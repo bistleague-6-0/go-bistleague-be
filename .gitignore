@@ -1,0 +1,34 @@
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# Executables
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go-specific
+*.test
+*.out
+
+# Dependency directories
+/vendor/
+/go.sum
+
+# Output files
+*.log
+*.test
+
+# IDE and editor-specific files
+.idea/
+.vscode/
+*.swp
+*~
+
+# Build output
+/bin/
+# secret
+files/secrets/config.secrets.json
