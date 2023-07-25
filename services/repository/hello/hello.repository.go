@@ -19,10 +19,5 @@ func New(cfg *config.Config, client *auth.Client) *Repository {
 }
 
 func (r *Repository) GetHello(ctx *fiber.Ctx) (string, error) {
-	claims := map[string]interface{}{
-		"premiumAccount": true,
-	}
-
-	token, err := r.authClient.CustomTokenWithClaims(ctx.Context(), "some-uid", claims)
-	return token, err
+	return "hello, world!", nil
 }
