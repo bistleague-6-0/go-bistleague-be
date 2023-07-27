@@ -30,7 +30,7 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 
 	//hello router
 	helloRoute := hello.New(cfg, usecase.HelloUC)
-	helloRoute.Register(app, resource.AuthClient)
+	helloRoute.Register(app)
 
 	//auth route [Development only]
 	if cfg.Stage == "staging" {

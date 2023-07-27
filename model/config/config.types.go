@@ -5,6 +5,12 @@ type Config struct {
 	Server   ServerConfig   `json:"server"`
 	Database DatabaseConfig `json:"database"`
 	Firebase FirebaseConfig `json:"firebase"`
+	Secret   SecretConfig   `json:"secret"`
+}
+
+type SecretConfig struct {
+	TokenSecret string `json:"token_secret"`
+	JWTSecret   string `json:"jwt_secret"`
 }
 
 type ServerConfig struct {

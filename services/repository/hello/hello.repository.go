@@ -2,19 +2,16 @@ package hello
 
 import (
 	"bistleague-be/model/config"
-	"firebase.google.com/go/auth"
 	"github.com/gofiber/fiber/v2"
 )
 
 type Repository struct {
-	cfg        *config.Config
-	authClient *auth.Client
+	cfg *config.Config
 }
 
-func New(cfg *config.Config, client *auth.Client) *Repository {
+func New(cfg *config.Config) *Repository {
 	return &Repository{
-		cfg:        cfg,
-		authClient: client,
+		cfg: cfg,
 	}
 }
 
