@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     full_name VARCHAR(155) not null,
     institution VARCHAR(155),
     major VARCHAR(55),
+    entry_year int2 default 0,
     linkedin_url VARCHAR(100),
     line_id VARCHAR(55),
     team_id uuid,

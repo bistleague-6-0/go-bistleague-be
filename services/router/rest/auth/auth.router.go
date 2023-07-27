@@ -71,18 +71,18 @@ func (r *Router) SignInUser(g *guard.GuardContext) error {
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
 		fmt.Println("error", err)
-		return g.ReturnError(http.StatusInternalServerError, "cannot find json body")
+		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
 	if err != nil {
-		return g.ReturnError(http.StatusInternalServerError, err.Error())
+		return g.ReturnError(http.StatusBadRequest, err.Error())
 	}
 	if req.RePassword != req.Password {
 		return g.ReturnError(http.StatusBadRequest, "password does not match")
 	}
 	resp, err := r.usecase.SignInUser(g.FiberCtx.Context(), req)
 	if err != nil {
-		return g.ReturnError(http.StatusInternalServerError, err.Error())
+		return g.ReturnError(http.StatusNotFound, "wrong username or password")
 	}
 	return g.ReturnSuccess(resp)
 }
@@ -92,18 +92,18 @@ func (r *Router) SignUpUser(g *guard.GuardContext) error {
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
 		fmt.Println("error", err)
-		return g.ReturnError(http.StatusInternalServerError, "cannot find json body")
+		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
 	if err != nil {
-		return g.ReturnError(http.StatusInternalServerError, err.Error())
+		return g.ReturnError(http.StatusBadRequest, err.Error())
 	}
 	if req.RePassword != req.Password {
 		return g.ReturnError(http.StatusBadRequest, "password does not match")
 	}
 	resp, err := r.usecase.InsertNewUser(g.FiberCtx.Context(), req)
 	if err != nil {
-		return g.ReturnError(http.StatusInternalServerError, err.Error())
+		return g.ReturnError(http.StatusInternalServerError, "cannot register user")
 	}
 	return g.ReturnSuccess(resp)
 }

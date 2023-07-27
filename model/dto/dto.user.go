@@ -31,6 +31,7 @@ type UserResponseDTO struct {
 	FullName    string `json:"full_name"`
 	Institution string `json:"institution"`
 	Major       string `json:"major"`
+	EntryYear   uint32 `json:"entry_year"`
 	LinkedInURL string `json:"linkedin_url"`
 	LineID      string `json:"line_id"`
 }

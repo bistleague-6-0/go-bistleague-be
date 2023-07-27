@@ -58,7 +58,7 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.SignUpUserRequestDT
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    "rest",
 			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
@@ -75,6 +75,7 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.SignUpUserRequestDT
 			FullName:    resp.FullName,
 			Institution: resp.Institution.String,
 			Major:       resp.Major.String,
+			EntryYear:   resp.EntryYear,
 			LinkedInURL: resp.LinkedInURL.String,
 			LineID:      resp.LineID.String,
 		},
@@ -97,7 +98,7 @@ func (u *Usecase) SignInUser(ctx context.Context, req dto.SignInUserRequestDTO) 
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    "rest",
 			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
@@ -114,6 +115,7 @@ func (u *Usecase) SignInUser(ctx context.Context, req dto.SignInUserRequestDTO) 
 			FullName:    user.FullName,
 			Institution: user.Institution.String,
 			Major:       user.Major.String,
+			EntryYear:   user.EntryYear,
 			LinkedInURL: user.LinkedInURL.String,
 			LineID:      user.LineID.String,
 		},

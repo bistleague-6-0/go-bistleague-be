@@ -15,6 +15,7 @@ type UserEntity struct {
 	FullName    string         `db:"full_name"`
 	Institution sql.NullString `db:"institution"`
 	Major       sql.NullString `db:"major"`
+	EntryYear   uint32         `db:"entry_year"`
 	LinkedInURL sql.NullString `db:"linkedin_url"`
 	LineID      sql.NullString `db:"line_id"`
 	InsertedAt  time.Time      `db:"inserted_at"`
