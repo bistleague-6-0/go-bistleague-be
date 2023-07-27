@@ -35,3 +35,20 @@ func (r *Repository) RegisterNewUser(ctx context.Context, newUser entity.UserEnt
 	}
 	return &resp, err
 }
+
+func (r *Repository) LoginUser(ctx context.Context, username string) (*entity.UserEntity, error) {
+	resp := entity.UserEntity{}
+	query := r.qb.
+		Select("uid", "team_id", "username", "password", "email", "full_name", "institution", "major", "linkedin_url", "line_id").
+		From("users").
+		Where(goqu.C("username").Eq(username)).Limit(1)
+	sql, _, err := query.ToSQL()
+	if err != nil {
+		return nil, err
+	}
+	err = r.db.GetContext(ctx, &resp, sql)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}

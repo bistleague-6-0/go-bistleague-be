@@ -9,6 +9,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -24,10 +25,14 @@ func New(cfg *config.Config, repo *auth.Repository) *Usecase {
 	}
 }
 
-func (u *Usecase) InsertNewUser(ctx context.Context, req dto.CreateUserRequestDTO) (*dto.AuthUserResponseDTO, error) {
+func (u *Usecase) InsertNewUser(ctx context.Context, req dto.SignUpUserRequestDTO) (*dto.AuthUserResponseDTO, error) {
+	newpw, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
 	user := entity.UserEntity{
 		Username: req.Username,
-		Password: req.RePassword,
+		Password: string(newpw),
 		Email:    req.Email,
 		FullName: req.FullName,
 		Institution: sql.NullString{
@@ -48,7 +53,7 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.CreateUserRequestDT
 		return nil, err
 	}
 	claims := entity.CustomClaim{
-		TeamID: resp.TeamID,
+		TeamID: resp.TeamID.String,
 		UserID: resp.UID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    "rest",
@@ -62,9 +67,9 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.CreateUserRequestDT
 		return nil, err
 	}
 	return &dto.AuthUserResponseDTO{
-		Info: dto.UserResponseDTO{
+		User: dto.UserResponseDTO{
 			UID:         resp.UID,
-			TeamID:      resp.TeamID,
+			TeamID:      resp.TeamID.String,
 			Username:    resp.Username,
 			Email:       resp.Email,
 			FullName:    resp.FullName,
@@ -72,6 +77,45 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.CreateUserRequestDT
 			Major:       resp.Major.String,
 			LinkedInURL: resp.LinkedInURL.String,
 			LineID:      resp.LineID.String,
+		},
+		Token: token,
+	}, nil
+}
+
+func (u *Usecase) SignInUser(ctx context.Context, req dto.SignInUserRequestDTO) (*dto.AuthUserResponseDTO, error) {
+	user, err := u.repo.LoginUser(ctx, req.Username)
+	if err != nil {
+		return nil, err
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
+	if err != nil {
+		return nil, err
+	}
+	claims := entity.CustomClaim{
+		TeamID: user.TeamID.String,
+		UserID: user.UID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    "rest",
+			Subject:   "",
+			ExpiresAt: jwt.NewNumericDate(time.Now()),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	token, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.AuthUserResponseDTO{
+		User: dto.UserResponseDTO{
+			UID:         user.UID,
+			TeamID:      user.TeamID.String,
+			Username:    user.Username,
+			Email:       user.Email,
+			FullName:    user.FullName,
+			Institution: user.Institution.String,
+			Major:       user.Major.String,
+			LinkedInURL: user.LinkedInURL.String,
+			LineID:      user.LineID.String,
 		},
 		Token: token,
 	}, nil

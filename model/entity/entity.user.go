@@ -8,7 +8,7 @@ import (
 
 type UserEntity struct {
 	UID         string         `db:"uid"`
-	TeamID      string         `db:"team_id"`
+	TeamID      sql.NullString `db:"team_id"`
 	Username    string         `db:"username"`
 	Password    string         `db:"password"`
 	Email       string         `db:"email"`

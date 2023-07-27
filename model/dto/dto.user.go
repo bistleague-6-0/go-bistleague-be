@@ -1,9 +1,9 @@
 package dto
 
-type CreateUserRequestDTO struct {
-	Username    string `json:"username" validate:"required"`
-	Password    string `json:"password" validate:"required"`
-	RePassword  string `json:"re_password" validate:"required"`
+type SignUpUserRequestDTO struct {
+	Username    string `json:"username" validate:"required,min=5,max=20"`
+	Password    string `json:"password" validate:"required,min=8,max=20"`
+	RePassword  string `json:"re_password" validate:"required,min=8,max=20"`
 	Email       string `json:"email" validate:"required,email"`
 	FullName    string `json:"full_name" validate:"required"`
 	Institution string `json:"institution"`
@@ -12,8 +12,14 @@ type CreateUserRequestDTO struct {
 	LineID      string `json:"line_id"`
 }
 
+type SignInUserRequestDTO struct {
+	Username   string `json:"username" validate:"required,min=5,max=20"`
+	Password   string `json:"password" validate:"required,min=8,max=20"`
+	RePassword string `json:"re_password" validate:"required,min=8,max=20"`
+}
+
 type AuthUserResponseDTO struct {
-	Info  UserResponseDTO `json:"info"`
+	User  UserResponseDTO `json:"user"`
 	Token string          `json:"token"`
 }
 
