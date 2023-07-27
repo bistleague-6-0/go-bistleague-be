@@ -1,11 +1,14 @@
 package guard
 
 import (
+	"bistleague-be/model/config"
 	"bistleague-be/model/dto"
+	"bistleague-be/model/entity"
 	"firebase.google.com/go/auth"
+	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"net/http"
-	"strings"
 )
 
 type GuardContext struct {
@@ -14,6 +17,7 @@ type GuardContext struct {
 
 type AuthGuardContext struct {
 	FiberCtx *fiber.Ctx
+	Claims   entity.CustomClaim
 }
 
 func (g *GuardContext) ReturnError(
@@ -69,19 +73,56 @@ func DefaultGuard(handlerFunc func(g *GuardContext) error) fiber.Handler {
 	}
 }
 
-func AuthGuard(handlerFunc func(g *AuthGuardContext) error) fiber.Handler {
-	return func(ctx *fiber.Ctx) error {
-		authorization := ctx.Get("Authorization")
-		if !strings.Contains(authorization, "Bearer") {
-			return ctx.Status(http.StatusUnauthorized).JSON(dto.NoBodyDTOResponseWrapper{
-				Status:  http.StatusUnauthorized,
-				Message: "unauthorized",
-			})
-		}
-		_ = authorization[7:]
-		authGuardCtx := AuthGuardContext{
-			FiberCtx: ctx,
-		}
-		return handlerFunc(&authGuardCtx)
+func AuthGuard(cfg *config.Config, handlerFunc func(g *AuthGuardContext) error) []fiber.Handler {
+	handlers := []fiber.Handler{
+		jwtware.New(jwtware.Config{SigningKey: jwtware.SigningKey{
+			Key: []byte(cfg.Secret.JWTSecret),
+		}}),
+		func(ctx *fiber.Ctx) error {
+			user := ctx.Locals("user").(*jwt.Token)
+			claims := user.Claims.(jwt.MapClaims)
+			expireAt, err := claims.GetExpirationTime()
+			if err != nil {
+				return ctx.Status(http.StatusUnauthorized).JSON(dto.NoBodyDTOResponseWrapper{
+					Status:  http.StatusUnauthorized,
+					Message: "unauthorized",
+				})
+			}
+			issuedAt, err := claims.GetIssuedAt()
+			if err != nil {
+				return ctx.Status(http.StatusUnauthorized).JSON(dto.NoBodyDTOResponseWrapper{
+					Status:  http.StatusUnauthorized,
+					Message: "unauthorized",
+				})
+			}
+			teamID, ok := claims["team_id"].(string)
+			if !ok {
+				return ctx.Status(http.StatusUnauthorized).JSON(dto.NoBodyDTOResponseWrapper{
+					Status:  http.StatusUnauthorized,
+					Message: "unauthorized",
+				})
+			}
+			userID, ok := claims["user_id"].(string)
+			if !ok {
+				return ctx.Status(http.StatusUnauthorized).JSON(dto.NoBodyDTOResponseWrapper{
+					Status:  http.StatusUnauthorized,
+					Message: "unauthorized",
+				})
+			}
+			ety := entity.CustomClaim{
+				TeamID: teamID,
+				UserID: userID,
+				RegisteredClaims: jwt.RegisteredClaims{
+					ExpiresAt: expireAt,
+					IssuedAt:  issuedAt,
+				},
+			}
+			authGuardCtx := AuthGuardContext{
+				FiberCtx: ctx,
+				Claims:   ety,
+			}
+			return handlerFunc(&authGuardCtx)
+		},
 	}
+	return handlers
 }
