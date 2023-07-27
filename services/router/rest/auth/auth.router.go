@@ -2,10 +2,13 @@ package auth
 
 import (
 	"bistleague-be/model/config"
+	"bistleague-be/model/entity"
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/utils/httpclient"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+	"time"
 )
 
 type Router struct {
@@ -20,6 +23,7 @@ func New(cfg *config.Config) *Router {
 
 func (r *Router) RegisterRoute(app *fiber.App) {
 	app.Post("/login", guard.DefaultGuard(r.GetTokenByEmail))
+	app.Get("/token", guard.DefaultGuard(r.CreateSign))
 }
 
 type AuthRequest struct {
@@ -30,6 +34,27 @@ type AuthRequest struct {
 type TokenAuth struct {
 	Token             string `json:"token"`
 	ReturnSecureToken bool   `json:"returnSecureToken"`
+}
+
+func (r *Router) CreateSign(g *guard.GuardContext) error {
+	claims := entity.CustomClaim{
+		TeamID: "s08d8d",
+		UserID: "skss",
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    "rest",
+			Subject:   "",
+			ExpiresAt: jwt.NewNumericDate(time.Now()),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	strToken, err := token.SignedString([]byte(r.cfg.Secret.JWTSecret))
+	if err != nil {
+		return g.ReturnError(500, err.Error())
+	}
+	return g.ReturnSuccess(map[string]interface{}{
+		"token": strToken,
+	})
 }
 
 func (r *Router) GetTokenByEmail(g *guard.GuardContext) error {
