@@ -10,7 +10,7 @@ type CommonRepository struct {
 }
 
 func NewCommonRepository(cfg *config.Config, rsc *CommonResource) (*CommonRepository, error) {
-	helloRepo := hello.New(cfg, rsc.AuthClient)
+	helloRepo := hello.New(cfg)
 	commonRepo := CommonRepository{
 		helloRepo: helloRepo,
 	}

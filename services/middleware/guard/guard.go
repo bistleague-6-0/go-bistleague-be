@@ -13,8 +13,7 @@ type GuardContext struct {
 }
 
 type AuthGuardContext struct {
-	FiberCtx  *fiber.Ctx
-	AuthToken *auth.Token
+	FiberCtx *fiber.Ctx
 }
 
 func (g *GuardContext) ReturnError(
@@ -70,7 +69,7 @@ func DefaultGuard(handlerFunc func(g *GuardContext) error) fiber.Handler {
 	}
 }
 
-func AuthGuard(client *auth.Client, handlerFunc func(g *AuthGuardContext) error) fiber.Handler {
+func AuthGuard(handlerFunc func(g *AuthGuardContext) error) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		authorization := ctx.Get("Authorization")
 		if !strings.Contains(authorization, "Bearer") {
@@ -79,17 +78,9 @@ func AuthGuard(client *auth.Client, handlerFunc func(g *AuthGuardContext) error)
 				Message: "unauthorized",
 			})
 		}
-		bearer := authorization[7:]
-		token, err := client.VerifyIDToken(ctx.Context(), bearer)
-		if err != nil {
-			return ctx.Status(http.StatusUnauthorized).JSON(dto.NoBodyDTOResponseWrapper{
-				Status:  http.StatusUnauthorized,
-				Message: "unauthorized",
-			})
-		}
+		_ = authorization[7:]
 		authGuardCtx := AuthGuardContext{
-			FiberCtx:  ctx,
-			AuthToken: token,
+			FiberCtx: ctx,
 		}
 		return handlerFunc(&authGuardCtx)
 	}

@@ -4,7 +4,6 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/usecase/hello"
-	"firebase.google.com/go/auth"
 	"github.com/gofiber/fiber/v2"
 	"log"
 	"net/http"
@@ -22,10 +21,10 @@ func New(cfg *config.Config, helloUC *hello.Usecase) *Router {
 	}
 }
 
-func (r *Router) Register(app *fiber.App, authClient *auth.Client) {
+func (r *Router) Register(app *fiber.App) {
 	g := app.Group("/hello")
 	g.Get("", guard.DefaultGuard(r.HelloGet))
-	g.Post("", guard.AuthGuard(authClient, r.HelloPost))
+	g.Post("", guard.AuthGuard(r.HelloPost))
 }
 
 type HelloRequest struct {
@@ -39,7 +38,7 @@ type HelloResponse struct {
 func (r *Router) HelloPost(g *guard.AuthGuardContext) error {
 	req := HelloRequest{}
 	g.FiberCtx.BodyParser(&req)
-	return g.ReturnSuccess(g.AuthToken.Claims)
+	return g.ReturnSuccess(req)
 }
 
 func (r *Router) HelloGet(g *guard.GuardContext) error {
