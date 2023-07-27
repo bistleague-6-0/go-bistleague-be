@@ -7,7 +7,6 @@ import (
 	"bistleague-be/services/repository/auth"
 	"bistleague-be/services/utils"
 	"context"
-	"database/sql"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"time"
@@ -31,22 +30,10 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.SignUpUserRequestDT
 		return nil, err
 	}
 	user := entity.UserEntity{
-		Username: req.Username,
 		Password: string(newpw),
 		Email:    req.Email,
 		FullName: req.FullName,
-		Institution: sql.NullString{
-			String: req.Institution,
-		},
-		Major: sql.NullString{
-			String: req.Major,
-		},
-		LinkedInURL: sql.NullString{
-			String: req.LinkedInURL,
-		},
-		LineID: sql.NullString{
-			String: req.LineID,
-		},
+		Username: req.Username,
 	}
 	resp, err := u.repo.RegisterNewUser(ctx, user)
 	if err != nil {
@@ -67,17 +54,9 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.SignUpUserRequestDT
 		return nil, err
 	}
 	return &dto.AuthUserResponseDTO{
-		User: dto.UserResponseDTO{
-			UID:         resp.UID,
-			TeamID:      resp.TeamID.String,
-			Username:    resp.Username,
-			Email:       resp.Email,
-			FullName:    resp.FullName,
-			Institution: resp.Institution.String,
-			Major:       resp.Major.String,
-			EntryYear:   resp.EntryYear,
-			LinkedInURL: resp.LinkedInURL.String,
-			LineID:      resp.LineID.String,
+		User: dto.AuthUserInfoResponse{
+			UserID:   resp.UID,
+			Username: resp.Username,
 		},
 		Token: token,
 	}, nil
@@ -107,17 +86,9 @@ func (u *Usecase) SignInUser(ctx context.Context, req dto.SignInUserRequestDTO) 
 		return nil, err
 	}
 	return &dto.AuthUserResponseDTO{
-		User: dto.UserResponseDTO{
-			UID:         user.UID,
-			TeamID:      user.TeamID.String,
-			Username:    user.Username,
-			Email:       user.Email,
-			FullName:    user.FullName,
-			Institution: user.Institution.String,
-			Major:       user.Major.String,
-			EntryYear:   user.EntryYear,
-			LinkedInURL: user.LinkedInURL.String,
-			LineID:      user.LineID.String,
+		User: dto.AuthUserInfoResponse{
+			UserID:   user.UID,
+			Username: user.Username,
 		},
 		Token: token,
 	}, nil

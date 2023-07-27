@@ -77,9 +77,6 @@ func (r *Router) SignInUser(g *guard.GuardContext) error {
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, err.Error())
 	}
-	if req.RePassword != req.Password {
-		return g.ReturnError(http.StatusBadRequest, "password does not match")
-	}
 	resp, err := r.usecase.SignInUser(g.FiberCtx.Context(), req)
 	if err != nil {
 		return g.ReturnError(http.StatusNotFound, "wrong username or password")

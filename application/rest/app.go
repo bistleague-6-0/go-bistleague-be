@@ -6,6 +6,7 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/services/router/rest/auth"
 	"bistleague-be/services/router/rest/hello"
+	"bistleague-be/services/router/rest/profile"
 	"context"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
@@ -54,6 +55,10 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	//auth route
 	authRoute := auth.New(cfg, usecase.AuthUC)
 	authRoute.RegisterRoute(app)
+
+	//profile route
+	profileRoute := profile.New(cfg)
+	profileRoute.Register(app)
 
 	return app, nil
 }

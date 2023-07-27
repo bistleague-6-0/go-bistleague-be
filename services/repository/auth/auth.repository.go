@@ -24,7 +24,12 @@ func New(cfg *config.Config, db *sqlx.DB, qb *goqu.DialectWrapper) *Repository {
 
 func (r *Repository) RegisterNewUser(ctx context.Context, newUser entity.UserEntity) (*entity.UserEntity, error) {
 	resp := newUser
-	query := r.qb.Insert("users").Rows(newUser.GetRecord()).Returning("uid")
+	query := r.qb.Insert("users").Rows(goqu.Record{
+		"email":     newUser.Email,
+		"password":  newUser.Password,
+		"full_name": newUser.FullName,
+		"username":  newUser.Username,
+	}).Returning("uid")
 	sql, _, err := query.ToSQL()
 	if err != nil {
 		return nil, err
@@ -39,7 +44,7 @@ func (r *Repository) RegisterNewUser(ctx context.Context, newUser entity.UserEnt
 func (r *Repository) LoginUser(ctx context.Context, username string) (*entity.UserEntity, error) {
 	resp := entity.UserEntity{}
 	query := r.qb.
-		Select("uid", "team_id", "username", "password", "email", "full_name", "institution", "major", "entry_year", "linkedin_url", "line_id").
+		Select("uid", "password", "username").
 		From("users").
 		Where(goqu.C("username").Eq(username)).Limit(1)
 	sql, _, err := query.ToSQL()
