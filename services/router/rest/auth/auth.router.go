@@ -2,10 +2,13 @@ package auth
 
 import (
 	"bistleague-be/model/config"
+	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/usecase/auth"
 	"bistleague-be/services/utils"
+	"fmt"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
@@ -15,12 +18,15 @@ import (
 type Router struct {
 	cfg     *config.Config
 	usecase *auth.Usecase
+	vld     *validator.Validate
 }
 
 func New(cfg *config.Config, usecase *auth.Usecase) *Router {
+	vld := validator.New() //MARK: move it to common resource
 	return &Router{
 		cfg:     cfg,
 		usecase: usecase,
+		vld:     vld,
 	}
 }
 
@@ -65,9 +71,22 @@ func (r *Router) SignInUser(g *guard.GuardContext) error {
 }
 
 func (r *Router) SignUpUser(g *guard.GuardContext) error {
-	sql, err := r.usecase.InsertNewUser(g.FiberCtx.Context())
+	req := dto.CreateUserRequestDTO{}
+	err := g.FiberCtx.BodyParser(&req)
+	if err != nil {
+		fmt.Println("error", err)
+		return g.ReturnError(http.StatusInternalServerError, "cannot decode json body")
+	}
+	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
 	if err != nil {
 		return g.ReturnError(http.StatusInternalServerError, err.Error())
 	}
-	return g.ReturnSuccess(sql)
+	if req.RePassword != req.Password {
+		return g.ReturnError(http.StatusBadRequest, "password does not match")
+	}
+	resp, err := r.usecase.InsertNewUser(g.FiberCtx.Context(), req)
+	if err != nil {
+		return g.ReturnError(http.StatusInternalServerError, err.Error())
+	}
+	return g.ReturnSuccess(resp)
 }

@@ -19,7 +19,7 @@ func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource
 	if err != nil {
 		return nil, err
 	}
-	dialect := goqu.Dialect(cfg.Database.DatabaseType)
+	dialect := goqu.Dialect("postgres")
 	rsc := CommonResource{
 		Db:       db,
 		QBuilder: &dialect,
