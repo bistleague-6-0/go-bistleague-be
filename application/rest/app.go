@@ -33,7 +33,7 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	helloRoute.Register(app)
 
 	//auth route
-	authRoute := auth.New(cfg)
+	authRoute := auth.New(cfg, usecase.AuthUC)
 	authRoute.RegisterRoute(app)
 
 	return app, nil

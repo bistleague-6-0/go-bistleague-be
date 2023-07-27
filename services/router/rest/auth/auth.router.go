@@ -4,7 +4,8 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/entity"
 	"bistleague-be/services/middleware/guard"
-	"bistleague-be/services/utils/httpclient"
+	"bistleague-be/services/usecase/auth"
+	"bistleague-be/services/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
@@ -12,18 +13,21 @@ import (
 )
 
 type Router struct {
-	cfg *config.Config
+	cfg     *config.Config
+	usecase *auth.Usecase
 }
 
-func New(cfg *config.Config) *Router {
+func New(cfg *config.Config, usecase *auth.Usecase) *Router {
 	return &Router{
-		cfg: cfg,
+		cfg:     cfg,
+		usecase: usecase,
 	}
 }
 
 func (r *Router) RegisterRoute(app *fiber.App) {
-	app.Post("/login", guard.DefaultGuard(r.GetTokenByEmail))
+	app.Post("/login", guard.DefaultGuard(r.SignInUser))
 	app.Get("/token", guard.DefaultGuard(r.CreateSign))
+	app.Post("/register", guard.DefaultGuard(r.SignUpUser))
 }
 
 type AuthRequest struct {
@@ -47,46 +51,23 @@ func (r *Router) CreateSign(g *guard.GuardContext) error {
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	strToken, err := token.SignedString([]byte(r.cfg.Secret.JWTSecret))
+	token, err := utils.CreateJWTToken(r.cfg.Secret.JWTSecret, claims)
 	if err != nil {
 		return g.ReturnError(500, err.Error())
 	}
 	return g.ReturnSuccess(map[string]interface{}{
-		"token": strToken,
+		"token": token,
 	})
 }
 
-func (r *Router) GetTokenByEmail(g *guard.GuardContext) error {
-	credential := AuthRequest{}
-	if err := g.FiberCtx.BodyParser(&credential); err != nil {
-		return err
-	}
-	requestBody := map[string]string{
-		"email":             credential.Email,
-		"password":          credential.Password,
-		"returnSecureToken": "true",
-	}
-	var response struct {
-		Uid          string `json:"localId"`
-		Email        string `json:"email"`
-		DisplayName  string `json:"displayName"`
-		IDToken      string `json:"idToken"`
-		RefreshToken string `json:"refreshToken"`
-		ExpiresIn    string `json:"expiresIn"`
-	}
+func (r *Router) SignInUser(g *guard.GuardContext) error {
+	return nil
+}
 
-	err := httpclient.Request(
-		r.cfg.Firebase.AuthDomain,
-		httpclient.PostMethod,
-		map[string]string{
-			"Content-Type": "application/json",
-		},
-		requestBody,
-		&response,
-	)
+func (r *Router) SignUpUser(g *guard.GuardContext) error {
+	sql, err := r.usecase.InsertNewUser(g.FiberCtx.Context())
 	if err != nil {
-		return g.ReturnError(http.StatusBadRequest, err.Error())
+		return g.ReturnError(http.StatusInternalServerError, err.Error())
 	}
-	return g.ReturnSuccess(response)
+	return g.ReturnSuccess(sql)
 }
