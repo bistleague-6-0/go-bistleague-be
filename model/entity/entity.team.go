@@ -9,3 +9,10 @@ type TeamEntity struct {
 	TeamMemberMails    []string `db:"team_member_mails"`
 	IsActive           bool     `db:"is_active"`
 }
+
+type TeamWithUserEntity struct {
+	TeamEntity
+	UserID   string `db:"uid"`
+	Username string `db:"username"`
+	FullName string `db:"full_name"`
+}

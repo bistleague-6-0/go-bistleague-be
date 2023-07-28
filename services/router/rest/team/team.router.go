@@ -7,6 +7,7 @@ import (
 	"bistleague-be/services/usecase/team"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"log"
 	"net/http"
 )
 
@@ -27,9 +28,10 @@ func New(cfg *config.Config, vld *validator.Validate, usecase *team.Usecase) *Ro
 func (r *Router) Register(app *fiber.App) {
 	group := app.Group("/team")
 	group.Post("", guard.AuthGuard(r.cfg, r.CreateTeam)...)
+	group.Get("", guard.AuthGuard(r.cfg, r.GetTeamInformation)...)
 }
 
-//MARK : NEED TO UPDATE
+// MARK : NEED TO UPDATE
 func (r *Router) CreateTeam(g *guard.AuthGuardContext) error {
 	req := dto.CreateTeamRequestDTO{}
 	err := g.FiberCtx.BodyParser(&req)
@@ -48,4 +50,16 @@ func (r *Router) CreateTeam(g *guard.AuthGuardContext) error {
 		Status:  http.StatusAccepted,
 		Message: "team has been created",
 	})
+}
+
+func (r *Router) GetTeamInformation(g *guard.AuthGuardContext) error {
+	if g.Claims.TeamID == "" {
+		return g.ReturnError(http.StatusNotFound, "user is not registered at any team")
+	}
+	resp, err := r.usecase.GetTeamInformation(g.FiberCtx.Context(), g.Claims.TeamID)
+	if err != nil {
+		log.Println(err)
+		return g.ReturnError(http.StatusNotFound, "cannot find team information")
+	}
+	return g.ReturnSuccess(resp)
 }

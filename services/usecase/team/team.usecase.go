@@ -25,6 +25,7 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 	team := entity.TeamEntity{
 		TeamName:     req.TeamName,
 		TeamLeaderID: teamLeaderID,
+		// MARK : PROCESS THIS FIRST
 		//BuktiPembayaranURL: req.PaymentProof,
 		TeamMemberMails: req.MemberEmails,
 	}
@@ -33,4 +34,25 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 		log.Println(err)
 	}
 	return err
+}
+
+func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string) (*dto.GetTeamInfoResponseDTO, error) {
+	resp, err := u.repo.GetTeamInformation(ctx, teamID)
+	if err != nil {
+		return nil, err
+	}
+	result := dto.GetTeamInfoResponseDTO{}
+	result.TeamID = teamID
+	for _, team := range resp {
+		result.TeamName = team.TeamName
+		result.IsActive = team.IsActive
+		result.IsVerified = team.IsVerified
+		result.Members = append(result.Members, dto.GetTeamMemberInfoResponseDTO{
+			UserID:   team.UserID,
+			Username: team.Username,
+			Fullname: team.FullName,
+			IsLeader: team.TeamLeaderID == team.UserID,
+		})
+	}
+	return &result, nil
 }
