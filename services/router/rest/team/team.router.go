@@ -33,6 +33,9 @@ func (r *Router) Register(app *fiber.App) {
 
 // MARK : NEED TO UPDATE
 func (r *Router) CreateTeam(g *guard.AuthGuardContext) error {
+	if g.Claims.TeamID != "" {
+		return g.ReturnError(http.StatusNotAcceptable, "user already registered on a team")
+	}
 	req := dto.CreateTeamRequestDTO{}
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
