@@ -5,8 +5,11 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
 	"bistleague-be/services/repository/team"
+	"bistleague-be/services/utils"
 	"context"
+	"github.com/golang-jwt/jwt/v5"
 	"log"
+	"time"
 )
 
 type Usecase struct {
@@ -21,7 +24,7 @@ func New(cfg *config.Config, repo *team.Repository) *Usecase {
 	}
 }
 
-func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, teamLeaderID string) error {
+func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, teamLeaderID string) (string, error) {
 	team := entity.TeamEntity{
 		TeamName:     req.TeamName,
 		TeamLeaderID: teamLeaderID,
@@ -29,11 +32,26 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 		//BuktiPembayaranURL: req.PaymentProof,
 		TeamMemberMails: req.MemberEmails,
 	}
-	err := u.repo.CreateTeam(ctx, team)
+	teamID, err := u.repo.CreateTeam(ctx, team)
 	if err != nil {
 		log.Println(err)
+		return "", err
 	}
-	return err
+	claims := entity.CustomClaim{
+		TeamID: teamID,
+		UserID: teamLeaderID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    "rest",
+			Subject:   "",
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	token, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }
 
 func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string) (*dto.GetTeamInfoResponseDTO, error) {

@@ -34,7 +34,7 @@ func (r *Router) Register(app *fiber.App) {
 // MARK : NEED TO UPDATE
 func (r *Router) CreateTeam(g *guard.AuthGuardContext) error {
 	if g.Claims.TeamID != "" {
-		return g.ReturnError(http.StatusNotAcceptable, "user already registered on a team")
+		return g.ReturnError(http.StatusNotAcceptable, "user already registered to a team")
 	}
 	req := dto.CreateTeamRequestDTO{}
 	err := g.FiberCtx.BodyParser(&req)
@@ -45,13 +45,16 @@ func (r *Router) CreateTeam(g *guard.AuthGuardContext) error {
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, err.Error())
 	}
-	err = r.usecase.CreateTeam(g.FiberCtx.Context(), req, g.Claims.UserID)
+	token, err := r.usecase.CreateTeam(g.FiberCtx.Context(), req, g.Claims.UserID)
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, "cannot create team")
 	}
-	return g.FiberCtx.JSON(dto.NoBodyDTOResponseWrapper{
+	return g.FiberCtx.JSON(dto.DefaultDTOResponseWrapper{
 		Status:  http.StatusAccepted,
 		Message: "team has been created",
+		Body: map[string]string{
+			"jwt_token": token,
+		},
 	})
 }
 
