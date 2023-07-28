@@ -17,16 +17,14 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS teams(
     team_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     team_name VARCHAR(55) UNIQUE NOT NULL,
-    bukti_pembayaran_url VARCHAR(155) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS teams_member_email(
-    team_id uuid PRIMARY KEY,
-    email VARCHAR(155) not null
+    team_leader_id UUID unique not null ,
+    bukti_pembayaran_url VARCHAR(155) NOT NULL,
+    team_member_mails TEXT[],
+    is_active boolean default true
 );
 
 CREATE TABLE IF NOT EXISTS teams_code(
     team_id uuid PRIMARY KEY,
     code VARCHAR(55) UNIQUE,
-    used int4 DEFAULT 3
+    used int8 default 2
 )
