@@ -13,10 +13,9 @@ Bist league 6.0 is bla bla bla
 4. Ask the lead for the secret keys
 5. Run `make services-up` to run all services
 6. If you want to specify which service you're going to start, use `make services-up SERVICE={service name}`
+7. If you want to look at the API Contract for Postman, go to `files->BistLeagueAPIContract.json` and use it on your postman client
 
 ## Maintainer
-### Evangelist
 1. Farhandika Zahrir Mufti Guenia - 18220015@std.stei.itb.ac.id
 2. Muhammad Rey Syazni - 18220013@std.stei.itb.ac.id
-### Contributor
-1. 
+3. Riandy Hasan - 18220058@std.stei.itb.ac.id
