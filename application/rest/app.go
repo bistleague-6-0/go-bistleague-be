@@ -7,6 +7,7 @@ import (
 	"bistleague-be/services/router/rest/auth"
 	"bistleague-be/services/router/rest/hello"
 	"bistleague-be/services/router/rest/profile"
+	"bistleague-be/services/router/rest/team"
 	"context"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
@@ -53,12 +54,16 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	helloRoute.Register(app)
 
 	//auth route
-	authRoute := auth.New(cfg, usecase.AuthUC)
+	authRoute := auth.New(cfg, usecase.AuthUC, resource.Vld)
 	authRoute.RegisterRoute(app)
 
 	//profile route
 	profileRoute := profile.New(cfg)
 	profileRoute.Register(app)
+
+	//team route
+	teamRoute := team.New(cfg, resource.Vld, usecase.TeamUC)
+	teamRoute.Register(app)
 
 	return app, nil
 }

@@ -21,8 +21,7 @@ type Router struct {
 	vld     *validator.Validate
 }
 
-func New(cfg *config.Config, usecase *auth.Usecase) *Router {
-	vld := validator.New() //MARK: move it to common resource
+func New(cfg *config.Config, usecase *auth.Usecase, vld *validator.Validate) *Router {
 	return &Router{
 		cfg:     cfg,
 		usecase: usecase,

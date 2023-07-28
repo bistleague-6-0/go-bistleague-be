@@ -44,7 +44,7 @@ func (r *Repository) RegisterNewUser(ctx context.Context, newUser entity.UserEnt
 func (r *Repository) LoginUser(ctx context.Context, username string) (*entity.UserEntity, error) {
 	resp := entity.UserEntity{}
 	query := r.qb.
-		Select("uid", "password", "username").
+		Select("uid", "password", "username", "team_id").
 		From("users").
 		Where(goqu.C("username").Eq(username)).Limit(1)
 	sql, _, err := query.ToSQL()
