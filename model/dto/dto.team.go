@@ -12,8 +12,9 @@ type GetTeamInfoResponseDTO struct {
 	// Is Team Participating
 	IsActive bool `json:"is_active"`
 	// Is Team payment is verified
-	IsVerified bool                           `json:"is_verified"`
-	Members    []GetTeamMemberInfoResponseDTO `json:"members"`
+	VerificationStatus     string                         `json:"verification_status"`
+	VerificationStatusCode int8                           `json:"verification_status_code"`
+	Members                []GetTeamMemberInfoResponseDTO `json:"members"`
 }
 
 type GetTeamMemberInfoResponseDTO struct {

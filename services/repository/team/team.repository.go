@@ -58,7 +58,7 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity) 
 
 func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]entity.TeamWithUserEntity, error) {
 	query := `select 
-    u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.bukti_pembayaran_url, t.is_verified
+    u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.bukti_pembayaran_url, t.verification_status
 		from users u
 			left join teams t
 				on u.team_id = t.team_id

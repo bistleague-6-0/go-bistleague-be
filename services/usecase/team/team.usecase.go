@@ -64,7 +64,8 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string) (*dto.G
 	for _, team := range resp {
 		result.TeamName = team.TeamName
 		result.IsActive = team.IsActive
-		result.IsVerified = team.IsVerified
+		result.VerificationStatusCode = team.VerificationStatus
+		result.VerificationStatus = entity.VerificationStatusMap[team.VerificationStatus]
 		result.Members = append(result.Members, dto.GetTeamMemberInfoResponseDTO{
 			UserID:   team.UserID,
 			Username: team.Username,

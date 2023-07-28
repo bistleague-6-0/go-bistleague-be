@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS teams(
     team_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     team_name VARCHAR(55) UNIQUE NOT NULL,
     team_leader_id UUID unique not null ,
+    bukti_pembayaran_filename VARCHAR(155) NOT NULL,
     bukti_pembayaran_url VARCHAR(155) NOT NULL,
     verification_status INT DEFAULT 0,
     team_member_mails TEXT[],

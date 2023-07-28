@@ -1,5 +1,11 @@
 package entity
 
+var VerificationStatusMap = map[int8]string{
+	-1: "rejected",
+	0:  "pending",
+	1:  "accepted",
+}
+
 type TeamEntity struct {
 	TeamID             string   `db:"team_id"`
 	TeamName           string   `db:"team_name"`
@@ -8,6 +14,7 @@ type TeamEntity struct {
 	IsVerified         bool     `db:"is_verified"`
 	TeamMemberMails    []string `db:"team_member_mails"`
 	IsActive           bool     `db:"is_active"`
+	VerificationStatus int8     `db:"verification_status"`
 }
 
 type TeamWithUserEntity struct {
