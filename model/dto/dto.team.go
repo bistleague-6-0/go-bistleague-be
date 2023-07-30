@@ -1,9 +1,17 @@
 package dto
 
+type RedeemTeamCodeRequestDTO struct {
+	RedeemCode string `json:"redeem_code" validate:"required"`
+}
+
 type CreateTeamRequestDTO struct {
 	TeamName     string   `json:"team_name" validate:"required,min=8,max=20"`
 	MemberEmails []string `json:"emails" validate:"required,listOfMail"`
 	PaymentProof string   `json:"payment_proof" validate:"base64"`
+}
+type CreateTeamResponseDTO struct {
+	TeamRedeemToken string `json:"team_redeem_token"`
+	JWTToken        string `json:"jwt_token"`
 }
 
 type GetTeamInfoResponseDTO struct {

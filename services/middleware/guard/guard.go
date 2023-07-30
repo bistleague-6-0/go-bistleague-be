@@ -4,7 +4,6 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
-	"firebase.google.com/go/auth"
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
@@ -58,10 +57,6 @@ func (g *AuthGuardContext) ReturnSuccess(
 		Message: "ok",
 		Body:    body,
 	})
-}
-
-type Guardian struct {
-	AuthClient *auth.Client
 }
 
 func DefaultGuard(handlerFunc func(g *GuardContext) error) fiber.Handler {

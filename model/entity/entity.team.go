@@ -17,6 +17,12 @@ type TeamEntity struct {
 	VerificationStatus int8     `db:"verification_status"`
 }
 
+type TeamRedeemCodeEntity struct {
+	TeamID string `db:"team_id"`
+	Code   string `db:"code"`
+	Used   int8   `db:"used"`
+}
+
 type TeamWithUserEntity struct {
 	TeamEntity
 	UserID   string `db:"uid"`

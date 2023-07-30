@@ -29,6 +29,7 @@ func (r *Router) Register(app *fiber.App) {
 	group := app.Group("/team")
 	group.Post("", guard.AuthGuard(r.cfg, r.CreateTeam)...)
 	group.Get("", guard.AuthGuard(r.cfg, r.GetTeamInformation)...)
+	group.Post("/redeem", guard.AuthGuard(r.cfg, r.RedeemTeamCode)...)
 }
 
 // MARK : NEED TO UPDATE
@@ -45,16 +46,14 @@ func (r *Router) CreateTeam(g *guard.AuthGuardContext) error {
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, err.Error())
 	}
-	token, err := r.usecase.CreateTeam(g.FiberCtx.Context(), req, g.Claims.UserID)
+	resp, err := r.usecase.CreateTeam(g.FiberCtx.Context(), req, g.Claims.UserID)
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, "cannot create team")
 	}
 	return g.FiberCtx.JSON(dto.DefaultDTOResponseWrapper{
 		Status:  http.StatusAccepted,
 		Message: "team has been created",
-		Body: map[string]string{
-			"jwt_token": token,
-		},
+		Body:    resp,
 	})
 }
 
@@ -68,4 +67,31 @@ func (r *Router) GetTeamInformation(g *guard.AuthGuardContext) error {
 		return g.ReturnError(http.StatusNotFound, "cannot find team information")
 	}
 	return g.ReturnSuccess(resp)
+}
+
+func (r *Router) RedeemTeamCode(g *guard.AuthGuardContext) error {
+	if g.Claims.TeamID != "" {
+		return g.ReturnError(http.StatusNotAcceptable, "user already registered to a team")
+	}
+	req := dto.RedeemTeamCodeRequestDTO{}
+	err := g.FiberCtx.BodyParser(&req)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
+	}
+	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "redeem code is invalid")
+	}
+	jwtToken, err := r.usecase.RedeemTeamCode(g.FiberCtx.Context(), req, g.Claims.UserID)
+	if err != nil {
+		return g.ReturnError(http.StatusNotAcceptable, "redeem code is invalid/expired")
+	}
+	//MARK : Create a better response message
+	return g.FiberCtx.JSON(dto.DefaultDTOResponseWrapper{
+		Status:  http.StatusAccepted,
+		Message: "successfully joined a team",
+		Body: map[string]string{
+			"jwt_token": jwtToken,
+		},
+	})
 }

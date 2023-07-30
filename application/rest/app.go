@@ -65,5 +65,14 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	teamRoute := team.New(cfg, resource.Vld, usecase.TeamUC)
 	teamRoute.Register(app)
 
+	// admin group
+	adminGroup := app.Group("/admin")
+	adminGroup.Get("", func(ctx *fiber.Ctx) error {
+		return ctx.JSON(dto.NoBodyDTOResponseWrapper{
+			Status:  http.StatusOK,
+			Message: "Fuck You Hacker!",
+		})
+	})
+
 	return app, nil
 }

@@ -7,8 +7,10 @@ import (
 	"bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
 	"context"
+	"encoding/hex"
 	"github.com/golang-jwt/jwt/v5"
 	"log"
+	"math/rand"
 	"time"
 )
 
@@ -24,7 +26,7 @@ func New(cfg *config.Config, repo *team.Repository) *Usecase {
 	}
 }
 
-func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, teamLeaderID string) (string, error) {
+func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, teamLeaderID string) (*dto.CreateTeamResponseDTO, error) {
 	team := entity.TeamEntity{
 		TeamName:     req.TeamName,
 		TeamLeaderID: teamLeaderID,
@@ -32,10 +34,16 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 		//BuktiPembayaranURL: req.PaymentProof,
 		TeamMemberMails: req.MemberEmails,
 	}
-	teamID, err := u.repo.CreateTeam(ctx, team)
+
+	// create redeem code
+	teamToken := make([]byte, 4)
+	rand.Read(teamToken)
+	strTeamToken := hex.EncodeToString(teamToken)
+
+	teamID, err := u.repo.CreateTeam(ctx, team, strTeamToken)
 	if err != nil {
 		log.Println(err)
-		return "", err
+		return nil, err
 	}
 	claims := entity.CustomClaim{
 		TeamID: teamID,
@@ -47,11 +55,14 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
-	token, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	jwtToken, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return token, nil
+	return &dto.CreateTeamResponseDTO{
+		TeamRedeemToken: strTeamToken,
+		JWTToken:        jwtToken,
+	}, nil
 }
 
 func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string) (*dto.GetTeamInfoResponseDTO, error) {
@@ -74,4 +85,26 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string) (*dto.G
 		})
 	}
 	return &result, nil
+}
+
+func (u *Usecase) RedeemTeamCode(ctx context.Context, req dto.RedeemTeamCodeRequestDTO, userID string) (string, error) {
+	resp, err := u.repo.RedeemTeamCode(ctx, userID, req.RedeemCode)
+	if err != nil {
+		return "", err
+	}
+	claims := entity.CustomClaim{
+		TeamID: resp.TeamID,
+		UserID: userID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    "rest",
+			Subject:   "",
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	jwtToken, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	if err != nil {
+		return "", err
+	}
+	return jwtToken, nil
 }
