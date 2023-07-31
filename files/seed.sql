@@ -28,5 +28,6 @@ CREATE TABLE IF NOT EXISTS teams(
 CREATE TABLE IF NOT EXISTS teams_code(
     team_id uuid PRIMARY KEY,
     code VARCHAR(55) UNIQUE,
+    team_member_mails TEXT[],
     used int8 default 2
 )

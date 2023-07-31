@@ -58,7 +58,7 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	authRoute.RegisterRoute(app)
 
 	//profile route
-	profileRoute := profile.New(cfg)
+	profileRoute := profile.New(cfg, usecase.ProfileUC)
 	profileRoute.Register(app)
 
 	//team route

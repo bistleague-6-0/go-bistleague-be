@@ -3,16 +3,12 @@ package auth
 import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/dto"
-	"bistleague-be/model/entity"
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/usecase/auth"
-	"bistleague-be/services/utils"
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
 	"net/http"
-	"time"
 )
 
 type Router struct {
@@ -31,7 +27,6 @@ func New(cfg *config.Config, usecase *auth.Usecase, vld *validator.Validate) *Ro
 
 func (r *Router) RegisterRoute(app *fiber.App) {
 	app.Post("/login", guard.DefaultGuard(r.SignInUser))
-	app.Get("/token", guard.DefaultGuard(r.CreateSign))
 	app.Post("/register", guard.DefaultGuard(r.SignUpUser))
 }
 
@@ -43,26 +38,6 @@ type AuthRequest struct {
 type TokenAuth struct {
 	Token             string `json:"token"`
 	ReturnSecureToken bool   `json:"returnSecureToken"`
-}
-
-func (r *Router) CreateSign(g *guard.GuardContext) error {
-	claims := entity.CustomClaim{
-		TeamID: "s08d8d",
-		UserID: "skss",
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "rest",
-			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now()),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-	token, err := utils.CreateJWTToken(r.cfg.Secret.JWTSecret, claims)
-	if err != nil {
-		return g.ReturnError(500, err.Error())
-	}
-	return g.ReturnSuccess(map[string]interface{}{
-		"token": token,
-	})
 }
 
 func (r *Router) SignInUser(g *guard.GuardContext) error {
