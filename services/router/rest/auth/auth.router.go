@@ -35,11 +35,6 @@ type AuthRequest struct {
 	Password string `json:"password"`
 }
 
-type TokenAuth struct {
-	Token             string `json:"token"`
-	ReturnSecureToken bool   `json:"returnSecureToken"`
-}
-
 func (r *Router) SignInUser(g *guard.GuardContext) error {
 	req := dto.SignInUserRequestDTO{}
 	err := g.FiberCtx.BodyParser(&req)

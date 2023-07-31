@@ -21,7 +21,7 @@ func New(cfg *config.Config, db *sqlx.DB) *Repository {
 
 func (r *Repository) GetUserProfile(ctx context.Context, userID string) (*entity.UserEntity, error) {
 	q := `SELECT 
-    uid, team_id, email, full_name, username, institution, major, entry_year, linkedin_url, line_id 
+    uid, team_id, email, full_name, username, phone_number, institution, major, entry_year, linkedin_url, line_id 
 	FROM users WHERE uid = $1 LIMIT 1`
 	resp := entity.UserEntity{}
 	err := r.db.GetContext(ctx, &resp, q, userID)
