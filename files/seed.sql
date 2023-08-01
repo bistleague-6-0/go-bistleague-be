@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(75) unique not null,
     password VARCHAR(155) not null,
     full_name VARCHAR(155) not null,
+    user_age int8 default 0,
     phone_number VARCHAR(155),
     institution VARCHAR(155),
     major VARCHAR(55),

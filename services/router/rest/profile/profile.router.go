@@ -2,6 +2,7 @@ package profile
 
 import (
 	"bistleague-be/model/config"
+	"bistleague-be/model/dto"
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/usecase/profile"
 	"github.com/go-playground/validator/v10"
@@ -42,5 +43,13 @@ func (r *Router) GetUserProfile(g *guard.GuardContext) error {
 }
 
 func (r *Router) UpdateUserProfile(g *guard.AuthGuardContext) error {
-	return g.ReturnSuccess(nil)
+	req := dto.UpdateUserProfileRequestDTO{}
+	err := r.uc.UpdateUserProfile(g.FiberCtx.Context(), req, g.Claims.UserID)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "cannot update user profile")
+	}
+	return g.FiberCtx.JSON(dto.NoBodyDTOResponseWrapper{
+		Status:  http.StatusAccepted,
+		Message: "user profile has been updated",
+	})
 }

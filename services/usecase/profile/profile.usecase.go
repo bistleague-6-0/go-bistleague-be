@@ -3,8 +3,10 @@ package profile
 import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/dto"
+	"bistleague-be/model/entity"
 	"bistleague-be/services/repository/profile"
 	"context"
+	"database/sql"
 )
 
 type Usecase struct {
@@ -30,7 +32,8 @@ func (u *Usecase) GetUserProfile(ctx context.Context, userID string) (*dto.UserP
 		Email:       resp.Email,
 		FullName:    resp.FullName,
 		Username:    resp.Username,
-		PhoneNumber: resp.PhoneNumber,
+		Age:         resp.Age,
+		PhoneNumber: resp.PhoneNumber.String,
 		Institution: resp.Institution.String,
 		Major:       resp.Institution.String,
 		EntryYear:   resp.EntryYear,
@@ -39,6 +42,28 @@ func (u *Usecase) GetUserProfile(ctx context.Context, userID string) (*dto.UserP
 	}, nil
 }
 
-func (u *Usecase) UpdateUserProfile(ctx context.Context) (*dto.UserProfileResponseDTO, error) {
-	return nil, nil
+func (u *Usecase) UpdateUserProfile(ctx context.Context, req dto.UpdateUserProfileRequestDTO, userID string) error {
+	ety := entity.UserEntity{
+		UID:      userID,
+		Email:    req.Email,
+		FullName: req.FullName,
+		Age:      req.Age,
+		PhoneNumber: sql.NullString{
+			String: req.PhoneNumber,
+		},
+		Institution: sql.NullString{
+			String: req.Institution,
+		},
+		Major: sql.NullString{
+			String: req.Major,
+		},
+		EntryYear: req.EntryYear,
+		LinkedInURL: sql.NullString{
+			String: req.LinkedInURL,
+		},
+		LineID: sql.NullString{
+			String: req.LineID,
+		},
+	}
+	return u.repo.UpdateUserProfile(ctx, ety)
 }
