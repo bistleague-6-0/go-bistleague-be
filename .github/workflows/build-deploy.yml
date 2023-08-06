@@ -26,13 +26,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup ENV
-        uses: nowactions/envsubst@v1
-        env:
-          CONFIG_SECRETS: ${{ secrets.CONFIG_SECRETS }}
-        with:
-          input: ./files/secrets/config.secrets.template
-          output: ./files/secrets/config.secrets.json
+      - name: Determine CONFIG_SECRETS based on branch
+      run: |
+        if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+          echo "CONFIG_SECRETS: ${{ secrets.CONFIG_SECRETS_PRODUCTION }}" >> $GITHUB_ENV
+        elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
+          echo "CONFIG_SECRETS: ${{ secrets.CONFIG_SECRETS_STAGING }}" >> $GITHUB_ENV
+        fi
+
+    - name: Setup ENV
+      uses: nowactions/envsubst@v1
+      env:
+        CONFIG_SECRETS: ${{ env.CONFIG_SECRETS }}
+      with:
+        input: ./files/secrets/config.secrets.template
+        output: ./files/secrets/config.secrets.json
 
       - name: Setup GCP
         uses: google-github-actions/setup-gcloud@v0
