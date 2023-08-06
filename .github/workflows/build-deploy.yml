@@ -26,20 +26,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Determine CONFIG_SECRETS and SERVICE_NAME based on branch
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-            echo "CONFIG_SECRETS: ${{ secrets.CONFIG_SECRETS_PRODUCTION }}" >> $GITHUB_ENV
-            echo "SERVICE_NAME: $SERVICE_NAME_MASTER" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
-            echo "CONFIG_SECRETS: ${{ secrets.CONFIG_SECRETS_STAGING }}" >> $GITHUB_ENV
-            echo "SERVICE_NAME: $SERVICE_NAME_STAGING" >> $GITHUB_ENV
-          fi
-
       - name: Setup ENV
         uses: nowactions/envsubst@v1
         env:
-          CONFIG_SECRETS: ${{ env.CONFIG_SECRETS }}
+          CONFIG_SECRETS: ${{ secrets.CONFIG_SECRETS_STAGING }}
         with:
           input: ./files/secrets/config.secrets.template
           output: ./files/secrets/config.secrets.json
