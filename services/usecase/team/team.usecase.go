@@ -4,10 +4,12 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
+	"bistleague-be/services/repository/document"
 	"bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
 	"context"
 	"encoding/hex"
+	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"log"
 	"math/rand"
@@ -15,11 +17,12 @@ import (
 )
 
 type Usecase struct {
-	cfg  *config.Config
-	repo *team.Repository
+	cfg      *config.Config
+	repo     *team.Repository
+	docsRepo *document.Repository
 }
 
-func New(cfg *config.Config, repo *team.Repository) *Usecase {
+func New(cfg *config.Config, repo *team.Repository, docsRepo *document.Repository) *Usecase {
 	return &Usecase{
 		cfg:  cfg,
 		repo: repo,
@@ -105,4 +108,16 @@ func (u *Usecase) RedeemTeamCode(ctx context.Context, req dto.RedeemTeamCodeRequ
 		return "", err
 	}
 	return jwtToken, nil
+}
+
+func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocumentRequestDTO, teamID string) (string, error) {
+	currentDate := time.Now()
+	formattedDate := currentDate.Format("2006-01-02")
+	filename := fmt.Sprintf("%s.%s.%s", req.Type, teamID, formattedDate)
+
+	// upload file
+	err := u.docsRepo.UploadTeamDocument(ctx, req.Type, filename, teamID)
+	//update db
+	err = u.repo.InsertTeamDocument(ctx, req.Type, filename, teamID)
+	return filename, err
 }

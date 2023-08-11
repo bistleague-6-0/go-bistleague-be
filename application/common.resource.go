@@ -31,6 +31,7 @@ func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource
 	dialect := goqu.Dialect("postgres")
 	vld := validator.New()
 	vld.RegisterValidation("listOfMail", isListOfEmail)
+	vld.RegisterValidation("isTeamDoc", isTeamDocs)
 
 	jsonCreds, err := json.Marshal(cfg.ServiceAccount)
 	if err != nil {
@@ -56,6 +57,22 @@ func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource
 		Uploader: &uploader,
 	}
 	return &rsc, nil
+}
+
+func isTeamDocs(fl validator.FieldLevel) bool {
+	doctypes := map[string]int8{
+		"payment":       0,
+		"student_card":  1,
+		"self_portrait": 2,
+		"twibbon":       3,
+		"enrollment":    4,
+	}
+	input, ok := fl.Field().Interface().(string)
+	if !ok {
+		return false
+	}
+	_, ok = doctypes[input]
+	return ok
 }
 
 func isListOfEmail(fl validator.FieldLevel) bool {

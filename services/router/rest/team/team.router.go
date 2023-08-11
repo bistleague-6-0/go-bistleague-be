@@ -30,6 +30,7 @@ func (r *Router) Register(app *fiber.App) {
 	group.Post("", guard.AuthGuard(r.cfg, r.CreateTeam)...)
 	group.Get("", guard.AuthGuard(r.cfg, r.GetTeamInformation)...)
 	group.Post("/redeem", guard.AuthGuard(r.cfg, r.RedeemTeamCode)...)
+	group.Post("/document", guard.AuthGuard(r.cfg, r.InsertTeamDocument)...)
 }
 
 // MARK : NEED TO UPDATE
@@ -93,5 +94,22 @@ func (r *Router) RedeemTeamCode(g *guard.AuthGuardContext) error {
 		Body: map[string]string{
 			"jwt_token": jwtToken,
 		},
+	})
+}
+
+func (r *Router) InsertTeamDocument(g *guard.AuthGuardContext) error {
+	req := dto.InsertTeamDocumentRequestDTO{}
+	err := g.FiberCtx.BodyParser(&req)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
+	}
+	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, err.Error())
+	}
+	filename, err := r.usecase.InsertTeamDocument(g.FiberCtx.Context(), req, g.Claims.TeamID)
+	return g.ReturnSuccess(map[string]string{
+		"doc_type": req.Type,
+		"filename": filename,
 	})
 }
