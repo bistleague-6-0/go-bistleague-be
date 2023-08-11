@@ -125,3 +125,26 @@ func (r *Repository) RedeemTeamCode(ctx context.Context, userID string, code str
 	}
 	return &tc, nil
 }
+
+func (r *Repository) InsertTeamDocument(ctx context.Context, doctype string, filename string, teamID string) error {
+	dbprop := map[string]string{
+		"payment":       "payment_filename",
+		"student_card":  "student_card_filename",
+		"self_portrait": "self_portrait_filename",
+		"twibbon":       "twibbon_filename",
+		"enrollment":    "enrollment_filename",
+	}
+	property, ok := dbprop[doctype]
+	if !ok {
+		return errors.New("document is not recognized")
+	}
+	q := r.qb.Update("teams").Set(goqu.Record{
+		property: filename,
+	}).Where(goqu.C("team_id").Eq(teamID))
+	query, _, err := q.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = r.db.ExecContext(ctx, query)
+	return err
+}
