@@ -15,14 +15,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n      \"username\": \"julet4_bab\",\n    \"password\": \"mysecretpassword1\"\n}",
+							"raw": "{\n    \"username\": \"secretname99\",\n    \"password\": \"mysecretpassword1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{local}}/login"
+						"url": "{{staging}}/login"
 					},
 					"response": []
 				},
@@ -33,14 +33,14 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"myname@tokop1.com\",\n    \"username\": \"userjcek\",\n  \"password\": \"mysecretpassword1\",\n  \"re_password\": \"mysecretpassword1\",\n  \"full_name\": \"Biba Babi\"\n}\n",
+							"raw": "{\n  \"email\": \"akun@baru4.com\",\n  \"username\": \"secretname99\",\n  \"password\": \"mysecretpassword1\",\n  \"re_password\": \"mysecretpassword1\",\n  \"full_name\": \"Biba Babi\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{local}}/register"
+						"url": "{{staging}}/register"
 					},
 					"response": []
 				}
@@ -55,21 +55,21 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiNDk0NDhmYTgtZDY2NC00YjUyLWFlZWUtOGIzMzNmZjIwMmY1IiwidXNlcl9pZCI6ImE0ODkyZDQ1LWJiNDctNGY5ZC05YmEyLTg5OTc5MzUwNmNkZiIsImlzcyI6InJlc3QiLCJleHAiOjE2OTA5ODczMjUsImlhdCI6MTY5MDU1NTMyNX0.ppatrloVPefaFqd14yFWLLdYEzvw7ZxX8wFDUsbqtCY"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6IjNiZDkyODI1LTNhNzgtNDA2Mi05ZjU1LTQ3ZTZkNzc2NjFmMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxNzc4NDcsImlhdCI6MTY5MTc0NTg0N30.ExD8Xfh1MzoFrnIH67Hd_5iUQToKi3x9Z1qMEEEyT0k"
 							}
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"team_name\":\"00120121_@\",\n    \"emails\": [\"email@email.com\",\"maama@mama.co\", \"email@notemail.com\"],\n    \"payment_proof\": \"iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII=\"\n}",
+							"raw": "{\n    \"team_name\":\"TamTimTum\",\n    \"emails\": [\"email@email.com\",\"maama@mama.co\", \"email@notemail.com\"],\n    \"payment_proof\": \"iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII=\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{local}}/team"
+						"url": "{{staging}}/team"
 					},
 					"response": []
 				},
@@ -79,12 +79,12 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiZjVmY2E1ZWQtYzgzMS00ZTY2LWJmYzctNWE3OTFmNGU0Mzk5IiwidXNlcl9pZCI6ImFmOTVmYjVhLTdmNzYtNGUxOS05ZGU0LWQ1YjM3YjVmYmFjMyIsImlzcyI6InJlc3QiLCJleHAiOjE2OTA5NjM3NzcsImlhdCI6MTY5MDUzMTc3N30.tOv8ZUMpcWQlFLXf2xAnwPaZVylpkRRfbOGKLFdqlG4"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiNTE3ZTQyNTMtYzMwZC00MWJlLTk3OTEtNDVkYWE0YjA2NmU2IiwidXNlcl9pZCI6IjNiZDkyODI1LTNhNzgtNDA2Mi05ZjU1LTQ3ZTZkNzc2NjFmMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxNzc4NjksImlhdCI6MTY5MTc0NTg2OX0.J70KWufUhAXp4ris4SYp1wqommgo5kjkJ7a67wE1EH8"
 							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": "{{local}}/team"
+						"url": "{{staging}}/team"
 					},
 					"response": [
 						{
@@ -112,6 +112,82 @@
 							"body": "{\n    \"status\": 200,\n    \"msg\": \"ok\",\n    \"data\": {\n        \"team_id\": \"f5fca5ed-c831-4e66-bfc7-5a791f4e4399\",\n        \"team_name\": \"tim jekatah\",\n        \"is_active\": false,\n        \"verification_status\": \"accepted\",\n        \"verification_status_code\": 1,\n        \"members\": [\n            {\n                \"user_id\": \"0e824030-fc43-43ac-a80d-bdd3fd42c25d\",\n                \"username\": \"ellay_alay\",\n                \"fullname\": \"John Doe\",\n                \"is_leader\": true\n            },\n            {\n                \"user_id\": \"af95fb5a-7f76-4e19-9de4-d5b37b5fbac3\",\n                \"username\": \"julet4_bab\",\n                \"fullname\": \"Biba Babi\",\n                \"is_leader\": false\n            }\n        ]\n    }\n}"
 						}
 					]
+				},
+				{
+					"name": "Redeem Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6ImVkNzYwOGE5LTExYzEtNDU3Zi1hN2EzLWY4NDZjZmM2ZDYwMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTE4NTQyNjYsImlhdCI6MTY5MTQyMjI2Nn0.a1MlpXemh3v3LCkkiQHtZE_DKEfrpn4WngvHAW0TdSU"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"redeem_code\": \"aea90c49\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{staging}}/team/redeem"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Update User Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiNTE3ZTQyNTMtYzMwZC00MWJlLTk3OTEtNDVkYWE0YjA2NmU2IiwidXNlcl9pZCI6IjNiZDkyODI1LTNhNzgtNDA2Mi05ZjU1LTQ3ZTZkNzc2NjFmMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxNzgwNzksImlhdCI6MTY5MTc0NjA3OX0.7CHf0-WlSAWpDF1Hu_DoCu7eq2JiXLtvx5rtRnbL1XY"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"email\": \"ehmail@mahil.com\",\n        \"full_name\": \"Biba Babi\",\n        \"age\": 22,\n        \"phone_number\": \"+62 85155036559\",\n        \"institution\": \"Aitibi\",\n        \"major\": \"Infosec\",\n        \"entry_year\": 2020,\n        \"linkedin_url\": \"https://linkedin.com\",\n        \"line_id\": \"url\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{staging}}/profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://be-staging-b6utdt2kwa-et.a.run.app/profile/3bd92825-3a78-4062-9f55-47e6d77661f1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Test Send Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{local}}/admin/verif"
+					},
+					"response": []
 				}
 			]
 		},
@@ -138,7 +214,7 @@
 						}
 					}
 				},
-				"url": "localhost:3381/hello"
+				"url": "{{staging}}/hello"
 			},
 			"response": []
 		},
@@ -196,7 +272,7 @@
 		},
 		{
 			"key": "staging",
-			"value": "http://127.0.0.1:3381"
+			"value": "https://be-staging-b6utdt2kwa-et.a.run.app"
 		},
 		{
 			"key": "production",
