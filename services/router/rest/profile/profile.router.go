@@ -7,6 +7,7 @@ import (
 	"bistleague-be/services/usecase/profile"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"log"
 	"net/http"
 )
 
@@ -44,8 +45,17 @@ func (r *Router) GetUserProfile(g *guard.GuardContext) error {
 
 func (r *Router) UpdateUserProfile(g *guard.AuthGuardContext) error {
 	req := dto.UpdateUserProfileRequestDTO{}
-	err := r.uc.UpdateUserProfile(g.FiberCtx.Context(), req, g.Claims.UserID)
+	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
+	}
+	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, err.Error())
+	}
+	err = r.uc.UpdateUserProfile(g.FiberCtx.Context(), req, g.Claims.UserID)
+	if err != nil {
+		log.Println(err)
 		return g.ReturnError(http.StatusBadRequest, "cannot update user profile")
 	}
 	return g.FiberCtx.JSON(dto.NoBodyDTOResponseWrapper{

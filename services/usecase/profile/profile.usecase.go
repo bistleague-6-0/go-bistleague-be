@@ -35,7 +35,7 @@ func (u *Usecase) GetUserProfile(ctx context.Context, userID string) (*dto.UserP
 		Age:         resp.Age,
 		PhoneNumber: resp.PhoneNumber.String,
 		Institution: resp.Institution.String,
-		Major:       resp.Institution.String,
+		Major:       resp.Major.String,
 		EntryYear:   resp.EntryYear,
 		LinkedInURL: resp.LinkedInURL.String,
 		LineID:      resp.LineID.String,
