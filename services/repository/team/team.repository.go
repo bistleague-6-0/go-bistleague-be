@@ -37,9 +37,9 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 	}
 
 	// create team
-	query := `INSERT INTO teams (team_name, team_leader_id, team_member_mails,bukti_pembayaran_url)
+	query := `INSERT INTO teams (team_name, team_leader_id, team_member_mails)
 			  VALUES ($1, $2, $3, $4) returning team_id`
-	err = tx.GetContext(ctx, &teamID, query, newTeam.TeamName, newTeam.TeamLeaderID, newTeam.TeamMemberMails, newTeam.BuktiPembayaranURL)
+	err = tx.GetContext(ctx, &teamID, query, newTeam.TeamName, newTeam.TeamLeaderID, newTeam.TeamMemberMails)
 	if err != nil {
 		tx.Rollback()
 		return "", err

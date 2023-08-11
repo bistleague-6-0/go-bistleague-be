@@ -28,10 +28,8 @@ func New(cfg *config.Config, repo *team.Repository) *Usecase {
 
 func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, teamLeaderID string) (*dto.CreateTeamResponseDTO, error) {
 	team := entity.TeamEntity{
-		TeamName:     req.TeamName,
-		TeamLeaderID: teamLeaderID,
-		// MARK : PROCESS THIS FIRST
-		//BuktiPembayaranURL: req.PaymentProof,
+		TeamName:        req.TeamName,
+		TeamLeaderID:    teamLeaderID,
 		TeamMemberMails: req.MemberEmails,
 	}
 
