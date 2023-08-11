@@ -15,6 +15,6 @@ func New(cfg *config.Config) *Repository {
 	}
 }
 
-func (r *Repository) UploadTeamDocument(ctx context.Context, doctype string, filename string, teamID string) error {
+func (r *Repository) UploadTeamDocument(ctx context.Context, doctype string, filename string, teamID string, document string) error {
 	return nil
 }
