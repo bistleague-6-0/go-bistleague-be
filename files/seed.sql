@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(75) unique not null,
     password VARCHAR(155) not null,
     full_name VARCHAR(155) not null,
+    user_age int8 default 0,
+    phone_number VARCHAR(155),
     institution VARCHAR(155),
     major VARCHAR(55),
     entry_year int2 default 0,
@@ -28,5 +30,6 @@ CREATE TABLE IF NOT EXISTS teams(
 CREATE TABLE IF NOT EXISTS teams_code(
     team_id uuid PRIMARY KEY,
     code VARCHAR(55) UNIQUE,
+    team_member_mails TEXT[],
     used int8 default 2
 )
