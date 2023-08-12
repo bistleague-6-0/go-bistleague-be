@@ -62,7 +62,7 @@ func (r *Router) GetTeamInformation(g *guard.AuthGuardContext) error {
 	if g.Claims.TeamID == "" {
 		return g.ReturnError(http.StatusNotFound, "user is not registered at any team")
 	}
-	resp, err := r.usecase.GetTeamInformation(g.FiberCtx.Context(), g.Claims.TeamID)
+	resp, err := r.usecase.GetTeamInformation(g.FiberCtx.Context(), g.Claims.TeamID, g.Claims.UserID)
 	if err != nil {
 		log.Println(err)
 		return g.ReturnError(http.StatusNotFound, "cannot find team information")

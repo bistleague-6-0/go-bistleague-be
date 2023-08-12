@@ -69,7 +69,7 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 	}, nil
 }
 
-func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string) (*dto.GetTeamInfoResponseDTO, error) {
+func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID string) (*dto.GetTeamInfoResponseDTO, error) {
 	resp, err := u.repo.GetTeamInformation(ctx, teamID)
 	if err != nil {
 		return nil, err
@@ -81,6 +81,23 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string) (*dto.G
 		result.IsActive = team.IsActive
 		result.VerificationStatusCode = team.VerificationStatus
 		result.VerificationStatus = entity.VerificationStatusMap[team.VerificationStatus]
+		if team.UserID == userID {
+			result.StudentCard = team.StudentCard
+			result.StudentCardStatusCode = team.StudentCardStatus
+			result.StudentCardStatus = entity.VerificationStatusMap[team.StudentCardStatus]
+
+			result.SelfPortrait = team.SelfPortrait
+			result.SelfPortraitStatusCode = team.SelfPortraitStatus
+			result.SelfPortraitStatus = entity.VerificationStatusMap[team.SelfPortraitStatus]
+
+			result.Twibbon = team.Twibbon
+			result.TwibbonStatusCode = team.TwibbonStatus
+			result.TwibbonStatus = entity.VerificationStatusMap[team.TwibbonStatus]
+
+			result.Enrollment = team.Enrollment
+			result.EnrollmentStatusCode = team.EnrollmentStatus
+			result.EnrollmentStatus = entity.VerificationStatusMap[team.EnrollmentStatus]
+		}
 		result.Members = append(result.Members, dto.GetTeamMemberInfoResponseDTO{
 			UserID:   team.UserID,
 			Username: team.Username,
