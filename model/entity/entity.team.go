@@ -30,11 +30,11 @@ type TeamWithUserEntity struct {
 	Username           string `db:"username"`
 	FullName           string `db:"full_name"`
 	StudentCard        string `db:"student_card_filename"`
-	StudentCardStatus  uint8  `db:"student_card_status"`
-	SelfPortrait       string
-	SelfPortraitStatus uint8
-	Twibbon            string
-	TwibbonStatus      uint8
-	Enrollment         string
-	EnrollmentStatus   uint8
+	StudentCardStatus  int8   `db:"student_card_status"`
+	SelfPortrait       string `db:"self_portrait_filename"`
+	SelfPortraitStatus int8   `db:"self_portrait_status"`
+	Twibbon            string `db:"twibbon_filename"`
+	TwibbonStatus      int8   `db:"twibbon_status"`
+	Enrollment         string `db:"enrollment_filename"`
+	EnrollmentStatus   int8   `db:"enrollment_status"`
 }
