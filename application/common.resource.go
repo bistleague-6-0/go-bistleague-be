@@ -6,10 +6,13 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	_ "database/sql"
+	"encoding/json"
+	"fmt"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/go-playground/validator/v10"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
+	"google.golang.org/api/option"
 	"regexp"
 )
 
@@ -29,22 +32,28 @@ func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource
 	vld := validator.New()
 	vld.RegisterValidation("listOfMail", isListOfEmail)
 
-	storage, err := storage.NewClient(context.Background())
+	jsonCreds, err := json.Marshal(cfg.ServiceAccount)
 	if err != nil {
+		return nil, err
+	}
+	stg, err := storage.NewClient(ctx, option.WithCredentialsJSON(jsonCreds))
+	if err != nil {
+		fmt.Println(cfg.ServiceAccount)
+		fmt.Println("error kontol", err)
 		return nil, err
 	}
 
 	uploader := storageutils.ClientUploader{
-		cl:         storage,
-		bucketName: cfg.StorageConfig.BucketName,
-		projectID:  cfg.StorageConfig.ProjectID,
+		Cl:         stg,
+		ProjectID:  cfg.Storage.BucketName,
+		BucketName: cfg.Storage.ProjectID,
 	}
 
 	rsc := CommonResource{
 		Db:       db,
 		QBuilder: &dialect,
 		Vld:      vld,
-		Uploader: &uploader
+		Uploader: &uploader,
 	}
 	return &rsc, nil
 }

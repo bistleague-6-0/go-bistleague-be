@@ -2,12 +2,12 @@ package storage
 
 import (
 	"bistleague-be/model/config"
-	"github.com/gofiber/fiber/v2"
+	"bistleague-be/services/utils/storageutils"
 )
 
 type Repository struct {
 	cfg      *config.Config
-	Uploader *storageutils.ClientUploader
+	uploader *storageutils.ClientUploader
 }
 
 func New(cfg *config.Config, uploader *storageutils.ClientUploader) *Repository {

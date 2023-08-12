@@ -28,7 +28,7 @@ func NewCommonRepository(cfg *config.Config, rsc *CommonResource) (*CommonReposi
 		authRepo:    authRepo,
 		teamRepo:    teamRepo,
 		profileRepo: profileRepo,
-		storageRepo: storageRepo
+		storageRepo: storageRepo,
 	}
 	return &commonRepo, nil
 }

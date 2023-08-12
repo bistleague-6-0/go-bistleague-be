@@ -1,6 +1,7 @@
 package storageutils
 
 import (
+	"cloud.google.com/go/storage"
 	"encoding/base64"
 	"errors"
 	"math/rand"

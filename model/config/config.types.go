@@ -6,8 +6,8 @@ type Config struct {
 	Database       DatabaseConfig `json:"database"`
 	Firebase       FirebaseConfig `json:"firebase"`
 	Secret         SecretConfig   `json:"secret"`
-	ServiceAccount ServiceAccount `json: "service-account-gcp"`
-	StorageConfig  StorageConfig  `json: "storage"`
+	ServiceAccount ServiceAccount `json:"service-account-gcp"`
+	Storage        StorageConfig  `json:"storage"`
 }
 
 type SecretConfig struct {
