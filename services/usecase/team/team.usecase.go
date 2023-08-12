@@ -81,9 +81,9 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 	for _, team := range resp {
 		result.TeamName = team.TeamName
 		result.IsActive = team.IsActive
-		result.Payment = team.BuktiPembayaranURL
+		result.Payment = team.PaymentFilename
 		if result.Payment != "" {
-			result.PaymentURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.BuktiPembayaranURL)
+			result.PaymentURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.PaymentFilename)
 		}
 		result.VerificationStatusCode = team.VerificationStatus
 		result.VerificationStatus = entity.VerificationStatusMap[team.VerificationStatus]
@@ -164,7 +164,8 @@ func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocu
 		return nil, err
 	}
 	filenameWithExt := fmt.Sprintf("%s%s", filename, file.Ext)
-	if req.Document == "payment" {
+	if req.Type == "payment" {
+		fmt.Println("here")
 		err = u.repo.InsertTeamDocument(ctx, filenameWithExt, teamID)
 	} else {
 		err = u.profileRepo.UpdateUserDocument(ctx, userID, filenameWithExt, req.Type)
