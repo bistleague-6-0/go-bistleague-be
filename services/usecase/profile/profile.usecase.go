@@ -33,6 +33,7 @@ func (u *Usecase) GetUserProfile(ctx context.Context, userID string) (*dto.UserP
 		FullName:    resp.FullName,
 		Username:    resp.Username,
 		Age:         resp.Age,
+		Address:     resp.Address,
 		PhoneNumber: resp.PhoneNumber.String,
 		Institution: resp.Institution.String,
 		Major:       resp.Major.String,
@@ -48,6 +49,7 @@ func (u *Usecase) UpdateUserProfile(ctx context.Context, req dto.UpdateUserProfi
 		Email:    req.Email,
 		FullName: req.FullName,
 		Age:      req.Age,
+		Address:  req.Address,
 		PhoneNumber: sql.NullString{
 			String: req.PhoneNumber,
 		},

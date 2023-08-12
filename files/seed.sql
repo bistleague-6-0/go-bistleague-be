@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     user_age int8 default 0,
     phone_number VARCHAR(155),
     institution VARCHAR(155),
+    address TEXT DEFAULT '',
     major VARCHAR(55),
     entry_year int2 default 0,
     linkedin_url VARCHAR(100),
