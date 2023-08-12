@@ -15,7 +15,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"log"
 	"math/rand"
-	"mime/multipart"
 	"time"
 )
 
@@ -82,24 +81,40 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 	for _, team := range resp {
 		result.TeamName = team.TeamName
 		result.IsActive = team.IsActive
+		result.Payment = team.BuktiPembayaranURL
+		if result.Payment != "" {
+			result.PaymentURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.BuktiPembayaranURL)
+		}
 		result.VerificationStatusCode = team.VerificationStatus
 		result.VerificationStatus = entity.VerificationStatusMap[team.VerificationStatus]
 		if team.UserID == userID {
 			result.StudentCard = team.StudentCard
 			result.StudentCardStatusCode = team.StudentCardStatus
 			result.StudentCardStatus = entity.VerificationStatusMap[team.StudentCardStatus]
+			if result.StudentCard != "" {
+				result.StudentCardURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.StudentCard)
+			}
 
 			result.SelfPortrait = team.SelfPortrait
 			result.SelfPortraitStatusCode = team.SelfPortraitStatus
 			result.SelfPortraitStatus = entity.VerificationStatusMap[team.SelfPortraitStatus]
+			if result.SelfPortrait != "" {
+				result.SelfPortraitURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.SelfPortrait)
+			}
 
 			result.Twibbon = team.Twibbon
 			result.TwibbonStatusCode = team.TwibbonStatus
 			result.TwibbonStatus = entity.VerificationStatusMap[team.TwibbonStatus]
+			if result.Twibbon != "" {
+				result.TwibbonURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.Twibbon)
+			}
 
 			result.Enrollment = team.Enrollment
 			result.EnrollmentStatusCode = team.EnrollmentStatus
 			result.EnrollmentStatus = entity.VerificationStatusMap[team.EnrollmentStatus]
+			if result.Enrollment != "" {
+				result.EnrollmentURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.Enrollment)
+			}
 		}
 		result.Members = append(result.Members, dto.GetTeamMemberInfoResponseDTO{
 			UserID:   team.UserID,
@@ -140,7 +155,6 @@ func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocu
 	rand.Read(randFileName)
 	strRandFileName := hex.EncodeToString(randFileName)
 	filename := fmt.Sprintf("%s.%s.%s", req.Type, strRandFileName, formattedDate)
-
 	file, err := storageutils.NewBase64FromString(req.Document, filename)
 	if err != nil {
 		return nil, err
@@ -149,17 +163,14 @@ func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocu
 	if err != nil {
 		return nil, err
 	}
+	filenameWithExt := fmt.Sprintf("%s%s", filename, file.Ext)
 	if req.Document == "payment" {
-		err = u.repo.InsertTeamDocument(ctx, filename, teamID)
+		err = u.repo.InsertTeamDocument(ctx, filenameWithExt, teamID)
 	} else {
-		err = u.profileRepo.UpdateUserDocument(ctx, userID, filename, req.Type)
+		err = u.profileRepo.UpdateUserDocument(ctx, userID, filenameWithExt, req.Type)
 	}
 	return &dto.InputTeamDocumentResponseDTO{
-		DocumentName: fmt.Sprintf("%s%s", file.Name, file.Ext),
+		DocumentName: filenameWithExt,
 		DocumentURL:  docUrl,
 	}, err
-}
-
-func (u *Usecase) UploadDoc(ctx context.Context, file *multipart.FileHeader) error {
-	return nil
 }

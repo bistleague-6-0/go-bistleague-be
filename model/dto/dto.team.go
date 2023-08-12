@@ -24,22 +24,28 @@ type GetTeamInfoResponseDTO struct {
 	// Is Team Participating
 	IsActive bool `json:"is_active"`
 	// Is Team payment is verified
+	Payment                string `json:"payment_proof"`
+	PaymentURL             string `json:"payment_proof_url"`
 	VerificationStatus     string `json:"verification_status"`
 	VerificationStatusCode int8   `json:"verification_status_code"`
 
 	StudentCard           string `json:"student_card"`
+	StudentCardURL        string `json:"student_card_url"`
 	StudentCardStatus     string `json:"student_card_status"`
 	StudentCardStatusCode int8   `json:"student_card_status_code"`
 
 	SelfPortrait           string `json:"self_portrait"`
+	SelfPortraitURL        string `json:"self_portrait_url"`
 	SelfPortraitStatus     string `json:"self_portrait_status"`
 	SelfPortraitStatusCode int8   `json:"self_portrait_status_code"`
 
 	Twibbon           string `json:"twibbon"`
+	TwibbonURL        string `json:"twibbon_url"`
 	TwibbonStatus     string `json:"twibbon_status"`
 	TwibbonStatusCode int8   `json:"twibbon_status_code"`
 
 	Enrollment           string `json:"enrollment"`
+	EnrollmentURL        string `json:"enrollment_url"`
 	EnrollmentStatus     string `json:"enrollment_status"`
 	EnrollmentStatusCode int8   `json:"enrollment_status_code"`
 
