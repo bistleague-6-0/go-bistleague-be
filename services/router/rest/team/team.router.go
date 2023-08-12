@@ -107,7 +107,10 @@ func (r *Router) InsertTeamDocument(g *guard.AuthGuardContext) error {
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, err.Error())
 	}
-	filename, err := r.usecase.InsertTeamDocument(g.FiberCtx.Context(), req, g.Claims.TeamID)
+	filename, err := r.usecase.InsertTeamDocument(g.FiberCtx.Context(), req, g.Claims.TeamID, g.Claims.UserID)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, err.Error())
+	}
 	return g.ReturnSuccess(map[string]string{
 		"doc_type": req.Type,
 		"filename": filename,

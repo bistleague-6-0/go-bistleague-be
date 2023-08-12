@@ -24,8 +24,12 @@ func NewCommonRepository(cfg *config.Config, rsc *CommonResource) (*CommonReposi
 	authRepo := auth.New(cfg, rsc.Db, rsc.QBuilder)
 	teamRepo := team.New(cfg, rsc.Db, rsc.QBuilder)
 	docsRepo := document.New(cfg)
+<<<<<<< HEAD
 	profileRepo := profile.New(cfg, rsc.Db)
 	storageRepo := storage.New(cfg, rsc.Uploader)
+=======
+	profileRepo := profile.New(cfg, rsc.Db, rsc.QBuilder)
+>>>>>>> a78099f (fic docu)
 	commonRepo := CommonRepository{
 		helloRepo:   helloRepo,
 		authRepo:    authRepo,

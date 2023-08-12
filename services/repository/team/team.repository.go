@@ -69,7 +69,9 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 
 func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]entity.TeamWithUserEntity, error) {
 	query := `select 
-    u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.bukti_pembayaran_url, t.verification_status
+    u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.bukti_pembayaran_url, t.verification_status,
+    u.student_card_filename, u.student_card_status , u.self_portrait_filename, u.self_portrait_status , u.twibbon_filename, u.twibbon_status,
+    u.enrollment_filename, u.enrollment_status
 		from users u
 			left join teams t
 				on u.team_id = t.team_id
@@ -126,20 +128,10 @@ func (r *Repository) RedeemTeamCode(ctx context.Context, userID string, code str
 	return &tc, nil
 }
 
-func (r *Repository) InsertTeamDocument(ctx context.Context, doctype string, filename string, teamID string) error {
-	dbprop := map[string]string{
-		"payment":       "payment_filename",
-		"student_card":  "student_card_filename",
-		"self_portrait": "self_portrait_filename",
-		"twibbon":       "twibbon_filename",
-		"enrollment":    "enrollment_filename",
-	}
-	property, ok := dbprop[doctype]
-	if !ok {
-		return errors.New("document is not recognized")
-	}
+func (r *Repository) InsertTeamDocument(ctx context.Context, filename string, teamID string) error {
 	q := r.qb.Update("teams").Set(goqu.Record{
-		property: filename,
+		"payment_filename":    filename,
+		"verification_status": 1,
 	}).Where(goqu.C("team_id").Eq(teamID))
 	query, _, err := q.ToSQL()
 	if err != nil {

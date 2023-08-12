@@ -5,6 +5,7 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
 	"bistleague-be/services/repository/document"
+	"bistleague-be/services/repository/profile"
 	"bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
 	"context"
@@ -17,15 +18,17 @@ import (
 )
 
 type Usecase struct {
-	cfg      *config.Config
-	repo     *team.Repository
-	docsRepo *document.Repository
+	cfg         *config.Config
+	repo        *team.Repository
+	docsRepo    *document.Repository
+	profileRepo *profile.Repository
 }
 
-func New(cfg *config.Config, repo *team.Repository, docsRepo *document.Repository) *Usecase {
+func New(cfg *config.Config, repo *team.Repository, docsRepo *document.Repository, profileRepo *profile.Repository) *Usecase {
 	return &Usecase{
-		cfg:  cfg,
-		repo: repo,
+		cfg:         cfg,
+		repo:        repo,
+		profileRepo: profileRepo,
 	}
 }
 
@@ -110,14 +113,21 @@ func (u *Usecase) RedeemTeamCode(ctx context.Context, req dto.RedeemTeamCodeRequ
 	return jwtToken, nil
 }
 
-func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocumentRequestDTO, teamID string) (string, error) {
+func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocumentRequestDTO, teamID string, userID string) (string, error) {
 	currentDate := time.Now()
 	formattedDate := currentDate.Format("2006-01-02")
 	filename := fmt.Sprintf("%s.%s.%s", req.Type, teamID, formattedDate)
 
 	// upload file
-	err := u.docsRepo.UploadTeamDocument(ctx, req.Type, filename, teamID)
+	err := u.docsRepo.UploadTeamDocument(ctx, req.Type, filename, teamID, req.Document)
+	if err != nil {
+		return "", err
+	}
 	//update db
-	err = u.repo.InsertTeamDocument(ctx, req.Type, filename, teamID)
+	if req.Document == "payment" {
+		err = u.repo.InsertTeamDocument(ctx, filename, teamID)
+	} else {
+		err = u.profileRepo.UpdateUserDocument(ctx, userID, filename, req.Type)
+	}
 	return filename, err
 }

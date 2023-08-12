@@ -4,18 +4,21 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/entity"
 	"context"
+	"github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
 )
 
 type Repository struct {
 	cfg *config.Config
 	db  *sqlx.DB
+	qb  *goqu.DialectWrapper
 }
 
-func New(cfg *config.Config, db *sqlx.DB) *Repository {
+func New(cfg *config.Config, db *sqlx.DB, qb *goqu.DialectWrapper) *Repository {
 	return &Repository{
 		cfg: cfg,
 		db:  db,
+		qb:  qb,
 	}
 }
 
@@ -36,5 +39,36 @@ func (r *Repository) UpdateUserProfile(ctx context.Context, req entity.UserEntit
 SET email = $2, full_name = $3, user_age = $4, phone_number = $5, institution =$6, 
     major =$7, entry_year =$8, linkedin_url =$9, line_id = $10 WHERE uid = $1`
 	_, err := r.db.ExecContext(ctx, q, req.UID, req.Email, req.FullName, req.Age, req.PhoneNumber.String, req.Institution.String, req.Major.String, req.EntryYear, req.LinkedInURL.String, req.LineID.String)
+	return err
+}
+
+func (r *Repository) UpdateUserDocument(ctx context.Context, userID string, filename string, doctype string) error {
+	q := r.qb.Update("users").Where(goqu.C("uid").Eq(userID))
+	if doctype == "student_card" {
+		q = q.Set(goqu.Record{
+			"student_card_filename": filename,
+			"student_card_status":   1,
+		})
+	} else if doctype == "self_portrait" {
+		q = q.Set(goqu.Record{
+			"self_portrait_filename": filename,
+			"self_portrait_status":   1,
+		})
+	} else if doctype == "twibbon" {
+		q = q.Set(goqu.Record{
+			"twibbon_filename": filename,
+			"twibbon_status":   1,
+		})
+	} else {
+		q = q.Set(goqu.Record{
+			"enrollment_filename": filename,
+			"enrollment_status":   1,
+		})
+	}
+	query, _, err := q.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = r.db.ExecContext(ctx, query)
 	return err
 }
