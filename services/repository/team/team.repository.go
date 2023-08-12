@@ -71,10 +71,12 @@ func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]e
 	query := `select 
     u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.payment_filename, t.verification_status,
     u.student_card_filename, u.student_card_status , u.self_portrait_filename, u.self_portrait_status , u.twibbon_filename, u.twibbon_status,
-    u.enrollment_filename, u.enrollment_status
+    u.enrollment_filename, u.enrollment_status, tc.code
 		from users u
 			left join teams t
 				on u.team_id = t.team_id
+			left join teams_code tc
+				on u.team_id = tc.team_id
 		where u.team_id = $1 LIMIT 3`
 	resp := []entity.TeamWithUserEntity{}
 	err := r.db.SelectContext(ctx, &resp, query, teamID)

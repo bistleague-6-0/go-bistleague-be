@@ -19,15 +19,16 @@ type CreateTeamResponseDTO struct {
 }
 
 type GetTeamInfoResponseDTO struct {
-	TeamID   string `json:"team_id"`
-	TeamName string `json:"team_name"`
+	TeamID         string `json:"team_id"`
+	TeamName       string `json:"team_name"`
+	TeamRedeemCode string `json:"team_redeem_code"`
 	// Is Team Participating
 	IsActive bool `json:"is_active"`
 	// Is Team payment is verified
-	Payment                string `json:"payment_proof"`
-	PaymentURL             string `json:"payment_proof_url"`
-	VerificationStatus     string `json:"verification_status"`
-	VerificationStatusCode int8   `json:"verification_status_code"`
+	Payment           string `json:"payment_proof"`
+	PaymentURL        string `json:"payment_proof_url"`
+	PaymentStatus     string `json:"payment_status"`
+	PaymentStatusCode int8   `json:"payment_status_code"`
 
 	StudentCard           string `json:"student_card"`
 	StudentCardURL        string `json:"student_card_url"`
