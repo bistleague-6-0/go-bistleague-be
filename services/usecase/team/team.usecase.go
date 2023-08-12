@@ -4,31 +4,34 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
-	"bistleague-be/services/repository/document"
 	"bistleague-be/services/repository/profile"
+	"bistleague-be/services/repository/storage"
 	"bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
+	"bistleague-be/services/utils/storageutils"
 	"context"
 	"encoding/hex"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"log"
 	"math/rand"
+	"mime/multipart"
 	"time"
 )
 
 type Usecase struct {
 	cfg         *config.Config
 	repo        *team.Repository
-	docsRepo    *document.Repository
 	profileRepo *profile.Repository
+	storageRepo *storage.Repository
 }
 
-func New(cfg *config.Config, repo *team.Repository, docsRepo *document.Repository, profileRepo *profile.Repository) *Usecase {
+func New(cfg *config.Config, repo *team.Repository, storageRepo *storage.Repository, profileRepo *profile.Repository) *Usecase {
 	return &Usecase{
 		cfg:         cfg,
 		repo:        repo,
 		profileRepo: profileRepo,
+		storageRepo: storageRepo,
 	}
 }
 
@@ -130,21 +133,33 @@ func (u *Usecase) RedeemTeamCode(ctx context.Context, req dto.RedeemTeamCodeRequ
 	return jwtToken, nil
 }
 
-func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocumentRequestDTO, teamID string, userID string) (string, error) {
+func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocumentRequestDTO, teamID string, userID string) (*dto.InputTeamDocumentResponseDTO, error) {
 	currentDate := time.Now()
 	formattedDate := currentDate.Format("2006-01-02")
-	filename := fmt.Sprintf("%s.%s.%s", req.Type, teamID, formattedDate)
+	randFileName := make([]byte, 4)
+	rand.Read(randFileName)
+	strRandFileName := hex.EncodeToString(randFileName)
+	filename := fmt.Sprintf("%s.%s.%s", req.Type, strRandFileName, formattedDate)
 
-	// upload file
-	err := u.docsRepo.UploadTeamDocument(ctx, req.Type, filename, teamID, req.Document)
+	file, err := storageutils.NewBase64FromString(req.Document, filename)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	//update db
+	docUrl, err := u.storageRepo.UploadDocument(ctx, file)
+	if err != nil {
+		return nil, err
+	}
 	if req.Document == "payment" {
 		err = u.repo.InsertTeamDocument(ctx, filename, teamID)
 	} else {
 		err = u.profileRepo.UpdateUserDocument(ctx, userID, filename, req.Type)
 	}
-	return filename, err
+	return &dto.InputTeamDocumentResponseDTO{
+		DocumentName: fmt.Sprintf("%s%s", file.Name, file.Ext),
+		DocumentURL:  docUrl,
+	}, err
+}
+
+func (u *Usecase) UploadDoc(ctx context.Context, file *multipart.FileHeader) error {
+	return nil
 }

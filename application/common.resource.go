@@ -2,7 +2,6 @@ package application
 
 import (
 	"bistleague-be/model/config"
-	"bistleague-be/services/utils/storageutils"
 	"cloud.google.com/go/storage"
 	"context"
 	_ "database/sql"
@@ -20,7 +19,7 @@ type CommonResource struct {
 	Db       *sqlx.DB
 	QBuilder *goqu.DialectWrapper
 	Vld      *validator.Validate
-	Uploader *storageutils.ClientUploader
+	bucket   *storage.BucketHandle
 }
 
 func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource, error) {
@@ -37,24 +36,18 @@ func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource
 	if err != nil {
 		return nil, err
 	}
-	stg, err := storage.NewClient(ctx, option.WithCredentialsJSON(jsonCreds))
+	storageCli, err := storage.NewClient(ctx, option.WithCredentialsJSON(jsonCreds))
 	if err != nil {
 		fmt.Println(cfg.ServiceAccount)
 		fmt.Println("error kontol", err)
 		return nil, err
 	}
-
-	uploader := storageutils.ClientUploader{
-		Cl:         stg,
-		ProjectID:  cfg.Storage.BucketName,
-		BucketName: cfg.Storage.ProjectID,
-	}
-
+	bucket := storageCli.Bucket(cfg.Storage.BucketName)
 	rsc := CommonResource{
 		Db:       db,
 		QBuilder: &dialect,
 		Vld:      vld,
-		Uploader: &uploader,
+		bucket:   bucket,
 	}
 	return &rsc, nil
 }

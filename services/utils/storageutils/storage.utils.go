@@ -1,19 +1,12 @@
 package storageutils
 
 import (
-	"cloud.google.com/go/storage"
 	"encoding/base64"
 	"errors"
 	"math/rand"
 	"strings"
 	"time"
 )
-
-type ClientUploader struct {
-	Cl         *storage.Client
-	ProjectID  string
-	BucketName string
-}
 
 var signatures = map[string]string{
 	"JVBERi0":     "application/pdf",
@@ -23,7 +16,20 @@ var signatures = map[string]string{
 
 type Base64File struct {
 	Name     string
+	Ext      string
 	Contents []byte
+}
+
+func NewBase64FromString(base64File string, filename string) (*Base64File, error) {
+	data, ext, err := DecodeBase64WithFormat(base64File)
+	if err != nil {
+		return nil, err
+	}
+	return &Base64File{
+		Name:     filename,
+		Ext:      ext,
+		Contents: data,
+	}, nil
 }
 
 func NewBase64File(name string, contents []byte) *Base64File {

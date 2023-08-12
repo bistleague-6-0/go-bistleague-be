@@ -52,3 +52,9 @@ type GetTeamMemberInfoResponseDTO struct {
 	Fullname string `json:"fullname"`
 	IsLeader bool   `json:"is_leader"`
 }
+
+type InputTeamDocumentResponseDTO struct {
+	DocumentType string `json:"doc_type"`
+	DocumentName string `json:"doc_name"`
+	DocumentURL  string `json:"doc_url"`
+}

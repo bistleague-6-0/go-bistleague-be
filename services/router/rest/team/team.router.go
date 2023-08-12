@@ -31,6 +31,7 @@ func (r *Router) Register(app *fiber.App) {
 	group.Get("", guard.AuthGuard(r.cfg, r.GetTeamInformation)...)
 	group.Post("/redeem", guard.AuthGuard(r.cfg, r.RedeemTeamCode)...)
 	group.Post("/document", guard.AuthGuard(r.cfg, r.InsertTeamDocument)...)
+	group.Post("/document/upload", guard.DefaultGuard(r.TestUploadDoc))
 }
 
 // MARK : NEED TO UPDATE
@@ -107,12 +108,18 @@ func (r *Router) InsertTeamDocument(g *guard.AuthGuardContext) error {
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, err.Error())
 	}
-	filename, err := r.usecase.InsertTeamDocument(g.FiberCtx.Context(), req, g.Claims.TeamID, g.Claims.UserID)
+	resp, err := r.usecase.InsertTeamDocument(g.FiberCtx.Context(), req, g.Claims.TeamID, g.Claims.UserID)
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, err.Error())
 	}
-	return g.ReturnSuccess(map[string]string{
-		"doc_type": req.Type,
-		"filename": filename,
-	})
+	resp.DocumentType = req.Type
+	return g.ReturnSuccess(resp)
+}
+
+func (r *Router) TestUploadDoc(g *guard.GuardContext) error {
+	file, err := g.FiberCtx.FormFile("file")
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "file not found")
+	}
+	return r.usecase.UploadDoc(g.FiberCtx.Context(), file)
 }
