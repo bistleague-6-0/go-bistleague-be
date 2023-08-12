@@ -19,8 +19,9 @@ type CreateTeamResponseDTO struct {
 }
 
 type GetTeamInfoResponseDTO struct {
-	TeamID   string `json:"team_id"`
-	TeamName string `json:"team_name"`
+	TeamID         string `json:"team_id"`
+	TeamName       string `json:"team_name"`
+	TeamRedeemCode string `json:"team_redeem_code"`
 	// Is Team Participating
 	IsActive bool `json:"is_active"`
 	// Is Team payment is verified

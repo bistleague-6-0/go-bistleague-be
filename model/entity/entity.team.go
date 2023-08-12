@@ -38,4 +38,5 @@ type TeamWithUserEntity struct {
 	TwibbonStatus      int8   `db:"twibbon_status"`
 	Enrollment         string `db:"enrollment_filename"`
 	EnrollmentStatus   int8   `db:"enrollment_status"`
+	RedeemCode         string `db:"code"`
 }

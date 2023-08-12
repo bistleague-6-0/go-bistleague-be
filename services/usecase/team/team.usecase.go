@@ -80,13 +80,14 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 	result.TeamID = teamID
 	for _, team := range resp {
 		result.TeamName = team.TeamName
+		result.TeamRedeemCode = team.RedeemCode
 		result.IsActive = team.IsActive
 		result.Payment = team.PaymentFilename
 		if result.Payment != "" {
 			result.PaymentURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.PaymentFilename)
 		}
-		result.VerificationStatusCode = team.VerificationStatus
-		result.VerificationStatus = entity.VerificationStatusMap[team.VerificationStatus]
+		result.PaymentStatusCode = team.VerificationStatus
+		result.PaymentStatus = entity.VerificationStatusMap[team.VerificationStatus]
 		if team.UserID == userID {
 			result.StudentCard = team.StudentCard
 			result.StudentCardStatusCode = team.StudentCardStatus
