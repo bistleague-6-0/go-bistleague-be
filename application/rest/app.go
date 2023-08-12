@@ -30,6 +30,7 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 		AllowOrigins: "*",
 		AllowHeaders: "Origin, Content-Type, Accept, Bearer",
 	}))
+
 	resource, err := application.NewCommonResource(cfg, ctx)
 	if err != nil {
 		return nil, err
