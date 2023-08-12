@@ -4,10 +4,11 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
+	"net/http"
+
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"net/http"
 )
 
 type GuardContext struct {
