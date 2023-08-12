@@ -13,6 +13,7 @@ type UserEntity struct {
 	Username    string         `db:"username"`
 	FullName    string         `db:"full_name"`
 	Age         uint64         `db:"user_age"`
+	Address     string         `db:"address"`
 	PhoneNumber sql.NullString `db:"phone_number"`
 	Institution sql.NullString `db:"institution"`
 	Major       sql.NullString `db:"major"`

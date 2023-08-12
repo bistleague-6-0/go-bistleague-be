@@ -4,6 +4,7 @@ type UpdateUserProfileRequestDTO struct {
 	Email       string `json:"email" validate:"required,email"`
 	FullName    string `json:"full_name" validate:"required"`
 	Age         uint64 `json:"age" validate:"required"`
+	Address     string `json:"address" validate:"required"`
 	PhoneNumber string `json:"phone_number" validate:"required"`
 	Institution string `json:"institution" validate:"required"`
 	Major       string `json:"major" validate:"required"`
@@ -19,6 +20,7 @@ type UserProfileResponseDTO struct {
 	FullName    string `json:"full_name"`
 	Age         uint64 `json:"age"`
 	Username    string `json:"username"`
+	Address     string `json:"address"`
 	PhoneNumber string `json:"phone_number"`
 	Institution string `json:"institution"`
 	Major       string `json:"major"`
