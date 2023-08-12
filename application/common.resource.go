@@ -2,6 +2,8 @@ package application
 
 import (
 	"bistleague-be/model/config"
+	"bistleague-be/services/utils/storageutils"
+	"cloud.google.com/go/storage"
 	"context"
 	_ "database/sql"
 	"github.com/doug-martin/goqu/v9"
@@ -15,6 +17,7 @@ type CommonResource struct {
 	Db       *sqlx.DB
 	QBuilder *goqu.DialectWrapper
 	Vld      *validator.Validate
+	Uploader *storageutils.ClientUploader
 }
 
 func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource, error) {
@@ -25,10 +28,23 @@ func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource
 	dialect := goqu.Dialect("postgres")
 	vld := validator.New()
 	vld.RegisterValidation("listOfMail", isListOfEmail)
+
+	storage, err := storage.NewClient(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	uploader := storageutils.ClientUploader{
+		cl:         storage,
+		bucketName: cfg.StorageConfig.BucketName,
+		projectID:  cfg.StorageConfig.ProjectID,
+	}
+
 	rsc := CommonResource{
 		Db:       db,
 		QBuilder: &dialect,
 		Vld:      vld,
+		Uploader: &uploader
 	}
 	return &rsc, nil
 }
