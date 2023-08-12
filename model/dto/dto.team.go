@@ -4,10 +4,14 @@ type RedeemTeamCodeRequestDTO struct {
 	RedeemCode string `json:"redeem_code" validate:"required"`
 }
 
+type InsertTeamDocumentRequestDTO struct {
+	Type     string `json:"doc_type" validate:"required,isTeamDoc"`
+	Document string `json:"document" validate:"base64"`
+}
+
 type CreateTeamRequestDTO struct {
 	TeamName     string   `json:"team_name" validate:"required,min=8,max=20"`
 	MemberEmails []string `json:"emails" validate:"required,listOfMail"`
-	PaymentProof string   `json:"payment_proof" validate:"base64"`
 }
 type CreateTeamResponseDTO struct {
 	TeamRedeemToken string `json:"team_redeem_token"`
@@ -20,9 +24,26 @@ type GetTeamInfoResponseDTO struct {
 	// Is Team Participating
 	IsActive bool `json:"is_active"`
 	// Is Team payment is verified
-	VerificationStatus     string                         `json:"verification_status"`
-	VerificationStatusCode int8                           `json:"verification_status_code"`
-	Members                []GetTeamMemberInfoResponseDTO `json:"members"`
+	VerificationStatus     string `json:"verification_status"`
+	VerificationStatusCode int8   `json:"verification_status_code"`
+
+	StudentCard           string `json:"student_card"`
+	StudentCardStatus     string `json:"student_card_status"`
+	StudentCardStatusCode int8   `json:"student_card_status_code"`
+
+	SelfPortrait           string `json:"self_portrait"`
+	SelfPortraitStatus     string `json:"self_portrait_status"`
+	SelfPortraitStatusCode int8   `json:"self_portrait_status_code"`
+
+	Twibbon           string `json:"twibbon"`
+	TwibbonStatus     string `json:"twibbon_status"`
+	TwibbonStatusCode int8   `json:"twibbon_status_code"`
+
+	Enrollment           string `json:"enrollment"`
+	EnrollmentStatus     string `json:"enrollment_status"`
+	EnrollmentStatusCode int8   `json:"enrollment_status_code"`
+
+	Members []GetTeamMemberInfoResponseDTO `json:"members"`
 }
 
 type GetTeamMemberInfoResponseDTO struct {
@@ -30,4 +51,10 @@ type GetTeamMemberInfoResponseDTO struct {
 	Username string `json:"username"`
 	Fullname string `json:"fullname"`
 	IsLeader bool   `json:"is_leader"`
+}
+
+type InputTeamDocumentResponseDTO struct {
+	DocumentType string `json:"doc_type"`
+	DocumentName string `json:"doc_name"`
+	DocumentURL  string `json:"doc_url"`
 }

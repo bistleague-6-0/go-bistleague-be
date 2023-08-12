@@ -30,6 +30,8 @@ func (r *Router) Register(app *fiber.App) {
 	group.Post("", guard.AuthGuard(r.cfg, r.CreateTeam)...)
 	group.Get("", guard.AuthGuard(r.cfg, r.GetTeamInformation)...)
 	group.Post("/redeem", guard.AuthGuard(r.cfg, r.RedeemTeamCode)...)
+	group.Post("/document", guard.AuthGuard(r.cfg, r.InsertTeamDocument)...)
+	group.Post("/document/upload", guard.DefaultGuard(r.TestUploadDoc))
 }
 
 // MARK : NEED TO UPDATE
@@ -61,7 +63,7 @@ func (r *Router) GetTeamInformation(g *guard.AuthGuardContext) error {
 	if g.Claims.TeamID == "" {
 		return g.ReturnError(http.StatusNotFound, "user is not registered at any team")
 	}
-	resp, err := r.usecase.GetTeamInformation(g.FiberCtx.Context(), g.Claims.TeamID)
+	resp, err := r.usecase.GetTeamInformation(g.FiberCtx.Context(), g.Claims.TeamID, g.Claims.UserID)
 	if err != nil {
 		log.Println(err)
 		return g.ReturnError(http.StatusNotFound, "cannot find team information")
@@ -94,4 +96,30 @@ func (r *Router) RedeemTeamCode(g *guard.AuthGuardContext) error {
 			"jwt_token": jwtToken,
 		},
 	})
+}
+
+func (r *Router) InsertTeamDocument(g *guard.AuthGuardContext) error {
+	req := dto.InsertTeamDocumentRequestDTO{}
+	err := g.FiberCtx.BodyParser(&req)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
+	}
+	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, err.Error())
+	}
+	resp, err := r.usecase.InsertTeamDocument(g.FiberCtx.Context(), req, g.Claims.TeamID, g.Claims.UserID)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, err.Error())
+	}
+	resp.DocumentType = req.Type
+	return g.ReturnSuccess(resp)
+}
+
+func (r *Router) TestUploadDoc(g *guard.GuardContext) error {
+	file, err := g.FiberCtx.FormFile("file")
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "file not found")
+	}
+	return r.usecase.UploadDoc(g.FiberCtx.Context(), file)
 }

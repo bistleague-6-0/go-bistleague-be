@@ -2,8 +2,9 @@ package entity
 
 var VerificationStatusMap = map[int8]string{
 	-1: "rejected",
-	0:  "pending",
-	1:  "accepted",
+	0:  "no file",
+	1:  "under review",
+	2:  "accepted",
 }
 
 type TeamEntity struct {
@@ -25,7 +26,15 @@ type TeamRedeemCodeEntity struct {
 
 type TeamWithUserEntity struct {
 	TeamEntity
-	UserID   string `db:"uid"`
-	Username string `db:"username"`
-	FullName string `db:"full_name"`
+	UserID             string `db:"uid"`
+	Username           string `db:"username"`
+	FullName           string `db:"full_name"`
+	StudentCard        string `db:"student_card_filename"`
+	StudentCardStatus  int8   `db:"student_card_status"`
+	SelfPortrait       string `db:"self_portrait_filename"`
+	SelfPortraitStatus int8   `db:"self_portrait_status"`
+	Twibbon            string `db:"twibbon_filename"`
+	TwibbonStatus      int8   `db:"twibbon_status"`
+	Enrollment         string `db:"enrollment_filename"`
+	EnrollmentStatus   int8   `db:"enrollment_status"`
 }

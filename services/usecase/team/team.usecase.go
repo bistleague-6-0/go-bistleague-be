@@ -4,34 +4,41 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
+	"bistleague-be/services/repository/profile"
+	"bistleague-be/services/repository/storage"
 	"bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
+	"bistleague-be/services/utils/storageutils"
 	"context"
 	"encoding/hex"
+	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"log"
 	"math/rand"
+	"mime/multipart"
 	"time"
 )
 
 type Usecase struct {
-	cfg  *config.Config
-	repo *team.Repository
+	cfg         *config.Config
+	repo        *team.Repository
+	profileRepo *profile.Repository
+	storageRepo *storage.Repository
 }
 
-func New(cfg *config.Config, repo *team.Repository) *Usecase {
+func New(cfg *config.Config, repo *team.Repository, storageRepo *storage.Repository, profileRepo *profile.Repository) *Usecase {
 	return &Usecase{
-		cfg:  cfg,
-		repo: repo,
+		cfg:         cfg,
+		repo:        repo,
+		profileRepo: profileRepo,
+		storageRepo: storageRepo,
 	}
 }
 
 func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, teamLeaderID string) (*dto.CreateTeamResponseDTO, error) {
 	team := entity.TeamEntity{
-		TeamName:     req.TeamName,
-		TeamLeaderID: teamLeaderID,
-		// MARK : PROCESS THIS FIRST
-		//BuktiPembayaranURL: req.PaymentProof,
+		TeamName:        req.TeamName,
+		TeamLeaderID:    teamLeaderID,
 		TeamMemberMails: req.MemberEmails,
 	}
 
@@ -65,7 +72,7 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 	}, nil
 }
 
-func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string) (*dto.GetTeamInfoResponseDTO, error) {
+func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID string) (*dto.GetTeamInfoResponseDTO, error) {
 	resp, err := u.repo.GetTeamInformation(ctx, teamID)
 	if err != nil {
 		return nil, err
@@ -77,6 +84,23 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string) (*dto.G
 		result.IsActive = team.IsActive
 		result.VerificationStatusCode = team.VerificationStatus
 		result.VerificationStatus = entity.VerificationStatusMap[team.VerificationStatus]
+		if team.UserID == userID {
+			result.StudentCard = team.StudentCard
+			result.StudentCardStatusCode = team.StudentCardStatus
+			result.StudentCardStatus = entity.VerificationStatusMap[team.StudentCardStatus]
+
+			result.SelfPortrait = team.SelfPortrait
+			result.SelfPortraitStatusCode = team.SelfPortraitStatus
+			result.SelfPortraitStatus = entity.VerificationStatusMap[team.SelfPortraitStatus]
+
+			result.Twibbon = team.Twibbon
+			result.TwibbonStatusCode = team.TwibbonStatus
+			result.TwibbonStatus = entity.VerificationStatusMap[team.TwibbonStatus]
+
+			result.Enrollment = team.Enrollment
+			result.EnrollmentStatusCode = team.EnrollmentStatus
+			result.EnrollmentStatus = entity.VerificationStatusMap[team.EnrollmentStatus]
+		}
 		result.Members = append(result.Members, dto.GetTeamMemberInfoResponseDTO{
 			UserID:   team.UserID,
 			Username: team.Username,
@@ -107,4 +131,35 @@ func (u *Usecase) RedeemTeamCode(ctx context.Context, req dto.RedeemTeamCodeRequ
 		return "", err
 	}
 	return jwtToken, nil
+}
+
+func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocumentRequestDTO, teamID string, userID string) (*dto.InputTeamDocumentResponseDTO, error) {
+	currentDate := time.Now()
+	formattedDate := currentDate.Format("2006-01-02")
+	randFileName := make([]byte, 4)
+	rand.Read(randFileName)
+	strRandFileName := hex.EncodeToString(randFileName)
+	filename := fmt.Sprintf("%s.%s.%s", req.Type, strRandFileName, formattedDate)
+
+	file, err := storageutils.NewBase64FromString(req.Document, filename)
+	if err != nil {
+		return nil, err
+	}
+	docUrl, err := u.storageRepo.UploadDocument(ctx, file)
+	if err != nil {
+		return nil, err
+	}
+	if req.Document == "payment" {
+		err = u.repo.InsertTeamDocument(ctx, filename, teamID)
+	} else {
+		err = u.profileRepo.UpdateUserDocument(ctx, userID, filename, req.Type)
+	}
+	return &dto.InputTeamDocumentResponseDTO{
+		DocumentName: fmt.Sprintf("%s%s", file.Name, file.Ext),
+		DocumentURL:  docUrl,
+	}, err
+}
+
+func (u *Usecase) UploadDoc(ctx context.Context, file *multipart.FileHeader) error {
+	return nil
 }
