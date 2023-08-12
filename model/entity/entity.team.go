@@ -12,6 +12,7 @@ type TeamEntity struct {
 	TeamName           string   `db:"team_name"`
 	TeamLeaderID       string   `db:"team_leader_id"`
 	BuktiPembayaranURL string   `db:"bukti_pembayaran_url"`
+	PaymentFilename    string   `db:"payment_filename"`
 	IsVerified         bool     `db:"is_verified"`
 	TeamMemberMails    []string `db:"team_member_mails"`
 	IsActive           bool     `db:"is_active"`

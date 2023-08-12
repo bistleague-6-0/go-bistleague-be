@@ -29,6 +29,6 @@ func (r *Repository) UploadDocument(ctx context.Context, file *storageutils.Base
 	if err := wc.Close(); err != nil {
 		return "", fmt.Errorf("Writer.Close: %v", err)
 	}
-	fileURL := fmt.Sprintf("https://storage.googleapis.com/%s/%s", r.cfg.Storage.BucketName, filename)
+	fileURL := fmt.Sprintf(r.cfg.Storage.StorageURlBase, r.cfg.Storage.BucketName, filename)
 	return fileURL, nil
 }

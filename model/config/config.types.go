@@ -46,6 +46,7 @@ type ServiceAccount struct {
 }
 
 type StorageConfig struct {
-	ProjectID  string `json:"projectID"`
-	BucketName string `json:"bucketName"`
+	StorageURlBase string `json:"storage_url_base"`
+	ProjectID      string `json:"projectID"`
+	BucketName     string `json:"bucketName"`
 }

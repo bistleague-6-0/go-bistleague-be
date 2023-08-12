@@ -38,7 +38,7 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 
 	// create team
 	query := `INSERT INTO teams (team_name, team_leader_id, team_member_mails)
-			  VALUES ($1, $2, $3, $4) returning team_id`
+			  VALUES ($1, $2, $3) returning team_id`
 	err = tx.GetContext(ctx, &teamID, query, newTeam.TeamName, newTeam.TeamLeaderID, newTeam.TeamMemberMails)
 	if err != nil {
 		tx.Rollback()
@@ -69,7 +69,7 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 
 func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]entity.TeamWithUserEntity, error) {
 	query := `select 
-    u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.bukti_pembayaran_url, t.verification_status,
+    u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.payment_filename, t.verification_status,
     u.student_card_filename, u.student_card_status , u.self_portrait_filename, u.self_portrait_status , u.twibbon_filename, u.twibbon_status,
     u.enrollment_filename, u.enrollment_status
 		from users u
