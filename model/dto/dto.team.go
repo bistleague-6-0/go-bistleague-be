@@ -54,10 +54,12 @@ type GetTeamInfoResponseDTO struct {
 }
 
 type GetTeamMemberInfoResponseDTO struct {
-	UserID   string `json:"user_id"`
-	Username string `json:"username"`
-	Fullname string `json:"fullname"`
-	IsLeader bool   `json:"is_leader"`
+	UserID            string `json:"user_id"`
+	Username          string `json:"username"`
+	Fullname          string `json:"fullname"`
+	IsLeader          bool   `json:"is_leader"`
+	IsDocVerified     bool   `json:"is_doc_verified"`
+	IsProfileVerified bool   `json:"is_profile_verified"`
 }
 
 type InputTeamDocumentResponseDTO struct {

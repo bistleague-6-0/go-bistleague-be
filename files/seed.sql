@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS users (
     twibbon_status INT DEFAULT 0,
     enrollment_filename VARCHAR(155) DEFAULT '',
     enrollment_status INT DEFAULT 0,
+    is_doc_verified boolean default false,
+    is_profile_verified boolean default false,
     inserted_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp
 );

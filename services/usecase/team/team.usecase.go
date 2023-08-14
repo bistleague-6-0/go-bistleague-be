@@ -118,10 +118,12 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			}
 		}
 		result.Members = append(result.Members, dto.GetTeamMemberInfoResponseDTO{
-			UserID:   team.UserID,
-			Username: team.Username,
-			Fullname: team.FullName,
-			IsLeader: team.TeamLeaderID == team.UserID,
+			UserID:            team.UserID,
+			Username:          team.Username,
+			Fullname:          team.FullName,
+			IsLeader:          team.TeamLeaderID == team.UserID,
+			IsDocVerified:     team.IsDocVerified,
+			IsProfileVerified: team.IsProfileVerified,
 		})
 	}
 	return &result, nil
@@ -166,7 +168,6 @@ func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocu
 	}
 	filenameWithExt := fmt.Sprintf("%s%s", filename, file.Ext)
 	if req.Type == "payment" {
-		fmt.Println("here")
 		err = u.repo.InsertTeamDocument(ctx, filenameWithExt, teamID)
 	} else {
 		err = u.profileRepo.UpdateUserDocument(ctx, userID, filenameWithExt, req.Type)
