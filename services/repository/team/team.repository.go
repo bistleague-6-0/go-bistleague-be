@@ -69,7 +69,7 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 
 func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]entity.TeamWithUserEntity, error) {
 	query := `select 
-    u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.payment_filename, t.verification_status,
+    u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.payment_filename, t.verification_status, u.is_profile_verified, u.is_doc_verified,
     u.student_card_filename, u.student_card_status , u.self_portrait_filename, u.self_portrait_status , u.twibbon_filename, u.twibbon_status,
     u.enrollment_filename, u.enrollment_status, tc.code
 		from users u
