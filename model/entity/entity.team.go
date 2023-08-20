@@ -30,6 +30,8 @@ type TeamWithUserEntity struct {
 	UserID             string `db:"uid"`
 	Username           string `db:"username"`
 	FullName           string `db:"full_name"`
+	IsDocVerified      bool   `db:"is_doc_verified"`
+	IsProfileVerified  bool   `db:"is_profile_verified"`
 	StudentCard        string `db:"student_card_filename"`
 	StudentCardStatus  int8   `db:"student_card_status"`
 	SelfPortrait       string `db:"self_portrait_filename"`
