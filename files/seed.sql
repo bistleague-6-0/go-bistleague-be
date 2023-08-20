@@ -34,7 +34,9 @@ CREATE TABLE IF NOT EXISTS teams(
     payment_filename VARCHAR(155) DEFAULT '',
     verification_status INT DEFAULT 0,
     team_member_mails TEXT[],
-    is_active boolean default true
+    is_active boolean default true,
+    submission_1_filename VARCHAR(155) DEFAULT '',
+    submission_2_filename VARCHAR(155) DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS teams_code(
