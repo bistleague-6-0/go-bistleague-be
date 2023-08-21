@@ -5,6 +5,7 @@ import (
 	"bistleague-be/model/entity"
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/net/context"
@@ -37,10 +38,29 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 	}
 
 	// create team
-	query := `INSERT INTO teams (team_name, team_leader_id, team_member_mails)
+	q1 := `INSERT INTO teams (team_name, team_leader_id, team_member_mails)
 			  VALUES ($1, $2, $3) returning team_id`
-	err = tx.GetContext(ctx, &teamID, query, newTeam.TeamName, newTeam.TeamLeaderID, newTeam.TeamMemberMails)
+	err = tx.GetContext(ctx, &teamID, q1, newTeam.TeamName, newTeam.TeamLeaderID, newTeam.TeamMemberMails)
 	if err != nil {
+		tx.Rollback()
+		return "", err
+	}
+	fmt.Println(teamID)
+
+	// create team token
+	q3 := "INSERT INTO teams_code(team_id, code) VALUES ($1, $2)"
+	_, err = tx.ExecContext(ctx, q3, teamID.Id, redeemToken)
+	if err != nil {
+		fmt.Println("err 54", err)
+		tx.Rollback()
+		return "", err
+	}
+
+	// create team docs table
+	q1two := `INSERT INTO teams_docs(team_id) VALUES ($1)`
+	_, err = tx.ExecContext(ctx, q1two, teamID.Id)
+	if err != nil {
+		fmt.Println("err 63", err)
 		tx.Rollback()
 		return "", err
 	}
@@ -48,14 +68,6 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 	// update user's team id
 	q2 := "UPDATE users SET team_id = $1 WHERE uid = $2"
 	_, err = tx.ExecContext(ctx, q2, teamID.Id, newTeam.TeamLeaderID)
-	if err != nil {
-		tx.Rollback()
-		return "", err
-	}
-
-	// create team token
-	q3 := "INSERT INTO teams_code(team_id, code) VALUES ($1, $2)"
-	_, err = tx.ExecContext(ctx, q3, teamID.Id, redeemToken)
 	if err != nil {
 		tx.Rollback()
 		return "", err
@@ -68,16 +80,22 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 }
 
 func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]entity.TeamWithUserEntity, error) {
-	query := `select 
-    u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.payment_filename, t.verification_status, u.is_profile_verified, u.is_doc_verified,
-    u.student_card_filename, u.student_card_status , u.self_portrait_filename, u.self_portrait_status , u.twibbon_filename, u.twibbon_status,
-    u.enrollment_filename, u.enrollment_status, tc.code
-		from users u
-			left join teams t
-				on u.team_id = t.team_id
-			left join teams_code tc
-				on u.team_id = tc.team_id
-		where u.team_id = $1 LIMIT 3`
+	query := `select
+    t.team_id, t.team_name, t.team_leader_id, tc.code,
+    td.payment_filename, td.payment_url, td.payment_status,
+    u.uid, u.username, u.full_name,
+    ud.student_card_filename, ud.student_card_url, ud.student_card_status,
+    ud.enrollment_filename, ud.enrollment_url, ud.enrollment_status,
+    ud.self_portrait_filename, ud.self_portrait_url, ud.self_portrait_url,
+    ud.twibbon_filename, ud.twibbon_url, ud.twibbon_url,
+    ud.is_doc_verified, u.is_profile_verified
+from users u
+left join users_docs ud on ud.uid = u.uid
+left join teams t on u.team_id = t.team_id
+left join teams_code tc on tc.team_id = t.team_id
+left join teams_docs td on td.team_id = t.team_id
+where u.team_id = $1 LIMIT 3
+`
 	resp := []entity.TeamWithUserEntity{}
 	err := r.db.SelectContext(ctx, &resp, query, teamID)
 	return resp, err
@@ -130,10 +148,11 @@ func (r *Repository) RedeemTeamCode(ctx context.Context, userID string, code str
 	return &tc, nil
 }
 
-func (r *Repository) InsertTeamDocument(ctx context.Context, filename string, teamID string) error {
-	q := r.qb.Update("teams").Set(goqu.Record{
-		"payment_filename":    filename,
-		"verification_status": 1,
+func (r *Repository) InsertTeamDocument(ctx context.Context, filename string, fileURL string, teamID string) error {
+	q := r.qb.Update("teams_docs").Set(goqu.Record{
+		"payment_filename": filename,
+		"payment_url":      fileURL,
+		"payment_status":   1,
 	}).Where(goqu.C("team_id").Eq(teamID))
 	query, _, err := q.ToSQL()
 	if err != nil {

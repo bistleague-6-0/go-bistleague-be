@@ -8,15 +8,22 @@ var VerificationStatusMap = map[int8]string{
 }
 
 type TeamEntity struct {
-	TeamID             string   `db:"team_id"`
-	TeamName           string   `db:"team_name"`
-	TeamLeaderID       string   `db:"team_leader_id"`
-	BuktiPembayaranURL string   `db:"bukti_pembayaran_url"`
-	PaymentFilename    string   `db:"payment_filename"`
-	IsVerified         bool     `db:"is_verified"`
-	TeamMemberMails    []string `db:"team_member_mails"`
-	IsActive           bool     `db:"is_active"`
-	VerificationStatus int8     `db:"verification_status"`
+	TeamID       string `db:"team_id"`
+	TeamName     string `db:"team_name"`
+	TeamLeaderID string `db:"team_leader_id"`
+
+	//MARK: deprecate this
+	BuktiPembayaranURL string `db:"bukti_pembayaran_url"`
+	VerificationStatus int8   `db:"verification_status"`
+	IsVerified         bool   `db:"is_verified"`
+	//
+
+	PaymentFilename string `db:"payment_filename"`
+	PaymentURL      string `db:"payment_url"`
+	PaymentStatus   int8   `db:"payment_status"`
+
+	TeamMemberMails []string `db:"team_member_mails"`
+	IsActive        bool     `db:"is_active"`
 }
 
 type TeamRedeemCodeEntity struct {
@@ -27,18 +34,27 @@ type TeamRedeemCodeEntity struct {
 
 type TeamWithUserEntity struct {
 	TeamEntity
-	UserID             string `db:"uid"`
-	Username           string `db:"username"`
-	FullName           string `db:"full_name"`
-	IsDocVerified      bool   `db:"is_doc_verified"`
-	IsProfileVerified  bool   `db:"is_profile_verified"`
-	StudentCard        string `db:"student_card_filename"`
-	StudentCardStatus  int8   `db:"student_card_status"`
+	UserID            string `db:"uid"`
+	Username          string `db:"username"`
+	FullName          string `db:"full_name"`
+	IsDocVerified     bool   `db:"is_doc_verified"`
+	IsProfileVerified bool   `db:"is_profile_verified"`
+
+	StudentCard       string `db:"student_card_filename"`
+	StudentCardStatus int8   `db:"student_card_status"`
+	StudentCardURL    string `db:"student_card_url"`
+
 	SelfPortrait       string `db:"self_portrait_filename"`
 	SelfPortraitStatus int8   `db:"self_portrait_status"`
-	Twibbon            string `db:"twibbon_filename"`
-	TwibbonStatus      int8   `db:"twibbon_status"`
-	Enrollment         string `db:"enrollment_filename"`
-	EnrollmentStatus   int8   `db:"enrollment_status"`
-	RedeemCode         string `db:"code"`
+	SelfPortraitURL    string `db:"self_portrait_url"`
+
+	Twibbon       string `db:"twibbon_filename"`
+	TwibbonStatus int8   `db:"twibbon_status"`
+	TwibbonURL    string `db:"twibbon_url"`
+
+	Enrollment       string `db:"enrollment_filename"`
+	EnrollmentStatus int8   `db:"enrollment_status"`
+	EnrollmentURL    string `db:"enrollment_url"`
+
+	RedeemCode string `db:"code"`
 }

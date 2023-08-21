@@ -5,8 +5,9 @@ type RedeemTeamCodeRequestDTO struct {
 }
 
 type InsertTeamDocumentRequestDTO struct {
-	Type     string `json:"doc_type" validate:"required,isTeamDoc"`
-	Document string `json:"document" validate:"base64"`
+	Type         string `json:"doc_type" validate:"required,isTeamDoc"`
+	DocumentName string `json:"document_name" validate:"required"`
+	Document     string `json:"document" validate:"base64,required"`
 }
 
 type CreateTeamRequestDTO struct {
