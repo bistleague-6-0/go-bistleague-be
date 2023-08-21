@@ -69,6 +69,7 @@ func (r *Router) SignUpUser(g *guard.GuardContext) error {
 	}
 	resp, err := r.usecase.InsertNewUser(g.FiberCtx.Context(), req)
 	if err != nil {
+		fmt.Println(err)
 		return g.ReturnError(http.StatusInternalServerError, "cannot register user")
 	}
 	return g.ReturnSuccess(resp)

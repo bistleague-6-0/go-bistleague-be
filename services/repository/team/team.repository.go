@@ -5,6 +5,7 @@ import (
 	"bistleague-be/model/entity"
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/net/context"
@@ -44,22 +45,29 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 		tx.Rollback()
 		return "", err
 	}
-
-	// create team docs table
-	q1two := `INSERT INTO teams_docs(team_id) VALUES ($1)`
-	_, err = tx.ExecContext(ctx, q1two, teamID)
-
-	// update user's team id
-	q2 := "UPDATE users SET team_id = $1 WHERE uid = $2"
-	_, err = tx.ExecContext(ctx, q2, teamID.Id, newTeam.TeamLeaderID)
-	if err != nil {
-		tx.Rollback()
-		return "", err
-	}
+	fmt.Println(teamID)
 
 	// create team token
 	q3 := "INSERT INTO teams_code(team_id, code) VALUES ($1, $2)"
 	_, err = tx.ExecContext(ctx, q3, teamID.Id, redeemToken)
+	if err != nil {
+		fmt.Println("err 54", err)
+		tx.Rollback()
+		return "", err
+	}
+
+	// create team docs table
+	q1two := `INSERT INTO teams_docs(team_id) VALUES ($1)`
+	_, err = tx.ExecContext(ctx, q1two, teamID.Id)
+	if err != nil {
+		fmt.Println("err 63", err)
+		tx.Rollback()
+		return "", err
+	}
+
+	// update user's team id
+	q2 := "UPDATE users SET team_id = $1 WHERE uid = $2"
+	_, err = tx.ExecContext(ctx, q2, teamID.Id, newTeam.TeamLeaderID)
 	if err != nil {
 		tx.Rollback()
 		return "", err
