@@ -37,13 +37,17 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 	}
 
 	// create team
-	query := `INSERT INTO teams (team_name, team_leader_id, team_member_mails)
+	q1 := `INSERT INTO teams (team_name, team_leader_id, team_member_mails)
 			  VALUES ($1, $2, $3) returning team_id`
-	err = tx.GetContext(ctx, &teamID, query, newTeam.TeamName, newTeam.TeamLeaderID, newTeam.TeamMemberMails)
+	err = tx.GetContext(ctx, &teamID, q1, newTeam.TeamName, newTeam.TeamLeaderID, newTeam.TeamMemberMails)
 	if err != nil {
 		tx.Rollback()
 		return "", err
 	}
+
+	// create team docs table
+	q1two := `INSERT INTO teams_docs(team_id) VALUES ($1)`
+	_, err = tx.ExecContext(ctx, q1two, teamID)
 
 	// update user's team id
 	q2 := "UPDATE users SET team_id = $1 WHERE uid = $2"
@@ -68,16 +72,6 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 }
 
 func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]entity.TeamWithUserEntity, error) {
-	//query := `select
-	//u.uid, t.team_leader_id, u.username, u.full_name, t.team_id, t.team_name, t.payment_filename, t.verification_status, u.is_profile_verified, u.is_doc_verified,
-	//u.student_card_filename, u.student_card_status , u.self_portrait_filename, u.self_portrait_status , u.twibbon_filename, u.twibbon_status,
-	//u.enrollment_filename, u.enrollment_status, tc.code
-	//	from users u
-	//		left join teams t
-	//			on u.team_id = t.team_id
-	//		left join teams_code tc
-	//			on u.team_id = tc.team_id
-	//	where u.team_id = $1 LIMIT 3`
 	query := `select
     t.team_id, t.team_name, t.team_leader_id, tc.code,
     td.payment_filename, td.payment_url, td.payment_status,
