@@ -4,6 +4,7 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/entity"
 	"context"
+	"fmt"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
 )
@@ -24,6 +25,7 @@ func New(cfg *config.Config, db *sqlx.DB, qb *goqu.DialectWrapper) *Repository {
 
 func (r *Repository) RegisterNewUser(ctx context.Context, newUser entity.UserEntity) (*entity.UserEntity, error) {
 	resp := newUser
+	tx, err := r.db.BeginTxx(ctx, nil)
 	query := r.qb.Insert("users").Rows(goqu.Record{
 		"email":     newUser.Email,
 		"password":  newUser.Password,
@@ -34,10 +36,19 @@ func (r *Repository) RegisterNewUser(ctx context.Context, newUser entity.UserEnt
 	if err != nil {
 		return nil, err
 	}
-	err = r.db.GetContext(ctx, &resp, sql)
+	err = tx.GetContext(ctx, &resp, sql)
 	if err != nil {
+		tx.Rollback()
 		return nil, err
 	}
+	q2 := "INSERT INTO users_docs(uid) VALUES ($1)"
+	_, err = tx.ExecContext(ctx, q2, resp.UID)
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	fmt.Println("WOI!")
+	err = tx.Commit()
 	return &resp, err
 }
 
