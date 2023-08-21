@@ -13,28 +13,45 @@ CREATE TABLE IF NOT EXISTS users (
     linkedin_url VARCHAR(100),
     line_id VARCHAR(55),
     team_id uuid,
-    student_card_filename VARCHAR(155) DEFAULT '',
-    student_card_status INT DEFAULT 0,
-    self_portrait_filename VARCHAR(155) DEFAULT '',
-    self_portrait_status INT DEFAULT 0,
-    twibbon_filename VARCHAR(155) DEFAULT '',
-    twibbon_status INT DEFAULT 0,
-    enrollment_filename VARCHAR(155) DEFAULT '',
-    enrollment_status INT DEFAULT 0,
-    is_doc_verified boolean default false,
     is_profile_verified boolean default false,
     inserted_at timestamp NOT NULL DEFAULT now(),
     updated_at timestamp
+);
+
+CREATE TABLE IF NOT EXISTS users_docs (
+    uid uuid PRIMARY KEY,
+    student_card_filename VARCHAR(155) DEFAULT '',
+    student_card_url text DEFAULT '',
+    student_card_status INT DEFAULT 0,
+
+    self_portrait_filename VARCHAR(155) DEFAULT '',
+    self_portrait_url text DEFAULT '',
+    self_portrait_status INT DEFAULT 0,
+
+    twibbon_filename VARCHAR(155) DEFAULT '',
+    twibbon_url text DEFAULT '',
+    twibbon_status INT DEFAULT 0,
+
+    enrollment_filename VARCHAR(155) DEFAULT '',
+    enrollment_url text DEFAULT '',
+    enrollment_status INT DEFAULT 0,
+
+    is_doc_verified boolean default false
 );
 
 CREATE TABLE IF NOT EXISTS teams(
     team_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     team_name VARCHAR(55) UNIQUE NOT NULL,
     team_leader_id UUID unique not null ,
-    payment_filename VARCHAR(155) DEFAULT '',
-    verification_status INT DEFAULT 0,
     team_member_mails TEXT[],
     is_active boolean default true
+);
+
+create TABLE IF NOT EXISTS teams_docs(
+    team_id uuid PRIMARY KEY,
+    payment_filename  VARCHAR(155) DEFAULT '',
+    payment_url text DEFAULT '',
+    payment_status INT DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS teams_code(

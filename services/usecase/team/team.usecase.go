@@ -82,40 +82,32 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 		result.TeamName = team.TeamName
 		result.TeamRedeemCode = team.RedeemCode
 		result.IsActive = team.IsActive
-		result.Payment = team.PaymentFilename
-		if result.Payment != "" {
-			result.PaymentURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.PaymentFilename)
+		if team.TeamLeaderID == userID {
+			result.Payment = team.PaymentFilename
+			result.PaymentURL = team.PaymentURL
+			result.PaymentStatusCode = team.PaymentStatus
 		}
-		result.PaymentStatusCode = team.VerificationStatus
-		result.PaymentStatus = entity.VerificationStatusMap[team.VerificationStatus]
+		result.PaymentStatus = entity.VerificationStatusMap[team.PaymentStatus]
 		if team.UserID == userID {
 			result.StudentCard = team.StudentCard
 			result.StudentCardStatusCode = team.StudentCardStatus
 			result.StudentCardStatus = entity.VerificationStatusMap[team.StudentCardStatus]
-			if result.StudentCard != "" {
-				result.StudentCardURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.StudentCard)
-			}
+			result.StudentCardURL = team.StudentCardURL
 
 			result.SelfPortrait = team.SelfPortrait
 			result.SelfPortraitStatusCode = team.SelfPortraitStatus
 			result.SelfPortraitStatus = entity.VerificationStatusMap[team.SelfPortraitStatus]
-			if result.SelfPortrait != "" {
-				result.SelfPortraitURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.SelfPortrait)
-			}
+			result.SelfPortraitURL = team.SelfPortraitURL
 
 			result.Twibbon = team.Twibbon
 			result.TwibbonStatusCode = team.TwibbonStatus
 			result.TwibbonStatus = entity.VerificationStatusMap[team.TwibbonStatus]
-			if result.Twibbon != "" {
-				result.TwibbonURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.Twibbon)
-			}
+			result.TwibbonURL = team.TwibbonURL
 
 			result.Enrollment = team.Enrollment
 			result.EnrollmentStatusCode = team.EnrollmentStatus
 			result.EnrollmentStatus = entity.VerificationStatusMap[team.EnrollmentStatus]
-			if result.Enrollment != "" {
-				result.EnrollmentURL = fmt.Sprintf(u.cfg.Storage.StorageURlBase, u.cfg.Storage.BucketName, team.Enrollment)
-			}
+			result.EnrollmentURL = result.EnrollmentURL
 		}
 		result.Members = append(result.Members, dto.GetTeamMemberInfoResponseDTO{
 			UserID:            team.UserID,
@@ -152,28 +144,27 @@ func (u *Usecase) RedeemTeamCode(ctx context.Context, req dto.RedeemTeamCodeRequ
 }
 
 func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocumentRequestDTO, teamID string, userID string) (*dto.InputTeamDocumentResponseDTO, error) {
-	currentDate := time.Now()
-	formattedDate := currentDate.Format("2006-01-02")
-	randFileName := make([]byte, 4)
-	rand.Read(randFileName)
-	strRandFileName := hex.EncodeToString(randFileName)
-	filename := fmt.Sprintf("%s.%s.%s", req.Type, strRandFileName, formattedDate)
-	file, err := storageutils.NewBase64FromString(req.Document, filename)
+	randName := utils.GenerateRandomName()
+	newName := fmt.Sprintf("%s.%s", req.Type, randName)
+	b64file, err := storageutils.NewBase64FromString(req.Document, newName)
 	if err != nil {
 		return nil, err
 	}
-	docUrl, err := u.storageRepo.UploadDocument(ctx, file)
+	fileurl, err := u.storageRepo.UploadDocument(ctx, b64file)
 	if err != nil {
 		return nil, err
 	}
-	filenameWithExt := fmt.Sprintf("%s%s", filename, file.Ext)
 	if req.Type == "payment" {
-		err = u.repo.InsertTeamDocument(ctx, filenameWithExt, teamID)
+		err = u.repo.InsertTeamDocument(ctx, req.DocumentName, fileurl, teamID)
 	} else {
-		err = u.profileRepo.UpdateUserDocument(ctx, userID, filenameWithExt, req.Type)
+		err = u.profileRepo.UpdateUserDocument(ctx, userID, req.DocumentName, fileurl, req.Type)
+	}
+	if err != nil {
+		return nil, err
 	}
 	return &dto.InputTeamDocumentResponseDTO{
-		DocumentName: filenameWithExt,
-		DocumentURL:  docUrl,
-	}, err
+		DocumentType: req.Type,
+		DocumentName: req.DocumentName,
+		DocumentURL:  fileurl,
+	}, nil
 }

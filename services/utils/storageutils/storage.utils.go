@@ -3,9 +3,7 @@ package storageutils
 import (
 	"encoding/base64"
 	"errors"
-	"math/rand"
 	"strings"
-	"time"
 )
 
 var signatures = map[string]string{
@@ -72,14 +70,4 @@ func DecodeBase64WithFormat(base64Data string) ([]byte, string, error) {
 	}
 
 	return decodedData, ext, nil
-}
-
-func GenerateRandomName() string {
-	rand.Seed(time.Now().UnixNano())
-	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	b := make([]byte, 128)
-	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
-	}
-	return string(b)
 }

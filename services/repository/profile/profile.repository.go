@@ -42,26 +42,30 @@ SET email = $2, full_name = $3, user_age = $4, phone_number = $5, institution =$
 	return err
 }
 
-func (r *Repository) UpdateUserDocument(ctx context.Context, userID string, filename string, doctype string) error {
-	q := r.qb.Update("users").Where(goqu.C("uid").Eq(userID))
+func (r *Repository) UpdateUserDocument(ctx context.Context, userID string, filename string, fileurl string, doctype string) error {
+	q := r.qb.Update("users_docs").Where(goqu.C("uid").Eq(userID))
 	if doctype == "student_card" {
 		q = q.Set(goqu.Record{
 			"student_card_filename": filename,
+			"student_card_url":      fileurl,
 			"student_card_status":   1,
 		})
 	} else if doctype == "self_portrait" {
 		q = q.Set(goqu.Record{
 			"self_portrait_filename": filename,
+			"self_portrait_url":      fileurl,
 			"self_portrait_status":   1,
 		})
 	} else if doctype == "twibbon" {
 		q = q.Set(goqu.Record{
 			"twibbon_filename": filename,
+			"twibbon_url":      fileurl,
 			"twibbon_status":   1,
 		})
 	} else {
 		q = q.Set(goqu.Record{
 			"enrollment_filename": filename,
+			"enrollment_url":      fileurl,
 			"enrollment_status":   1,
 		})
 	}
