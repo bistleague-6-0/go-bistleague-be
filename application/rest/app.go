@@ -27,8 +27,10 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	}))
 	// setup cors
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
-		AllowHeaders: "Origin, Content-Type, Accept, Bearer",
+		AllowHeaders:     "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin",
+		AllowOrigins:     "*",
+		AllowCredentials: true,
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
 	}))
 
 	resource, err := application.NewCommonResource(cfg, ctx)
