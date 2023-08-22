@@ -30,6 +30,7 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 		AllowOrigins: "*",
 		AllowHeaders: "Origin, Content-Type, Accept, Bearer",
 	}))
+
 	resource, err := application.NewCommonResource(cfg, ctx)
 	if err != nil {
 		return nil, err
@@ -49,7 +50,7 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 			Message: "Hello, Hacker!",
 		})
 	})
-	//hello router
+	//hello route
 	helloRoute := hello.New(cfg, usecase.HelloUC)
 	helloRoute.Register(app)
 
@@ -58,7 +59,7 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	authRoute.RegisterRoute(app)
 
 	//profile route
-	profileRoute := profile.New(cfg)
+	profileRoute := profile.New(cfg, usecase.ProfileUC, resource.Vld)
 	profileRoute.Register(app)
 
 	//team route
