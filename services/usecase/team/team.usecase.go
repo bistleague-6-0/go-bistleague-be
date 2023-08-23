@@ -156,9 +156,12 @@ func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocu
 	}
 	if req.Type == "payment" {
 		err = u.repo.InsertTeamDocument(ctx, req.DocumentName, fileurl, teamID)
+	} else if req.Type == "submission_1" || req.Type == "submission_2" {
+		err = u.repo.InsertTeamSubmission(ctx, req.DocumentName, fileurl, teamID, req.Type)
 	} else {
 		err = u.profileRepo.UpdateUserDocument(ctx, userID, req.DocumentName, fileurl, req.Type)
 	}
+
 	if err != nil {
 		return nil, err
 	}

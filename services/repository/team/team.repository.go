@@ -6,8 +6,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"golang.org/x/net/context"
 )
 
@@ -154,6 +157,37 @@ func (r *Repository) InsertTeamDocument(ctx context.Context, filename string, fi
 		"payment_url":      fileURL,
 		"payment_status":   1,
 	}).Where(goqu.C("team_id").Eq(teamID))
+	query, _, err := q.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = r.db.ExecContext(ctx, query)
+	return err
+}
+
+func (r *Repository) InsertTeamSubmission(ctx context.Context, filename string, fileURL string, teamID string, docType string) error {
+	wib, _ := time.LoadLocation("Asia/Jakarta")
+	currentTime := time.Now()
+	currentTimeInWIB := currentTime.In(wib)
+
+	var colFilename, colURL, colLastUpdate string
+
+	if docType == "submission_1" {
+		colFilename = "submission_1_filename"
+		colURL = "submission_1_url"
+		colLastUpdate = "submission_1_lastupdate"
+	} else {
+		colFilename = "submission_2_filename"
+		colURL = "submission_2_url"
+		colLastUpdate = "submission_2_lastupdate"
+	}
+
+	q := r.qb.Update("teams_docs").Set(goqu.Record{
+		colFilename:   filename,
+		colURL:        fileURL,
+		colLastUpdate: pq.FormatTimestamp(currentTimeInWIB),
+	}).Where(goqu.C("team_id").Eq(teamID))
+
 	query, _, err := q.ToSQL()
 	if err != nil {
 		return err

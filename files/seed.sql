@@ -53,7 +53,13 @@ create TABLE IF NOT EXISTS teams_docs(
     team_id uuid PRIMARY KEY,
     payment_filename  VARCHAR(155) DEFAULT '',
     payment_url text DEFAULT '',
-    payment_status INT DEFAULT 0
+    payment_status INT DEFAULT 0,
+    submission_1_filename   varchar(155) default ''::STRING,
+    submission_1_url        text         default ''::STRING,
+    submission_1_lastupdate timestamp,
+    submission_2_filename   varchar(155) default ''::STRING,
+    submission_2_url        text         default ''::STRING,
+    submission_2_lastupdate timestamp
 );
 
 CREATE TABLE IF NOT EXISTS teams_code(
