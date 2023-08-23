@@ -59,6 +59,8 @@ func isTeamDocs(fl validator.FieldLevel) bool {
 		"self_portrait": 2,
 		"twibbon":       3,
 		"enrollment":    4,
+		"submission_1":  5,
+		"submission_2":  6,
 	}
 	input, ok := fl.Field().Interface().(string)
 	if !ok {
