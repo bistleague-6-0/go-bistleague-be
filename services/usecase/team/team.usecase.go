@@ -8,14 +8,14 @@ import (
 	"bistleague-be/services/repository/storage"
 	"bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
+	"bistleague-be/services/utils/randomizer"
 	"bistleague-be/services/utils/storageutils"
 	"context"
-	"encoding/hex"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"log"
-	"math/rand"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type Usecase struct {
@@ -42,9 +42,7 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 	}
 
 	// create redeem code
-	teamToken := make([]byte, 4)
-	rand.Read(teamToken)
-	strTeamToken := hex.EncodeToString(teamToken)
+	strTeamToken := randomizer.RandStringBytes(6)
 
 	teamID, err := u.repo.CreateTeam(ctx, team, strTeamToken)
 	if err != nil {
