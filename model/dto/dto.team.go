@@ -1,5 +1,9 @@
 package dto
 
+import (
+	"time"
+)
+
 type RedeemTeamCodeRequestDTO struct {
 	RedeemCode string `json:"redeem_code" validate:"required"`
 }
@@ -67,4 +71,12 @@ type InputTeamDocumentResponseDTO struct {
 	DocumentType string `json:"doc_type"`
 	DocumentName string `json:"doc_name"`
 	DocumentURL  string `json:"doc_url"`
+}
+
+type GetSubmissionResponseDTO struct {
+	TeamID               string    `json:"team_id"`
+	DocumentType         string    `json:"doc_type"`
+	SubmissionFilename   string    `json:"submission_filename"`
+	SubmissionUrl        string    `json:"submission_url"`
+	SubmissionLastUpdate time.Time `json:"submission_lastupdate"`
 }

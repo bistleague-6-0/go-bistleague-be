@@ -169,3 +169,35 @@ func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocu
 		DocumentURL:  fileurl,
 	}, nil
 }
+
+func (u *Usecase) GetTeamSubmission(ctx context.Context, submissionType int, teamID string) (*dto.GetSubmissionResponseDTO, error) {
+	resp, err := u.repo.GetSubmission(ctx, teamID)
+	if err != nil {
+		return nil, err
+	}
+
+	var dtoResp dto.GetSubmissionResponseDTO
+
+	switch submissionType {
+	case 1:
+		dtoResp = dto.GetSubmissionResponseDTO{
+			TeamID:               teamID,
+			DocumentType:         "submission_1",
+			SubmissionFilename:   resp.Submission1Filename,
+			SubmissionUrl:        resp.Submission1Url,
+			SubmissionLastUpdate: resp.Submission1LastUpdate,
+		}
+	case 2:
+		dtoResp = dto.GetSubmissionResponseDTO{
+			TeamID:               teamID,
+			DocumentType:         "submission_2",
+			SubmissionFilename:   resp.Submission2Filename,
+			SubmissionUrl:        resp.Submission2Url,
+			SubmissionLastUpdate: resp.Submission2LastUpdate,
+		}
+	default:
+		return nil, fmt.Errorf("invalid submission type")
+	}
+
+	return &dtoResp, nil
+}

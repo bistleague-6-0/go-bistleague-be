@@ -3,9 +3,10 @@ package storage
 import (
 	"bistleague-be/model/config"
 	"bistleague-be/services/utils/storageutils"
-	"cloud.google.com/go/storage"
 	"context"
 	"fmt"
+
+	"cloud.google.com/go/storage"
 )
 
 type Repository struct {

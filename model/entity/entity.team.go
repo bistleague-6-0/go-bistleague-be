@@ -1,5 +1,9 @@
 package entity
 
+import (
+	"time"
+)
+
 var VerificationStatusMap = map[int8]string{
 	-1: "rejected",
 	0:  "no file",
@@ -57,4 +61,14 @@ type TeamWithUserEntity struct {
 	EnrollmentURL    string `db:"enrollment_url"`
 
 	RedeemCode string `db:"code"`
+}
+
+type TeamSubmission struct {
+	TeamID                string    `db:"team_id"`
+	Submission1Filename   string    `db:"submission_1_filename"`
+	Submission1Url        string    `db:"submission_1_url"`
+	Submission1LastUpdate time.Time `db:"submission_1_lastupdate"`
+	Submission2Filename   string    `db:"submission_2_filename"`
+	Submission2Url        string    `db:"submission_2_url"`
+	Submission2LastUpdate time.Time `db:"submission_2_lastupdate"`
 }

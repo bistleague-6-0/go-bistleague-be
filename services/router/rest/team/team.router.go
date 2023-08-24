@@ -5,10 +5,12 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/usecase/team"
-	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
 	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 )
 
 type Router struct {
@@ -31,6 +33,8 @@ func (r *Router) Register(app *fiber.App) {
 	group.Get("", guard.AuthGuard(r.cfg, r.GetTeamInformation)...)
 	group.Post("/redeem", guard.AuthGuard(r.cfg, r.RedeemTeamCode)...)
 	group.Post("/document", guard.AuthGuard(r.cfg, r.InsertTeamDocument)...)
+	group.Get("/submission/:docNumber", guard.AuthGuard(r.cfg, r.GetSubmission)...)
+
 }
 
 // MARK : NEED TO UPDATE
@@ -112,5 +116,20 @@ func (r *Router) InsertTeamDocument(g *guard.AuthGuardContext) error {
 		return g.ReturnError(http.StatusBadRequest, err.Error())
 	}
 	resp.DocumentType = req.Type
+	return g.ReturnSuccess(resp)
+}
+
+func (r *Router) GetSubmission(g *guard.AuthGuardContext) error {
+	docNumberStr := g.FiberCtx.Params("docNumber")
+	docNumber, err := strconv.Atoi(docNumberStr)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "invalid document number")
+	}
+
+	resp, err := r.usecase.GetTeamSubmission(g.FiberCtx.Context(), docNumber, g.Claims.TeamID)
+	if err != nil {
+		return g.ReturnError(http.StatusNotFound, "cannot find submission data")
+	}
+
 	return g.ReturnSuccess(resp)
 }
