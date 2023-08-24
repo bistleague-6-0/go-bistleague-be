@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -194,4 +195,24 @@ func (r *Repository) InsertTeamSubmission(ctx context.Context, filename string, 
 	}
 	_, err = r.db.ExecContext(ctx, query)
 	return err
+}
+
+func (r *Repository) GetSubmission(ctx context.Context, teamID string) (*entity.TeamSubmission, error) {
+	query := `
+        SELECT
+            team_id, submission_1_filename, submission_1_url, submission_1_lastupdate,
+            submission_2_filename, submission_2_url, submission_2_lastupdate
+        FROM teams_docs
+        WHERE team_id = $1
+        LIMIT 1
+    `
+
+	resp := entity.TeamSubmission{}
+	err := r.db.GetContext(ctx, &resp, query, teamID)
+
+	if err != nil {
+		log.Printf("Error executing query: %v", err)
+	}
+
+	return &resp, err
 }
