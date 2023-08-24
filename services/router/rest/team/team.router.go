@@ -128,7 +128,7 @@ func (r *Router) GetSubmission(g *guard.AuthGuardContext) error {
 
 	resp, err := r.usecase.GetTeamSubmission(g.FiberCtx.Context(), docNumber, g.Claims.TeamID)
 	if err != nil {
-		return g.ReturnError(http.StatusNoContent, "data not found")
+		return g.ReturnError(http.StatusNotFound, "cannot find submission data")
 	}
 
 	return g.ReturnSuccess(resp)
