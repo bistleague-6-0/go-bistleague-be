@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -209,10 +208,6 @@ func (r *Repository) GetSubmission(ctx context.Context, teamID string) (*entity.
 
 	resp := entity.TeamSubmission{}
 	err := r.db.GetContext(ctx, &resp, query, teamID)
-
-	if err != nil {
-		log.Printf("Error executing query: %v", err)
-	}
 
 	return &resp, err
 }
