@@ -209,5 +209,9 @@ func (r *Repository) GetSubmission(ctx context.Context, teamID string) (*entity.
 	resp := entity.TeamSubmission{}
 	err := r.db.GetContext(ctx, &resp, query, teamID)
 
+	if err != nil {
+		println("Error fetching submission:", err.Error())
+	}
+
 	return &resp, err
 }

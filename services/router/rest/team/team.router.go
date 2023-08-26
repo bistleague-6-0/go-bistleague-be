@@ -131,5 +131,9 @@ func (r *Router) GetSubmission(g *guard.AuthGuardContext) error {
 		return g.ReturnError(http.StatusNotFound, "cannot find submission data")
 	}
 
+	if resp.SubmissionLastUpdate == nil {
+		return g.ReturnError(http.StatusNotFound, "cannot find submission data")
+	}
+
 	return g.ReturnSuccess(resp)
 }
