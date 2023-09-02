@@ -12,8 +12,8 @@ type NoBodyDTOResponseWrapper struct {
 }
 
 type PaginationDTOWrapper struct {
-	PageSize  int16       `json:"page_size"`
-	Page      int16       `json:"page"`
-	TotalPage int16       `json:"total_page"`
+	PageSize  int         `json:"page_size"`
+	Page      int         `json:"page"`
+	TotalPage int         `json:"total_page"`
 	Data      interface{} `json:"page_data"`
 }

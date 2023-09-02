@@ -23,3 +23,22 @@ type UserEntity struct {
 	InsertedAt  time.Time      `db:"inserted_at"`
 	UpdatedAt   sql.NullTime   `db:"updated_at,omitempty"`
 }
+
+type UserDocs struct {
+	UID                  string `db:"uid"`
+	TeamName             string `db:"team_name"`
+	FullName             string `db:"full_name"`
+	StudentCardFilename  string `db:"student_card_filename"`
+	StudentCardURL       string `db:"student_card_url"`
+	StudentCardStatus    string `db:"student_card_status"`
+	SelfPortraitFilename string `db:"self_portrait_filename"`
+	SelfPortraitURL      string `db:"self_portrait_url"`
+	SelfPortraitStatus   string `db:"self_portrait_status"`
+	TwibbonFilename      string `db:"twibbon_filename"`
+	TwibbonURL           string `db:"twibbon_url"`
+	TwibbonStatus        string `db:"twibbon_status"`
+	EnrollmentFilename   string `db:"enrollment_filename"`
+	EnrollmentURL        string `db:"enrollment_url"`
+	EnrollmentStatus     string `db:"enrollment_status"`
+	IsProfileVerified    bool   `db:"is_profile_verified"`
+}

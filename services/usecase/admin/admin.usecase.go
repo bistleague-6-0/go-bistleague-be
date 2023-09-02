@@ -5,6 +5,8 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
 	adminRepo "bistleague-be/services/repository/admin"
+	profileRepo "bistleague-be/services/repository/profile"
+	teamRepo "bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
 	"context"
 	"time"
@@ -14,8 +16,10 @@ import (
 )
 
 type Usecase struct {
-	cfg  *config.Config
-	repo *adminRepo.Repository
+	cfg         *config.Config
+	repo        *adminRepo.Repository
+	teamRepo    *teamRepo.Repository
+	profileRepo *profileRepo.Repository
 }
 
 func New(cfg *config.Config, repo *adminRepo.Repository) *Usecase {
@@ -93,4 +97,54 @@ func (u *Usecase) SignInAdmin(ctx context.Context, req dto.SignInAdminRequestDTO
 		},
 		Token: token,
 	}, nil
+}
+
+func (u *Usecase) GetTeamPayment(ctx context.Context, page int, pageSize int) (*dto.PaginationDTOWrapper, error) {
+	resp, err := u.teamRepo.GetPayments(ctx, page, pageSize)
+	if err != nil {
+		return nil, err
+	}
+
+	totalTeam, err := u.teamRepo.GetTeamCount(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var dtoResp dto.PaginationDTOWrapper
+
+	totalPage := (totalTeam + pageSize - 1) / pageSize
+
+	dtoResp = dto.PaginationDTOWrapper{
+		PageSize:  pageSize,
+		Page:      page,
+		TotalPage: totalPage,
+		Data:      resp,
+	}
+
+	return &dtoResp, nil
+}
+
+func (u *Usecase) GetUserList(ctx context.Context, page int, pageSize int) (*dto.PaginationDTOWrapper, error) {
+	resp, err := u.profileRepo.GetUserList(ctx, page, pageSize)
+	if err != nil {
+		return nil, err
+	}
+
+	totalUser, err := u.profileRepo.GetUserCount(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var dtoResp dto.PaginationDTOWrapper
+
+	totalPage := (totalUser + pageSize - 1) / pageSize
+
+	dtoResp = dto.PaginationDTOWrapper{
+		PageSize:  pageSize,
+		Page:      page,
+		TotalPage: totalPage,
+		Data:      resp,
+	}
+
+	return &dtoResp, nil
 }

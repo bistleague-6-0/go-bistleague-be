@@ -5,7 +5,6 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/usecase/admin"
-	"bistleague-be/services/usecase/team"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -17,7 +16,6 @@ import (
 type Router struct {
 	cfg     *config.Config
 	usecase *admin.Usecase
-	teamuc  *team.Usecase
 	vld     *validator.Validate
 }
 
@@ -34,6 +32,7 @@ func (r *Router) RegisterRoute(app *fiber.App) {
 	g.Post("/login", guard.DefaultGuard(r.SignInAdmin))
 	g.Post("/register", guard.DefaultGuard(r.RegisterAdmin))
 	g.Get("/payments", guard.DefaultGuard(r.GetTeamPayment))
+	g.Get("/users", guard.DefaultGuard(r.GetTeamPayment))
 }
 
 type AuthRequest struct {
@@ -96,9 +95,34 @@ func (r *Router) GetTeamPayment(g *guard.GuardContext) error {
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, "page size is not valid int")
 	}
-	resp, err := r.teamuc.GetTeamPayment(g.FiberCtx.Context(), int16(page), int16(pageSize))
+	resp, err := r.usecase.GetTeamPayment(g.FiberCtx.Context(), int(page), int(pageSize))
 	if err != nil {
 		return g.ReturnError(http.StatusNotFound, "cannot get teams payment")
+	}
+	return g.ReturnSuccess(resp)
+}
+
+func (r *Router) GetUserDocsList(g *guard.GuardContext) error {
+	pageStr := g.FiberCtx.Params("page")
+	pageSizeStr := g.FiberCtx.Params("page_size")
+	if pageStr == "" {
+		pageStr = "1"
+	}
+	if pageSizeStr == "" {
+		pageSizeStr = "10"
+	}
+	page, err := strconv.ParseInt(pageStr, 10, 16)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "page is not valid int")
+	}
+
+	pageSize, err := strconv.ParseInt(pageSizeStr, 10, 16)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "page size is not valid int")
+	}
+	resp, err := r.usecase.GetUserList(g.FiberCtx.Context(), int(page), int(pageSize))
+	if err != nil {
+		return g.ReturnError(http.StatusNotFound, "cannot get user docs")
 	}
 	return g.ReturnSuccess(resp)
 }
