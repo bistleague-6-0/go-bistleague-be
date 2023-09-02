@@ -54,7 +54,7 @@ func (u *Usecase) InsertNewAdmin(ctx context.Context, req dto.RegisterAdminReque
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
-	token, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	token, err := utils.CreateJWTToken(u.cfg.Secret.AdminJWT, claims)
 	if err != nil {
 		return nil, err
 	}

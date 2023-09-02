@@ -30,9 +30,9 @@ func New(cfg *config.Config, usecase *admin.Usecase, vld *validator.Validate) *R
 func (r *Router) RegisterRoute(app *fiber.App) {
 	g := app.Group("/admin")
 	g.Post("/login", guard.DefaultGuard(r.SignInAdmin))
-	g.Post("/register", guard.DefaultGuard(r.RegisterAdmin))
-	g.Get("/payments", guard.DefaultGuard(r.GetTeamPayment))
-	g.Get("/users", guard.DefaultGuard(r.GetTeamPayment))
+	g.Post("/register", guard.ZeusGuard(r.cfg, r.RegisterAdmin)...)
+	g.Get("/payments", guard.AdminGuard(r.cfg, r.GetTeamPayment)...)
+	g.Get("/users", guard.AdminGuard(r.cfg, r.GetUserDocsList)...)
 }
 
 type AuthRequest struct {
@@ -77,7 +77,7 @@ func (r *Router) RegisterAdmin(g *guard.GuardContext) error {
 	return g.ReturnSuccess(resp)
 }
 
-func (r *Router) GetTeamPayment(g *guard.GuardContext) error {
+func (r *Router) GetTeamPayment(g *guard.AuthGuardContext) error {
 	pageStr := g.FiberCtx.Params("page")
 	pageSizeStr := g.FiberCtx.Params("page_size")
 	if pageStr == "" {
@@ -102,7 +102,7 @@ func (r *Router) GetTeamPayment(g *guard.GuardContext) error {
 	return g.ReturnSuccess(resp)
 }
 
-func (r *Router) GetUserDocsList(g *guard.GuardContext) error {
+func (r *Router) GetUserDocsList(g *guard.AuthGuardContext) error {
 	pageStr := g.FiberCtx.Params("page")
 	pageSizeStr := g.FiberCtx.Params("page_size")
 	if pageStr == "" {
