@@ -201,3 +201,20 @@ func (u *Usecase) GetTeamSubmission(ctx context.Context, submissionType int, tea
 
 	return &dtoResp, nil
 }
+
+func (u *Usecase) GetTeamPayment(ctx context.Context, page int16, pageSize int16) (*dto.PaginationDTOWrapper, error) {
+	resp, err := u.repo.GetPayments(ctx, page, pageSize)
+	if err != nil {
+		return nil, err
+	}
+	var dtoResp dto.PaginationDTOWrapper
+
+	dtoResp = dto.PaginationDTOWrapper{
+		PageSize:  pageSize,
+		Page:      page,
+		TotalPage: pageSize,
+		Data:      resp,
+	}
+
+	return &dtoResp, nil
+}

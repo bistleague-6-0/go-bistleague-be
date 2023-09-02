@@ -211,3 +211,24 @@ func (r *Repository) GetSubmission(ctx context.Context, teamID string) (*entity.
 
 	return &resp, err
 }
+
+func (r *Repository) GetPayments(ctx context.Context, page int16, pageSize int16) (*entity.TeamPayment, error) {
+	query := `
+        SELECT
+            t.team_id, t.team_name, t.team_member_mails, td.payment_filename, td.payment_url,
+            td.payment_status, tc.code
+        FROM teams t
+		LEFT JOIN teams_docs td
+		ON t.teams_id = td.teams_id
+		LEFT JOIN teams_code tc
+		ON t.teams_id = tc.teams_id
+		ORDER BY t.team_name
+		LIMIT ? OFFSET ?
+    `
+
+	resp := entity.TeamPayment{}
+	offset := (page - 1) * pageSize
+	err := r.db.GetContext(ctx, &resp, query, pageSize, offset)
+
+	return &resp, err
+}
