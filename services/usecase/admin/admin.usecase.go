@@ -5,10 +5,12 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
 	adminRepo "bistleague-be/services/repository/admin"
-	profileRepo "bistleague-be/services/repository/profile"
+	"bistleague-be/services/repository/profile"
+	"bistleague-be/services/repository/team"
 	teamRepo "bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
 	"context"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -18,14 +20,16 @@ import (
 type Usecase struct {
 	cfg         *config.Config
 	repo        *adminRepo.Repository
+	profileRepo *profile.Repository
 	teamRepo    *teamRepo.Repository
-	profileRepo *profileRepo.Repository
 }
 
-func New(cfg *config.Config, repo *adminRepo.Repository) *Usecase {
+func New(cfg *config.Config, repo *adminRepo.Repository, profileRepo *profile.Repository, teamRepo *team.Repository) *Usecase {
 	return &Usecase{
-		cfg:  cfg,
-		repo: repo,
+		cfg:         cfg,
+		repo:        repo,
+		profileRepo: profileRepo,
+		teamRepo:    teamRepo,
 	}
 }
 
@@ -36,7 +40,6 @@ func (u *Usecase) InsertNewAdmin(ctx context.Context, req dto.RegisterAdminReque
 	}
 	admin := entity.AdminEntity{
 		Password: string(newpw),
-		Email:    req.Email,
 		FullName: req.FullName,
 		Username: req.Username,
 	}
@@ -86,7 +89,7 @@ func (u *Usecase) SignInAdmin(ctx context.Context, req dto.SignInAdminRequestDTO
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
-	token, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	token, err := utils.CreateJWTToken(u.cfg.Secret.AdminJWT, claims)
 	if err != nil {
 		return nil, err
 	}
@@ -104,12 +107,24 @@ func (u *Usecase) GetTeamPayment(ctx context.Context, page int, pageSize int) (*
 	if err != nil {
 		return nil, err
 	}
-
+	data := []dto.GetTeamPaymentResponseDTO{}
+	for _, payment := range resp {
+		member_email_str := strings.Trim(payment.TeamMemberMails, "{}")
+		member_email := strings.Split(member_email_str, ",")
+		data = append(data, dto.GetTeamPaymentResponseDTO{
+			TeamID:          payment.TeamID,
+			TeamName:        payment.TeamName,
+			TeamMemberMails: member_email,
+			PaymentFilename: payment.PaymentFilename,
+			PaymentURL:      payment.PaymentURL,
+			PaymentStatus:   entity.VerificationStatusMap[payment.PaymentStatus],
+			Code:            payment.Code,
+		})
+	}
 	totalTeam, err := u.teamRepo.GetTeamCount(ctx)
 	if err != nil {
 		return nil, err
 	}
-
 	var dtoResp dto.PaginationDTOWrapper
 
 	totalPage := (totalTeam + pageSize - 1) / pageSize
@@ -118,7 +133,7 @@ func (u *Usecase) GetTeamPayment(ctx context.Context, page int, pageSize int) (*
 		PageSize:  pageSize,
 		Page:      page,
 		TotalPage: totalPage,
-		Data:      resp,
+		Data:      data,
 	}
 
 	return &dtoResp, nil
@@ -129,7 +144,27 @@ func (u *Usecase) GetUserList(ctx context.Context, page int, pageSize int) (*dto
 	if err != nil {
 		return nil, err
 	}
-
+	data := []dto.UserDocsResponseDTO{}
+	for _, user := range resp {
+		data = append(data, dto.UserDocsResponseDTO{
+			UID:                  user.UID,
+			TeamName:             user.TeamName.String,
+			FullName:             user.FullName,
+			StudentCardFilename:  user.StudentCardFilename.String,
+			StudentCardURL:       user.StudentCardURL.String,
+			StudentCardStatus:    entity.VerificationStatusMap[user.StudentCardStatus],
+			SelfPortraitFilename: user.SelfPortraitFilename.String,
+			SelfPortraitURL:      user.SelfPortraitURL.String,
+			SelfPortraitStatus:   entity.VerificationStatusMap[user.SelfPortraitStatus],
+			TwibbonFilename:      user.TwibbonFilename.String,
+			TwibbonURL:           user.TwibbonURL.String,
+			TwibbonStatus:        entity.VerificationStatusMap[user.TwibbonStatus],
+			EnrollmentFilename:   user.EnrollmentFilename.String,
+			EnrollmentURL:        user.EnrollmentURL.String,
+			EnrollmentStatus:     entity.VerificationStatusMap[user.EnrollmentStatus],
+			IsProfileVerified:    user.IsProfileVerified,
+		})
+	}
 	totalUser, err := u.profileRepo.GetUserCount(ctx)
 	if err != nil {
 		return nil, err
@@ -143,7 +178,7 @@ func (u *Usecase) GetUserList(ctx context.Context, page int, pageSize int) (*dto
 		PageSize:  pageSize,
 		Page:      page,
 		TotalPage: totalPage,
-		Data:      resp,
+		Data:      data,
 	}
 
 	return &dtoResp, nil

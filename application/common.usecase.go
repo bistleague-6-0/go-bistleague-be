@@ -22,7 +22,7 @@ func NewCommonUsecase(cfg *config.Config, commonRepo *CommonRepository) (*Common
 	authUC := auth.New(cfg, commonRepo.authRepo)
 	teamUC := team.New(cfg, commonRepo.teamRepo, commonRepo.storageRepo, commonRepo.profileRepo)
 	profileUC := profile.New(cfg, commonRepo.profileRepo)
-	adminUC := admin.New(cfg, commonRepo.adminRepo)
+	adminUC := admin.New(cfg, commonRepo.adminRepo, commonRepo.profileRepo, commonRepo.teamRepo)
 	commonUC := CommonUsecase{
 		HelloUC:   helloUC,
 		AuthUC:    authUC,

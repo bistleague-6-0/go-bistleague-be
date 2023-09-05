@@ -174,7 +174,7 @@ func ZeusGuard(cfg *config.Config, handlerFunc func(g *GuardContext) error) []fi
 	handlers := []fiber.Handler{
 		func(ctx *fiber.Ctx) error {
 			headers := ctx.GetReqHeaders()
-			tokenValue := headers["BIST-Zeus-Token"]
+			tokenValue := headers["Bist-Zeus-Token"]
 			if tokenValue != cfg.Secret.AdminSecret {
 				return ctx.Status(http.StatusUnauthorized).JSON(dto.NoBodyDTOResponseWrapper{
 					Status:  http.StatusUnauthorized,

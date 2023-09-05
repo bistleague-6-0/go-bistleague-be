@@ -68,11 +68,11 @@ type TeamSubmission struct {
 }
 
 type TeamPayment struct {
-	TeamID          string   `db:"team_id"`
-	TeamName        string   `db:"team_name"`
-	TeamMemberMails []string `db:"team_member_mails"`
-	PaymentFilename string   `db:"payment_filename"`
-	PaymentURL      string   `db:"payment_url"`
-	PaymentStatus   string   `db:"payment_status"`
-	Code            string   `db:"code"`
+	TeamID          string `db:"team_id"`
+	TeamName        string `db:"team_name"`
+	TeamMemberMails string `db:"team_member_mails"`
+	PaymentFilename string `db:"payment_filename"`
+	PaymentURL      string `db:"payment_url"`
+	PaymentStatus   int8   `db:"payment_status"`
+	Code            string `db:"code"`
 }

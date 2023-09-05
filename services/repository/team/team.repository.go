@@ -222,23 +222,23 @@ func (r *Repository) GetTeamCount(ctx context.Context) (int, error) {
 	return count, nil
 }
 
-func (r *Repository) GetPayments(ctx context.Context, page int, pageSize int) (*entity.TeamPayment, error) {
+func (r *Repository) GetPayments(ctx context.Context, page int, pageSize int) ([]entity.TeamPayment, error) {
 	query := `
         SELECT
             t.team_id, t.team_name, t.team_member_mails, td.payment_filename, td.payment_url,
             td.payment_status, tc.code
         FROM teams t
 		LEFT JOIN teams_docs td
-		ON t.teams_id = td.teams_id
+		ON t.team_id = td.team_id
 		LEFT JOIN teams_code tc
-		ON t.teams_id = tc.teams_id
+		ON t.team_id = tc.team_id
 		ORDER BY t.team_name
-		LIMIT ? OFFSET ?
+		LIMIT $1 OFFSET $2
     `
 
-	resp := entity.TeamPayment{}
+	resp := []entity.TeamPayment{}
 	offset := (page - 1) * pageSize
-	err := r.db.GetContext(ctx, &resp, query, pageSize, offset)
+	err := r.db.SelectContext(ctx, &resp, query, pageSize, offset)
 
-	return &resp, err
+	return resp, err
 }

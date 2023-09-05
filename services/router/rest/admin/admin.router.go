@@ -78,8 +78,8 @@ func (r *Router) RegisterAdmin(g *guard.GuardContext) error {
 }
 
 func (r *Router) GetTeamPayment(g *guard.AuthGuardContext) error {
-	pageStr := g.FiberCtx.Params("page")
-	pageSizeStr := g.FiberCtx.Params("page_size")
+	pageStr := g.FiberCtx.Queries()["page"]
+	pageSizeStr := g.FiberCtx.Queries()["page_size"]
 	if pageStr == "" {
 		pageStr = "1"
 	}
@@ -97,14 +97,15 @@ func (r *Router) GetTeamPayment(g *guard.AuthGuardContext) error {
 	}
 	resp, err := r.usecase.GetTeamPayment(g.FiberCtx.Context(), int(page), int(pageSize))
 	if err != nil {
+		fmt.Println(err)
 		return g.ReturnError(http.StatusNotFound, "cannot get teams payment")
 	}
 	return g.ReturnSuccess(resp)
 }
 
 func (r *Router) GetUserDocsList(g *guard.AuthGuardContext) error {
-	pageStr := g.FiberCtx.Params("page")
-	pageSizeStr := g.FiberCtx.Params("page_size")
+	pageStr := g.FiberCtx.Queries()["page"]
+	pageSizeStr := g.FiberCtx.Queries()["page_size"]
 	if pageStr == "" {
 		pageStr = "1"
 	}
@@ -122,6 +123,7 @@ func (r *Router) GetUserDocsList(g *guard.AuthGuardContext) error {
 	}
 	resp, err := r.usecase.GetUserList(g.FiberCtx.Context(), int(page), int(pageSize))
 	if err != nil {
+		fmt.Println(err)
 		return g.ReturnError(http.StatusNotFound, "cannot get user docs")
 	}
 	return g.ReturnSuccess(resp)

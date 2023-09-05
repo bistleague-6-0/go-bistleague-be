@@ -80,3 +80,13 @@ type GetSubmissionResponseDTO struct {
 	SubmissionUrl        string    `json:"submission_url"`
 	SubmissionLastUpdate time.Time `json:"submission_lastupdate"`
 }
+
+type GetTeamPaymentResponseDTO struct {
+	TeamID          string   `json:"team_id"`
+	TeamName        string   `json:"team_name"`
+	TeamMemberMails []string `json:"team_member_mails"`
+	PaymentFilename string   `json:"payment_filename"`
+	PaymentURL      string   `json:"payment_url"`
+	PaymentStatus   string   `json:"payment_status"`
+	Code            string   `json:"code"`
+}

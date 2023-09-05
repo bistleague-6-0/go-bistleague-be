@@ -25,20 +25,20 @@ type UserEntity struct {
 }
 
 type UserDocs struct {
-	UID                  string `db:"uid"`
-	TeamName             string `db:"team_name"`
-	FullName             string `db:"full_name"`
-	StudentCardFilename  string `db:"student_card_filename"`
-	StudentCardURL       string `db:"student_card_url"`
-	StudentCardStatus    string `db:"student_card_status"`
-	SelfPortraitFilename string `db:"self_portrait_filename"`
-	SelfPortraitURL      string `db:"self_portrait_url"`
-	SelfPortraitStatus   string `db:"self_portrait_status"`
-	TwibbonFilename      string `db:"twibbon_filename"`
-	TwibbonURL           string `db:"twibbon_url"`
-	TwibbonStatus        string `db:"twibbon_status"`
-	EnrollmentFilename   string `db:"enrollment_filename"`
-	EnrollmentURL        string `db:"enrollment_url"`
-	EnrollmentStatus     string `db:"enrollment_status"`
-	IsProfileVerified    bool   `db:"is_profile_verified"`
+	UID                  string         `db:"uid"`
+	TeamName             sql.NullString `db:"team_name"`
+	FullName             string         `db:"full_name"`
+	StudentCardFilename  sql.NullString `db:"student_card_filename"`
+	StudentCardURL       sql.NullString `db:"student_card_url"`
+	StudentCardStatus    int8           `db:"student_card_status"`
+	SelfPortraitFilename sql.NullString `db:"self_portrait_filename"`
+	SelfPortraitURL      sql.NullString `db:"self_portrait_url"`
+	SelfPortraitStatus   int8           `db:"self_portrait_status"`
+	TwibbonFilename      sql.NullString `db:"twibbon_filename"`
+	TwibbonURL           sql.NullString `db:"twibbon_url"`
+	TwibbonStatus        int8           `db:"twibbon_status"`
+	EnrollmentFilename   sql.NullString `db:"enrollment_filename"`
+	EnrollmentURL        sql.NullString `db:"enrollment_url"`
+	EnrollmentStatus     int8           `db:"enrollment_status"`
+	IsProfileVerified    bool           `db:"is_profile_verified"`
 }

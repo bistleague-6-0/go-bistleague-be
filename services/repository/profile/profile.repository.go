@@ -88,7 +88,7 @@ func (r *Repository) GetUserCount(ctx context.Context) (int, error) {
 	return count, nil
 }
 
-func (r *Repository) GetUserList(ctx context.Context, page int, pageSize int) (*entity.UserDocs, error) {
+func (r *Repository) GetUserList(ctx context.Context, page int, pageSize int) ([]entity.UserDocs, error) {
 	q := `SELECT 
 			u.uid, t.team_name, u.full_name, 
 			ud.student_card_filename, ud.student_card_url, ud.student_card_status, 
@@ -97,18 +97,18 @@ func (r *Repository) GetUserList(ctx context.Context, page int, pageSize int) (*
 			ud.enrollment_filename, ud.enrollment_url, ud.enrollment_status,
 			u.is_profile_verified
 		FROM users u
-		LEFT JOIN users_docs
+		LEFT JOIN users_docs ud
 		ON u.uid = ud.uid
 		LEFT JOIN teams t
 		ON u.team_id = t.team_id
 		ORDER BY u.full_name
-		LIMIT ? OFFSET ?
+		LIMIT $1 OFFSET $2
 	`
-	resp := entity.UserDocs{}
+	resp := []entity.UserDocs{}
 	offset := (page - 1) * pageSize
-	err := r.db.GetContext(ctx, &resp, q, pageSize, offset)
+	err := r.db.SelectContext(ctx, &resp, q, pageSize, offset)
 	if err != nil {
 		return nil, err
 	}
-	return &resp, nil
+	return resp, nil
 }

@@ -28,10 +28,9 @@ func (r *Repository) RegisterNewAdmin(ctx context.Context, newAdmin entity.Admin
 	resp := newAdmin
 	tx, err := r.db.BeginTxx(ctx, nil)
 	query := r.qb.Insert("admins").Rows(goqu.Record{
-		"email":     newAdmin.Email,
+		"username":  newAdmin.Username,
 		"password":  newAdmin.Password,
 		"full_name": newAdmin.FullName,
-		"username":  newAdmin.Username,
 	}).Returning("uid")
 	sql, _, err := query.ToSQL()
 	if err != nil {
