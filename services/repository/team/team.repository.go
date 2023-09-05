@@ -215,3 +215,34 @@ func (r *Repository) GetSubmission(ctx context.Context, teamID string) (*entity.
 
 	return &resp, err
 }
+
+func (r *Repository) GetTeamCount(ctx context.Context) (int, error) {
+	q := `SELECT COUNT(*) FROM teams`
+	var count int
+	err := r.db.GetContext(ctx, &count, q)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func (r *Repository) GetPayments(ctx context.Context, page int, pageSize int) ([]entity.TeamPayment, error) {
+	query := `
+        SELECT
+            t.team_id, t.team_name, t.team_member_mails, td.payment_filename, td.payment_url,
+            td.payment_status, tc.code
+        FROM teams t
+		LEFT JOIN teams_docs td
+		ON t.team_id = td.team_id
+		LEFT JOIN teams_code tc
+		ON t.team_id = tc.team_id
+		ORDER BY t.team_name
+		LIMIT $1 OFFSET $2
+    `
+
+	resp := []entity.TeamPayment{}
+	offset := (page - 1) * pageSize
+	err := r.db.SelectContext(ctx, &resp, query, pageSize, offset)
+
+	return resp, err
+}

@@ -4,16 +4,18 @@ import (
 	"bistleague-be/application"
 	"bistleague-be/model/config"
 	"bistleague-be/model/dto"
+	"bistleague-be/services/router/rest/admin"
 	"bistleague-be/services/router/rest/auth"
 	"bistleague-be/services/router/rest/hello"
 	"bistleague-be/services/router/rest/profile"
 	"bistleague-be/services/router/rest/team"
 	"context"
 	"fmt"
+	"net/http"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"net/http"
 )
 
 func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
@@ -68,14 +70,9 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	teamRoute := team.New(cfg, resource.Vld, usecase.TeamUC)
 	teamRoute.Register(app)
 
-	// admin group
-	adminGroup := app.Group("/admin")
-	adminGroup.Get("", func(ctx *fiber.Ctx) error {
-		return ctx.JSON(dto.NoBodyDTOResponseWrapper{
-			Status:  http.StatusOK,
-			Message: "Fuck You Hacker!",
-		})
-	})
+	// admin route
+	adminRoute := admin.New(cfg, usecase.AdminUC, resource.Vld)
+	adminRoute.RegisterRoute(app)
 
 	return app, nil
 }

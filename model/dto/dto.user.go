@@ -28,3 +28,22 @@ type UserProfileResponseDTO struct {
 	LinkedInURL string `json:"linkedin_url"`
 	LineID      string `json:"line_id"`
 }
+
+type UserDocsResponseDTO struct {
+	UID                  string `json:"uid"`
+	TeamName             string `json:"team_name"`
+	FullName             string `json:"full_name"`
+	StudentCardFilename  string `json:"student_card_filename"`
+	StudentCardURL       string `json:"student_card_url"`
+	StudentCardStatus    string `json:"student_card_status"`
+	SelfPortraitFilename string `json:"self_portrait_filename"`
+	SelfPortraitURL      string `json:"self_portrait_url"`
+	SelfPortraitStatus   string `json:"self_portrait_status"`
+	TwibbonFilename      string `json:"twibbon_filename"`
+	TwibbonURL           string `json:"twibbon_url"`
+	TwibbonStatus        string `json:"twibbon_status"`
+	EnrollmentFilename   string `json:"enrollment_filename"`
+	EnrollmentURL        string `json:"enrollment_url"`
+	EnrollmentStatus     string `json:"enrollment_status"`
+	IsProfileVerified    bool   `db:"is_profile_verified"`
+}

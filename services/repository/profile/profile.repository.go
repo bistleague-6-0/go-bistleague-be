@@ -4,6 +4,7 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/entity"
 	"context"
+
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
 )
@@ -75,4 +76,39 @@ func (r *Repository) UpdateUserDocument(ctx context.Context, userID string, file
 	}
 	_, err = r.db.ExecContext(ctx, query)
 	return err
+}
+
+func (r *Repository) GetUserCount(ctx context.Context) (int, error) {
+	q := `SELECT COUNT(*) FROM users`
+	var count int
+	err := r.db.GetContext(ctx, &count, q)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func (r *Repository) GetUserList(ctx context.Context, page int, pageSize int) ([]entity.UserDocs, error) {
+	q := `SELECT 
+			u.uid, t.team_name, u.full_name, 
+			ud.student_card_filename, ud.student_card_url, ud.student_card_status, 
+			ud.self_portrait_filename, ud.self_portrait_url, ud.self_portrait_status,
+			ud.twibbon_filename, ud.twibbon_url, ud.twibbon_status,
+			ud.enrollment_filename, ud.enrollment_url, ud.enrollment_status,
+			u.is_profile_verified
+		FROM users u
+		LEFT JOIN users_docs ud
+		ON u.uid = ud.uid
+		LEFT JOIN teams t
+		ON u.team_id = t.team_id
+		ORDER BY u.full_name
+		LIMIT $1 OFFSET $2
+	`
+	resp := []entity.UserDocs{}
+	offset := (page - 1) * pageSize
+	err := r.db.SelectContext(ctx, &resp, q, pageSize, offset)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }

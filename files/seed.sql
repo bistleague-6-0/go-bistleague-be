@@ -67,4 +67,13 @@ CREATE TABLE IF NOT EXISTS teams_code(
     code VARCHAR(55) UNIQUE,
     team_member_mails TEXT[],
     used int8 default 2
-)
+);
+
+CREATE TABLE IF NOT EXISTS admins (
+    uid uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    username varchar(55) unique  not null ,
+    password VARCHAR(155) not null,
+    full_name VARCHAR(155) not null,
+    inserted_at timestamp NOT NULL DEFAULT now(),
+    updated_at timestamp
+);
