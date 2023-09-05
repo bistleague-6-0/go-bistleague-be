@@ -2,6 +2,7 @@ package application
 
 import (
 	"bistleague-be/model/config"
+	"bistleague-be/services/usecase/admin"
 	"bistleague-be/services/usecase/auth"
 	"bistleague-be/services/usecase/hello"
 	"bistleague-be/services/usecase/profile"
@@ -13,6 +14,7 @@ type CommonUsecase struct {
 	AuthUC    *auth.Usecase
 	TeamUC    *team.Usecase
 	ProfileUC *profile.Usecase
+	AdminUC   *admin.Usecase
 }
 
 func NewCommonUsecase(cfg *config.Config, commonRepo *CommonRepository) (*CommonUsecase, error) {
@@ -20,11 +22,13 @@ func NewCommonUsecase(cfg *config.Config, commonRepo *CommonRepository) (*Common
 	authUC := auth.New(cfg, commonRepo.authRepo)
 	teamUC := team.New(cfg, commonRepo.teamRepo, commonRepo.storageRepo, commonRepo.profileRepo)
 	profileUC := profile.New(cfg, commonRepo.profileRepo)
+	adminUC := admin.New(cfg, commonRepo.adminRepo)
 	commonUC := CommonUsecase{
 		HelloUC:   helloUC,
 		AuthUC:    authUC,
 		TeamUC:    teamUC,
 		ProfileUC: profileUC,
+		AdminUC:   adminUC,
 	}
 	return &commonUC, nil
 }

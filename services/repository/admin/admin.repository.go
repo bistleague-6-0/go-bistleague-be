@@ -27,7 +27,7 @@ func New(cfg *config.Config, db *sqlx.DB, qb *goqu.DialectWrapper) *Repository {
 func (r *Repository) RegisterNewAdmin(ctx context.Context, newAdmin entity.AdminEntity) (*entity.AdminEntity, error) {
 	resp := newAdmin
 	tx, err := r.db.BeginTxx(ctx, nil)
-	query := r.qb.Insert("users").Rows(goqu.Record{
+	query := r.qb.Insert("admins").Rows(goqu.Record{
 		"email":     newAdmin.Email,
 		"password":  newAdmin.Password,
 		"full_name": newAdmin.FullName,
@@ -50,8 +50,8 @@ func (r *Repository) RegisterNewAdmin(ctx context.Context, newAdmin entity.Admin
 func (r *Repository) LoginAdmin(ctx context.Context, username string) (*entity.AdminEntity, error) {
 	resp := entity.AdminEntity{}
 	query := r.qb.
-		Select("uid", "password", "username", "name").
-		From("users").
+		Select("uid", "password", "username", "full_name").
+		From("admins").
 		Where(goqu.C("username").Eq(username)).Limit(1)
 	sql, _, err := query.ToSQL()
 	if err != nil {
