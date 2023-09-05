@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a03090a2-a7b9-4c52-bc98-8ac161261553",
+		"_postman_id": "131f7ba0-0773-4a5b-8327-56dd3e7f12dc",
 		"name": "Bist League",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19260182"
 	},
 	"item": [
 		{
@@ -22,7 +23,15 @@
 								}
 							}
 						},
-						"url": "{{local}}/login"
+						"url": {
+							"raw": "{{local}}/login",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"login"
+							]
+						}
 					},
 					"response": []
 				},
@@ -40,7 +49,15 @@
 								}
 							}
 						},
-						"url": "{{staging}}/register"
+						"url": {
+							"raw": "{{staging}}/register",
+							"host": [
+								"{{staging}}"
+							],
+							"path": [
+								"register"
+							]
+						}
 					},
 					"response": []
 				}
@@ -54,9 +71,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6IjBmMzI4NjM0LWMwYjQtNGE5Zi1iYTBmLWFiYzEzZTNmMzE1YSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxOTA3MTEsImlhdCI6MTY5MTc1ODcxMX0.s_NIdDQ5PjMbuVDAyegGsjk_whqxl4BZ7RbYIKYDREE"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6IjBmMzI4NjM0LWMwYjQtNGE5Zi1iYTBmLWFiYzEzZTNmMzE1YSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxOTA3MTEsImlhdCI6MTY5MTc1ODcxMX0.s_NIdDQ5PjMbuVDAyegGsjk_whqxl4BZ7RbYIKYDREE",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [],
@@ -69,7 +90,15 @@
 								}
 							}
 						},
-						"url": "{{local}}/team"
+						"url": {
+							"raw": "{{local}}/team",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"team"
+							]
+						}
 					},
 					"response": []
 				},
@@ -78,13 +107,25 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiNTE3ZTQyNTMtYzMwZC00MWJlLTk3OTEtNDVkYWE0YjA2NmU2IiwidXNlcl9pZCI6IjNiZDkyODI1LTNhNzgtNDA2Mi05ZjU1LTQ3ZTZkNzc2NjFmMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxODgxODQsImlhdCI6MTY5MTc1NjE4NH0.5sq81xOXGMZFqxgBgytr_issQJ27UyJEKCdasmSgeck"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiNTE3ZTQyNTMtYzMwZC00MWJlLTk3OTEtNDVkYWE0YjA2NmU2IiwidXNlcl9pZCI6IjNiZDkyODI1LTNhNzgtNDA2Mi05ZjU1LTQ3ZTZkNzc2NjFmMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxODgxODQsImlhdCI6MTY5MTc1NjE4NH0.5sq81xOXGMZFqxgBgytr_issQJ27UyJEKCdasmSgeck",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
 						"header": [],
-						"url": "{{local}}/team"
+						"url": {
+							"raw": "{{local}}/team",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"team"
+							]
+						}
 					},
 					"response": [
 						{
@@ -92,10 +133,18 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"url": "{{local}}/team"
+								"url": {
+									"raw": "{{local}}/team",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"team"
+									]
+								}
 							},
 							"_postman_previewlanguage": "json",
-							"header": null,
+							"header": [],
 							"cookie": [],
 							"body": "{\n    \"status\": 200,\n    \"msg\": \"ok\",\n    \"data\": {\n        \"team_id\": \"f5fca5ed-c831-4e66-bfc7-5a791f4e4399\",\n        \"team_name\": \"tim jekatah\",\n        \"is_active\": false,\n        \"verification_status\": \"rejected\",\n        \"verification_status_code\": -1,\n        \"members\": [\n            {\n                \"user_id\": \"0e824030-fc43-43ac-a80d-bdd3fd42c25d\",\n                \"username\": \"ellay_alay\",\n                \"fullname\": \"John Doe\",\n                \"is_leader\": true\n            },\n            {\n                \"user_id\": \"af95fb5a-7f76-4e19-9de4-d5b37b5fbac3\",\n                \"username\": \"julet4_bab\",\n                \"fullname\": \"Biba Babi\",\n                \"is_leader\": false\n            }\n        ]\n    }\n}"
 						},
@@ -104,10 +153,18 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"url": "{{local}}/team"
+								"url": {
+									"raw": "{{local}}/team",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"team"
+									]
+								}
 							},
 							"_postman_previewlanguage": "json",
-							"header": null,
+							"header": [],
 							"cookie": [],
 							"body": "{\n    \"status\": 200,\n    \"msg\": \"ok\",\n    \"data\": {\n        \"team_id\": \"f5fca5ed-c831-4e66-bfc7-5a791f4e4399\",\n        \"team_name\": \"tim jekatah\",\n        \"is_active\": false,\n        \"verification_status\": \"accepted\",\n        \"verification_status_code\": 1,\n        \"members\": [\n            {\n                \"user_id\": \"0e824030-fc43-43ac-a80d-bdd3fd42c25d\",\n                \"username\": \"ellay_alay\",\n                \"fullname\": \"John Doe\",\n                \"is_leader\": true\n            },\n            {\n                \"user_id\": \"af95fb5a-7f76-4e19-9de4-d5b37b5fbac3\",\n                \"username\": \"julet4_bab\",\n                \"fullname\": \"Biba Babi\",\n                \"is_leader\": false\n            }\n        ]\n    }\n}"
 						}
@@ -118,9 +175,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6ImVkNzYwOGE5LTExYzEtNDU3Zi1hN2EzLWY4NDZjZmM2ZDYwMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTE4NTQyNjYsImlhdCI6MTY5MTQyMjI2Nn0.a1MlpXemh3v3LCkkiQHtZE_DKEfrpn4WngvHAW0TdSU"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6ImVkNzYwOGE5LTExYzEtNDU3Zi1hN2EzLWY4NDZjZmM2ZDYwMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTE4NTQyNjYsImlhdCI6MTY5MTQyMjI2Nn0.a1MlpXemh3v3LCkkiQHtZE_DKEfrpn4WngvHAW0TdSU",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [],
@@ -133,7 +194,16 @@
 								}
 							}
 						},
-						"url": "{{staging}}/team/redeem"
+						"url": {
+							"raw": "{{staging}}/team/redeem",
+							"host": [
+								"{{staging}}"
+							],
+							"path": [
+								"team",
+								"redeem"
+							]
+						}
 					},
 					"response": []
 				},
@@ -142,9 +212,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiNTE3ZTQyNTMtYzMwZC00MWJlLTk3OTEtNDVkYWE0YjA2NmU2IiwidXNlcl9pZCI6IjNiZDkyODI1LTNhNzgtNDA2Mi05ZjU1LTQ3ZTZkNzc2NjFmMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxODgxODQsImlhdCI6MTY5MTc1NjE4NH0.5sq81xOXGMZFqxgBgytr_issQJ27UyJEKCdasmSgeck"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiNTE3ZTQyNTMtYzMwZC00MWJlLTk3OTEtNDVkYWE0YjA2NmU2IiwidXNlcl9pZCI6IjNiZDkyODI1LTNhNzgtNDA2Mi05ZjU1LTQ3ZTZkNzc2NjFmMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxODgxODQsImlhdCI6MTY5MTc1NjE4NH0.5sq81xOXGMZFqxgBgytr_issQJ27UyJEKCdasmSgeck",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [],
@@ -157,7 +231,16 @@
 								}
 							}
 						},
-						"url": "{{local}}/team/document"
+						"url": {
+							"raw": "{{local}}/team/document",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"team",
+								"document"
+							]
+						}
 					},
 					"response": [
 						{
@@ -174,12 +257,21 @@
 										}
 									}
 								},
-								"url": "{{local}}/team/document"
+								"url": {
+									"raw": "{{local}}/team/document",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"team",
+										"document"
+									]
+								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
-							"body": null
+							"body": ""
 						},
 						{
 							"name": "Student Card",
@@ -195,12 +287,21 @@
 										}
 									}
 								},
-								"url": "{{local}}/team/document"
+								"url": {
+									"raw": "{{local}}/team/document",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"team",
+										"document"
+									]
+								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
-							"body": null
+							"body": ""
 						},
 						{
 							"name": "Self Portrait",
@@ -216,12 +317,21 @@
 										}
 									}
 								},
-								"url": "{{local}}/team/document"
+								"url": {
+									"raw": "{{local}}/team/document",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"team",
+										"document"
+									]
+								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
-							"body": null
+							"body": ""
 						},
 						{
 							"name": "Twibbon",
@@ -237,12 +347,21 @@
 										}
 									}
 								},
-								"url": "{{local}}/team/document"
+								"url": {
+									"raw": "{{local}}/team/document",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"team",
+										"document"
+									]
+								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
-							"body": null
+							"body": ""
 						},
 						{
 							"name": "Enrollment",
@@ -258,12 +377,21 @@
 										}
 									}
 								},
-								"url": "{{local}}/team/document"
+								"url": {
+									"raw": "{{local}}/team/document",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"team",
+										"document"
+									]
+								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
-							"body": null
+							"body": ""
 						}
 					]
 				},
@@ -282,7 +410,17 @@
 								}
 							]
 						},
-						"url": "{{local}}/team/document/upload"
+						"url": {
+							"raw": "{{local}}/team/document/upload",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"team",
+								"document",
+								"upload"
+							]
+						}
 					},
 					"response": []
 				}
@@ -296,9 +434,13 @@
 					"request": {
 						"auth": {
 							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiNTE3ZTQyNTMtYzMwZC00MWJlLTk3OTEtNDVkYWE0YjA2NmU2IiwidXNlcl9pZCI6IjNiZDkyODI1LTNhNzgtNDA2Mi05ZjU1LTQ3ZTZkNzc2NjFmMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxNzgwNzksImlhdCI6MTY5MTc0NjA3OX0.7CHf0-WlSAWpDF1Hu_DoCu7eq2JiXLtvx5rtRnbL1XY"
-							}
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiNTE3ZTQyNTMtYzMwZC00MWJlLTk3OTEtNDVkYWE0YjA2NmU2IiwidXNlcl9pZCI6IjNiZDkyODI1LTNhNzgtNDA2Mi05ZjU1LTQ3ZTZkNzc2NjFmMSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTIxNzgwNzksImlhdCI6MTY5MTc0NjA3OX0.7CHf0-WlSAWpDF1Hu_DoCu7eq2JiXLtvx5rtRnbL1XY",
+									"type": "string"
+								}
+							]
 						},
 						"method": "PUT",
 						"header": [],
@@ -311,7 +453,15 @@
 								}
 							}
 						},
-						"url": "{{staging}}/profile"
+						"url": {
+							"raw": "{{staging}}/profile",
+							"host": [
+								"{{staging}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
 					},
 					"response": []
 				},
@@ -320,7 +470,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "https://be-staging-b6utdt2kwa-et.a.run.app/profile/3bd92825-3a78-4062-9f55-47e6d77661f1"
+						"url": {
+							"raw": "https://be-staging-b6utdt2kwa-et.a.run.app/profile/3bd92825-3a78-4062-9f55-47e6d77661f1",
+							"protocol": "https",
+							"host": [
+								"be-staging-b6utdt2kwa-et",
+								"a",
+								"run",
+								"app"
+							],
+							"path": [
+								"profile",
+								"3bd92825-3a78-4062-9f55-47e6d77661f1"
+							]
+						}
 					},
 					"response": []
 				}
@@ -334,9 +497,410 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{local}}/admin/verif"
+						"url": {
+							"raw": "{{local}}/admin/verif",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"admin",
+								"verif"
+							]
+						}
 					},
 					"response": []
+				},
+				{
+					"name": "Create Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "BIST-Zeus-Token",
+								"value": "tanya yandy hehe",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"youruname\",\n    \"password\": \"yourpass\",\n    \"full_name\": \"yourfullname\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{staging}}/admin/register",
+							"host": [
+								"{{staging}}"
+							],
+							"path": [
+								"admin",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Admin Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "BIST-Zeus-Token",
+										"value": "tanya yandy hehe",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"riandyhasan\",\n    \"password\": \"GueAdmin\",\n    \"full_name\": \"Yandy\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/register",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"register"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 05 Sep 2023 13:41:03 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								},
+								{
+									"key": "Content-Length",
+									"value": "364"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"msg\": \"ok\",\n    \"data\": {\n        \"admin\": {\n            \"admin_id\": \"89293642-9bd1-4ce9-8bf0-db16412a249e\",\n            \"username\": \"riandyhasan\"\n        },\n        \"jwt_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6Ijg5MjkzNjQyLTliZDEtNGNlOS04YmYwLWRiMTY0MTJhMjQ5ZSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTQzNTMyNjMsImlhdCI6MTY5MzkyMTI2M30.eMn3I0TTpYT91GHe73wbV7BaNpFiT9-5DUjVXY1EfCU\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Admin Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"youruname\",\n    \"password\": \"yourpassword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{staging}}/admin/login",
+							"host": [
+								"{{staging}}"
+							],
+							"path": [
+								"admin",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Admin Login Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"riandyhasan\",\n    \"password\": \"GueAdmin\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/login",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 05 Sep 2023 13:41:50 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								},
+								{
+									"key": "Content-Length",
+									"value": "366"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"msg\": \"ok\",\n    \"data\": {\n        \"admin\": {\n            \"admin_id\": \"89293642-9bd1-4ce9-8bf0-db16412a249e\",\n            \"username\": \"riandyhasan\"\n        },\n        \"jwt_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6Ijg5MjkzNjQyLTliZDEtNGNlOS04YmYwLWRiMTY0MTJhMjQ5ZSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTQzNTMzMTAsImlhdCI6MTY5MzkyMTMxMH0.gFteJCPf4fVW7ZAajOXXAtJSOW7lpaiIAYlBdN6NQPs\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Team Payments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6Ijg5MjkzNjQyLTliZDEtNGNlOS04YmYwLWRiMTY0MTJhMjQ5ZSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTQzNTM0ODYsImlhdCI6MTY5MzkyMTQ4Nn0.EVhlSvmKnHVdOe1W2-8EHKqqY1iEvVnivjo9SNeevSk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{staging}}/admin/payments?page=1&page_size=10",
+							"host": [
+								"{{staging}}"
+							],
+							"path": [
+								"admin",
+								"payments"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Team Payments Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/admin/payments?page=1&page_size=10",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"payments"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "page_size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 05 Sep 2023 14:45:45 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1003"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"msg\": \"ok\",\n    \"data\": {\n        \"page_size\": 10,\n        \"page\": 1,\n        \"total_page\": 2,\n        \"page_data\": [\n            {\n                \"team_id\": \"2b5ce3c4-7a06-4340-a322-77546490f05d\",\n                \"team_name\": \"Aman Damai\",\n                \"team_member_mails\": [\n                    \"koce@gmail.com\"\n                ],\n                \"payment_filename\": \"\",\n                \"payment_url\": \"\",\n                \"payment_status\": \"no file\",\n                \"code\": \"bVy5Ow\"\n            },\n            {\n                \"team_id\": \"2ad17522-2e78-4bcd-98a1-2f560030aa46\",\n                \"team_name\": \"BC SMANSASI\",\n                \"team_member_mails\": [\n                    \"1@gmail.com\",\n                    \"2@gmail.com\",\n                    \"3@gmail.com\"\n                ],\n                \"payment_filename\": \"\",\n                \"payment_url\": \"\",\n                \"payment_status\": \"no file\",\n                \"code\": \"vjgioG\"\n            },\n            {\n                \"team_id\": \"3ded5dd2-ca6b-4685-8f38-f8ef192c1495\",\n                \"team_name\": \"Cili Corner\",\n                \"team_member_mails\": [\n                    \"1@gmail.com\",\n                    \"2@gmail.com\",\n                    \"3@gmail.com\"\n                ],\n                \"payment_filename\": \"\",\n                \"payment_url\": \"\",\n                \"payment_status\": \"no file\",\n                \"code\": \"Ma6hAQ\"\n            },\n            {\n                \"team_id\": \"ce291cbc-57a2-46aa-baf5-5147281c49c7\",\n                \"team_name\": \"First Team Lah\",\n                \"team_member_mails\": [\n                    \"email@email.com\",\n                    \"maama@mama.co\",\n                    \"email@notemail.com\"\n                ],\n                \"payment_filename\": \"bukti.png\",\n                \"payment_url\": \"https://storage.googleapis.com/bist6-stg/payment.ZyCWpVpoYfGWGRjkRXOiNYOAnUpEVghiFEoXS5RQOclj0zQ7oZlHMelpK5vdY7MG4NxhvKDvzAtCAief5iLYa1YOwqUcViXySVLLsvwE9uDv6Y4XcRAmieP8A2j3qyaE.png\",\n                \"payment_status\": \"under review\",\n                \"code\": \"037690cf\"\n            },\n            {\n                \"team_id\": \"24c7027f-746c-4460-8731-34e664b59ba8\",\n                \"team_name\": \"Gay Team\",\n                \"team_member_mails\": [\n                    \"1@gmail.com\"\n                ],\n                \"payment_filename\": \"\",\n                \"payment_url\": \"\",\n                \"payment_status\": \"no file\",\n                \"code\": \"zC0R2C\"\n            },\n            {\n                \"team_id\": \"2c133203-561d-4678-b685-452f7b013ab2\",\n                \"team_name\": \"Iyal Lovers\",\n                \"team_member_mails\": [\n                    \"iyal@gmail.com\"\n                ],\n                \"payment_filename\": \"\",\n                \"payment_url\": \"\",\n                \"payment_status\": \"no file\",\n                \"code\": \"i29khw\"\n            },\n            {\n                \"team_id\": \"b2797225-23e8-4241-b56f-e99aaa6a22a8\",\n                \"team_name\": \"Need Help\",\n                \"team_member_mails\": [\n                    \"1@gmail.com\"\n                ],\n                \"payment_filename\": \"\",\n                \"payment_url\": \"\",\n                \"payment_status\": \"no file\",\n                \"code\": \"ZzeEoV\"\n            },\n            {\n                \"team_id\": \"881ffb5b-75a7-48ad-b4fc-03b3b64515de\",\n                \"team_name\": \"Second Team Lah\",\n                \"team_member_mails\": [\n                    \"email2@email.com\",\n                    \"maama2@mama.co\",\n                    \"emai2@notemail.com\"\n                ],\n                \"payment_filename\": \"\",\n                \"payment_url\": \"\",\n                \"payment_status\": \"no file\",\n                \"code\": \"9F3qNf\"\n            },\n            {\n                \"team_id\": \"c9a7182d-cecf-4d1c-a078-a497f612c7fa\",\n                \"team_name\": \"Sekar Gandes\",\n                \"team_member_mails\": [\n                    \"1@gmail.com\",\n                    \"2@gmail.com\",\n                    \"3@gmail.com\"\n                ],\n                \"payment_filename\": \"\",\n                \"payment_url\": \"\",\n                \"payment_status\": \"no file\",\n                \"code\": \"qPhqDZ\"\n            },\n            {\n                \"team_id\": \"f902b9d7-8f5b-429d-9e8a-adcd5c07c614\",\n                \"team_name\": \"Team Iyal\",\n                \"team_member_mails\": [\n                    \"email@email.com\",\n                    \"maama@mama.co\",\n                    \"email@notemail.com\"\n                ],\n                \"payment_filename\": \"\",\n                \"payment_url\": \"\",\n                \"payment_status\": \"no file\",\n                \"code\": \"6b873f86\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6Ijg5MjkzNjQyLTliZDEtNGNlOS04YmYwLWRiMTY0MTJhMjQ5ZSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTQzNTM0ODYsImlhdCI6MTY5MzkyMTQ4Nn0.EVhlSvmKnHVdOe1W2-8EHKqqY1iEvVnivjo9SNeevSk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{staging}}/admin/users?page=1&page_size=10",
+							"host": [
+								"{{staging}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get User List Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/admin/users?page=1&page_size=10",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "page_size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 05 Sep 2023 14:46:13 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1273"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"msg\": \"ok\",\n    \"data\": {\n        \"page_size\": 10,\n        \"page\": 1,\n        \"total_page\": 4,\n        \"page_data\": [\n            {\n                \"uid\": \"1360cec7-ed03-424b-a2bb-db0855f537e8\",\n                \"team_name\": \"testing123\",\n                \"full_name\": \"Abraham Megantoro\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"80777cca-ed63-459e-ba51-da87dffbcae2\",\n                \"team_name\": \"\",\n                \"full_name\": \"Abraham Megantoro\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"66c2d50a-63d0-4029-a6f5-d3492bf5af2b\",\n                \"team_name\": \"Iyal Lovers\",\n                \"full_name\": \"Adrenalin\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"8a326d81-de16-4711-a656-df2fcd9a6e5e\",\n                \"team_name\": \"testim13\",\n                \"full_name\": \"Biba Babi\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"dcc628a3-1649-4ced-b1ad-f56e028f0cd4\",\n                \"team_name\": \"jeketi48\",\n                \"full_name\": \"Chika Samudra\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"3b066aee-facc-49da-a9b8-f8f30a35731b\",\n                \"team_name\": \"\",\n                \"full_name\": \"Clara Andyna\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"489301d4-9acb-49ae-b7f8-d80f410a9efc\",\n                \"team_name\": \"BC SMANSASI\",\n                \"full_name\": \"Davinna Maritza\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"a7565e4d-6412-4704-92bf-50575b80ce4d\",\n                \"team_name\": \"Need Help\",\n                \"full_name\": \"Firsa Athaya\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"e43aee0f-8f18-48c1-97fe-32049a99f40b\",\n                \"team_name\": \"First Team Lah\",\n                \"full_name\": \"Florenzia Akhiran\",\n                \"student_card_filename\": \"peymento.jpg\",\n                \"student_card_url\": \"https://storage.googleapis.com/bist6-stg/student_card.7WCcK9FGPwgDLolbnyyCfbxtqnOQjz8H7DIpq4O0asOcbxRFVXTpsjZpNTVbiW3IM5fPed6W4l0sc5LiiWP36PkBomhvMwwhPZ6mmJqIWDOQ2zSPveafK29FjRPqZ4Kt.jpg\",\n                \"student_card_status\": \"under review\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"html-3640299.png\",\n                \"enrollment_url\": \"https://storage.googleapis.com/bist6-stg/enrollment.9zKvRTJIQbhYFF5C6RtNY9b2YwVJLBTfaPwpTo6SZiHO6p7phvFAkJ8BBjInEWi84yPfn0n6rlUzS2EV3zpVf8zNmK210oKNPjv49dBk37MhwB2SBMcywOSFBZqS2Jpn.png\",\n                \"enrollment_status\": \"under review\",\n                \"IsProfileVerified\": true\n            },\n            {\n                \"uid\": \"2f2e1607-1c5a-4e59-b904-2b688873a3b1\",\n                \"team_name\": \"Cili Corner\",\n                \"full_name\": \"Hanif Raihan\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            }\n        ]\n    }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -348,9 +912,13 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": {
-						"token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIyZGZmNzhhMGJkZDVhMDIyMTIwNjM0OTlkNzdlZjRkZWVkMWY2NWIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmlzdGxlYWd1ZS01IiwiYXVkIjoiYmlzdGxlYWd1ZS01IiwiYXV0aF90aW1lIjoxNjkwMjczMDAzLCJ1c2VyX2lkIjoiZmU1QlJNcVFjZGdLdjNsVFgyWXY0QzJQYzBqMiIsInN1YiI6ImZlNUJSTXFRY2RnS3YzbFRYMll2NEMyUGMwajIiLCJpYXQiOjE2OTAyNzMwMDMsImV4cCI6MTY5MDI3NjYwMywiZW1haWwiOiJ0ZXN0MkB0ZXN0LmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJ0ZXN0MkB0ZXN0LmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.tITVYEmXwi0AGxAXfJs4MZx6CEFaufiohjtX_XQwqbXj3DWxKA4GSjwlZF3AyUW50fSAewRXinZ-6wfHNrWk2zt88hExaBVUz6IvVYZEvKHniPwMtAUvmznDKtOI9auCIoC-q2WGqKi-RS8YnVMsjFZozBgdkbr_CLFu0Ln-O2tc2U6J6A5zvYyjI2TumITRQGNjYs2sy_N4DZdX1un30U6FGq--zLtpPBz7Rppc5HmrGU7kr0MSYv2HblCtUwfrTsH3LP0Ngnty7mEZmeUMvXldWRvfUQ93Ys4HUuDzTZllbgFJkz6I1txyClRLlLshe571G5oP4ILXjn7AauR87A"
-					}
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIyZGZmNzhhMGJkZDVhMDIyMTIwNjM0OTlkNzdlZjRkZWVkMWY2NWIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmlzdGxlYWd1ZS01IiwiYXVkIjoiYmlzdGxlYWd1ZS01IiwiYXV0aF90aW1lIjoxNjkwMjczMDAzLCJ1c2VyX2lkIjoiZmU1QlJNcVFjZGdLdjNsVFgyWXY0QzJQYzBqMiIsInN1YiI6ImZlNUJSTXFRY2RnS3YzbFRYMll2NEMyUGMwajIiLCJpYXQiOjE2OTAyNzMwMDMsImV4cCI6MTY5MDI3NjYwMywiZW1haWwiOiJ0ZXN0MkB0ZXN0LmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJ0ZXN0MkB0ZXN0LmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.tITVYEmXwi0AGxAXfJs4MZx6CEFaufiohjtX_XQwqbXj3DWxKA4GSjwlZF3AyUW50fSAewRXinZ-6wfHNrWk2zt88hExaBVUz6IvVYZEvKHniPwMtAUvmznDKtOI9auCIoC-q2WGqKi-RS8YnVMsjFZozBgdkbr_CLFu0Ln-O2tc2U6J6A5zvYyjI2TumITRQGNjYs2sy_N4DZdX1un30U6FGq--zLtpPBz7Rppc5HmrGU7kr0MSYv2HblCtUwfrTsH3LP0Ngnty7mEZmeUMvXldWRvfUQ93Ys4HUuDzTZllbgFJkz6I1txyClRLlLshe571G5oP4ILXjn7AauR87A",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [],
@@ -363,7 +931,15 @@
 						}
 					}
 				},
-				"url": "{{staging}}/hello"
+				"url": {
+					"raw": "{{staging}}/hello",
+					"host": [
+						"{{staging}}"
+					],
+					"path": [
+						"hello"
+					]
+				}
 			},
 			"response": []
 		},
@@ -372,9 +948,13 @@
 			"request": {
 				"auth": {
 					"type": "bearer",
-					"bearer": {
-						"token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImE1MWJiNGJkMWQwYzYxNDc2ZWIxYjcwYzNhNDdjMzE2ZDVmODkzMmIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmlzdC1sZWFndWUtNGZjZWIiLCJhdWQiOiJiaXN0LWxlYWd1ZS00ZmNlYiIsImF1dGhfdGltZSI6MTY4OTA2Nzk3MSwidXNlcl9pZCI6Ikx2ZHlkUmFwWk1lSDlWM3ZmT3h4NGFMT0ZhUTIiLCJzdWIiOiJMdmR5ZFJhcFpNZUg5VjN2Zk94eDRhTE9GYVEyIiwiaWF0IjoxNjg5MDY3OTcxLCJleHAiOjE2ODkwNzE1NzEsImVtYWlsIjoidG90b0B1c2VyLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJ0b3RvQHVzZXIuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.QHMDY3y3TI_QpuKrIFByqMu0-BpIt0cQYcCH98n-pr6v76cCL7KUfv7seCa0YZsTnHH0O_60H2ifw1KmtdNAdQkZ_l7e0ymSvu4VzqfJTHEoj7VhS3S0gfanuqVe2yWBgMHhks3PVYWesQslF5WSiPi8tM5QkmZHfAlQN0DN2Yh_s9c5MNNhhHkX5kQFYahf6z4GSUqJtprlNz8hkxcUtN39D7SDfe5otKNvp-XgqRHKaSg87xd6_m4fl_RcpujDSkceSu07-zSB0j9CwxOegcf4G8jR1o7RnmwsCQaJEs3ILSY9b1P-50vt_alql3jAWixOd0pXPlzEgrDp73vFOw"
-					}
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImE1MWJiNGJkMWQwYzYxNDc2ZWIxYjcwYzNhNDdjMzE2ZDVmODkzMmIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vYmlzdC1sZWFndWUtNGZjZWIiLCJhdWQiOiJiaXN0LWxlYWd1ZS00ZmNlYiIsImF1dGhfdGltZSI6MTY4OTA2Nzk3MSwidXNlcl9pZCI6Ikx2ZHlkUmFwWk1lSDlWM3ZmT3h4NGFMT0ZhUTIiLCJzdWIiOiJMdmR5ZFJhcFpNZUg5VjN2Zk94eDRhTE9GYVEyIiwiaWF0IjoxNjg5MDY3OTcxLCJleHAiOjE2ODkwNzE1NzEsImVtYWlsIjoidG90b0B1c2VyLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJ0b3RvQHVzZXIuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.QHMDY3y3TI_QpuKrIFByqMu0-BpIt0cQYcCH98n-pr6v76cCL7KUfv7seCa0YZsTnHH0O_60H2ifw1KmtdNAdQkZ_l7e0ymSvu4VzqfJTHEoj7VhS3S0gfanuqVe2yWBgMHhks3PVYWesQslF5WSiPi8tM5QkmZHfAlQN0DN2Yh_s9c5MNNhhHkX5kQFYahf6z4GSUqJtprlNz8hkxcUtN39D7SDfe5otKNvp-XgqRHKaSg87xd6_m4fl_RcpujDSkceSu07-zSB0j9CwxOegcf4G8jR1o7RnmwsCQaJEs3ILSY9b1P-50vt_alql3jAWixOd0pXPlzEgrDp73vFOw",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
@@ -385,14 +965,22 @@
 						"variables": "{\n  \"input\": {\n    \"id\": \"1\",\n    \"username\": \"mimimi\",\n    \"email\": \"johndoe@example.com\"\n  }\n}"
 					}
 				},
-				"url": "localhost:8080/gql"
+				"url": {
+					"raw": "localhost:8080/gql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"gql"
+					]
+				}
 			},
 			"response": []
 		}
 	],
 	"auth": {
-		"type": "bearer",
-		"bearer": {}
+		"type": "bearer"
 	},
 	"event": [
 		{
