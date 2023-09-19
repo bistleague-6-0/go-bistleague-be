@@ -20,3 +20,14 @@ type AuthAdminInfoResponse struct {
 	AdminID  string `json:"admin_id"`
 	Username string `json:"username"`
 }
+
+type UpdateTeamPaymentStatus struct {
+	Status    int    `json:"status"`
+	Rejection string `json:"rejection"`
+}
+
+type UpdateUserDocumentStatus struct {
+	DocumentType string `json:"doc_type"`
+	Status       int    `json:"status"`
+	Rejection    string `json:"rejection"`
+}

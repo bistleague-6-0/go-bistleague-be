@@ -84,21 +84,21 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 
 func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]entity.TeamWithUserEntity, error) {
 	query := `select
-    t.team_id, t.team_name, t.team_leader_id, tc.code,
-    td.payment_filename, td.payment_url, td.payment_status,
-    u.uid, u.username, u.full_name,
-    ud.student_card_filename, ud.student_card_url, ud.student_card_status,
-    ud.enrollment_filename, ud.enrollment_url, ud.enrollment_status,
-    ud.self_portrait_filename, ud.self_portrait_url, ud.self_portrait_url,
-    ud.twibbon_filename, ud.twibbon_url, ud.twibbon_url,
-    ud.is_doc_verified, u.is_profile_verified
-from users u
-left join users_docs ud on ud.uid = u.uid
-left join teams t on u.team_id = t.team_id
-left join teams_code tc on tc.team_id = t.team_id
-left join teams_docs td on td.team_id = t.team_id
-where u.team_id = $1 LIMIT 3
-`
+		t.team_id, t.team_name, t.team_leader_id, tc.code,
+		td.payment_filename, td.payment_url, td.payment_status, td.payment_rejection,
+		u.uid, u.username, u.full_name,
+		ud.student_card_filename, ud.student_card_url, ud.student_card_status, ud.student_card_rejection,
+		ud.enrollment_filename, ud.enrollment_url, ud.enrollment_status, ud.enrollment_rejection,
+		ud.self_portrait_filename, ud.self_portrait_url, ud.self_portrait_url, ud.self_portrait_rejection
+		ud.twibbon_filename, ud.twibbon_url, ud.twibbon_status, ud.twibbon_rejection,
+		ud.is_doc_verified, u.is_profile_verified
+	from users u
+		left join users_docs ud on ud.uid = u.uid
+		left join teams t on u.team_id = t.team_id
+		left join teams_code tc on tc.team_id = t.team_id
+		left join teams_docs td on td.team_id = t.team_id
+	where u.team_id = $1 LIMIT 3
+	`
 	resp := []entity.TeamWithUserEntity{}
 	err := r.db.SelectContext(ctx, &resp, query, teamID)
 	return resp, err
@@ -241,4 +241,17 @@ func (r *Repository) GetPayments(ctx context.Context, page int, pageSize int) ([
 	err := r.db.SelectContext(ctx, &resp, query, pageSize, offset)
 
 	return resp, err
+}
+
+func (r *Repository) UpdatePaymentStatus(ctx context.Context, teamID string, status int, rejection string) error {
+	q := r.qb.Update("teams_docs").Set(goqu.Record{
+		"payment_status":    1,
+		"payment_rejection": rejection,
+	}).Where(goqu.C("team_id").Eq(teamID))
+	query, _, err := q.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = r.db.ExecContext(ctx, query)
+	return err
 }

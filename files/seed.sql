@@ -23,18 +23,22 @@ CREATE TABLE IF NOT EXISTS users_docs (
     student_card_filename VARCHAR(155) DEFAULT '',
     student_card_url text DEFAULT '',
     student_card_status INT DEFAULT 0,
+    student_card_rejection text DEFAULT '',
 
     self_portrait_filename VARCHAR(155) DEFAULT '',
     self_portrait_url text DEFAULT '',
     self_portrait_status INT DEFAULT 0,
+    self_portrait_rejection text DEFAULT '',
 
     twibbon_filename VARCHAR(155) DEFAULT '',
     twibbon_url text DEFAULT '',
     twibbon_status INT DEFAULT 0,
+    twibbon_rejection text DEFAULT '',
 
     enrollment_filename VARCHAR(155) DEFAULT '',
     enrollment_url text DEFAULT '',
     enrollment_status INT DEFAULT 0,
+    enrollment_rejection text DEFAULT '',
 
     is_doc_verified boolean default false
 );
@@ -54,6 +58,7 @@ create TABLE IF NOT EXISTS teams_docs(
     payment_filename  VARCHAR(155) DEFAULT '',
     payment_url text DEFAULT '',
     payment_status INT DEFAULT 0,
+    payment_rejection text DEFAULT '',
     submission_1_filename   varchar(155) default ''::STRING,
     submission_1_url        text         default ''::STRING,
     submission_1_lastupdate timestamp,
