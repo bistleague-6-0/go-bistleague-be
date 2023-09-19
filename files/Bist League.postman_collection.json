@@ -901,6 +901,205 @@
 							"body": "{\n    \"status\": 200,\n    \"msg\": \"ok\",\n    \"data\": {\n        \"page_size\": 10,\n        \"page\": 1,\n        \"total_page\": 4,\n        \"page_data\": [\n            {\n                \"uid\": \"1360cec7-ed03-424b-a2bb-db0855f537e8\",\n                \"team_name\": \"testing123\",\n                \"full_name\": \"Abraham Megantoro\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"80777cca-ed63-459e-ba51-da87dffbcae2\",\n                \"team_name\": \"\",\n                \"full_name\": \"Abraham Megantoro\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"66c2d50a-63d0-4029-a6f5-d3492bf5af2b\",\n                \"team_name\": \"Iyal Lovers\",\n                \"full_name\": \"Adrenalin\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"8a326d81-de16-4711-a656-df2fcd9a6e5e\",\n                \"team_name\": \"testim13\",\n                \"full_name\": \"Biba Babi\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"dcc628a3-1649-4ced-b1ad-f56e028f0cd4\",\n                \"team_name\": \"jeketi48\",\n                \"full_name\": \"Chika Samudra\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"3b066aee-facc-49da-a9b8-f8f30a35731b\",\n                \"team_name\": \"\",\n                \"full_name\": \"Clara Andyna\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"489301d4-9acb-49ae-b7f8-d80f410a9efc\",\n                \"team_name\": \"BC SMANSASI\",\n                \"full_name\": \"Davinna Maritza\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"a7565e4d-6412-4704-92bf-50575b80ce4d\",\n                \"team_name\": \"Need Help\",\n                \"full_name\": \"Firsa Athaya\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            },\n            {\n                \"uid\": \"e43aee0f-8f18-48c1-97fe-32049a99f40b\",\n                \"team_name\": \"First Team Lah\",\n                \"full_name\": \"Florenzia Akhiran\",\n                \"student_card_filename\": \"peymento.jpg\",\n                \"student_card_url\": \"https://storage.googleapis.com/bist6-stg/student_card.7WCcK9FGPwgDLolbnyyCfbxtqnOQjz8H7DIpq4O0asOcbxRFVXTpsjZpNTVbiW3IM5fPed6W4l0sc5LiiWP36PkBomhvMwwhPZ6mmJqIWDOQ2zSPveafK29FjRPqZ4Kt.jpg\",\n                \"student_card_status\": \"under review\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"html-3640299.png\",\n                \"enrollment_url\": \"https://storage.googleapis.com/bist6-stg/enrollment.9zKvRTJIQbhYFF5C6RtNY9b2YwVJLBTfaPwpTo6SZiHO6p7phvFAkJ8BBjInEWi84yPfn0n6rlUzS2EV3zpVf8zNmK210oKNPjv49dBk37MhwB2SBMcywOSFBZqS2Jpn.png\",\n                \"enrollment_status\": \"under review\",\n                \"IsProfileVerified\": true\n            },\n            {\n                \"uid\": \"2f2e1607-1c5a-4e59-b904-2b688873a3b1\",\n                \"team_name\": \"Cili Corner\",\n                \"full_name\": \"Hanif Raihan\",\n                \"student_card_filename\": \"\",\n                \"student_card_url\": \"\",\n                \"student_card_status\": \"no file\",\n                \"self_portrait_filename\": \"\",\n                \"self_portrait_url\": \"\",\n                \"self_portrait_status\": \"no file\",\n                \"twibbon_filename\": \"\",\n                \"twibbon_url\": \"\",\n                \"twibbon_status\": \"no file\",\n                \"enrollment_filename\": \"\",\n                \"enrollment_url\": \"\",\n                \"enrollment_status\": \"no file\",\n                \"IsProfileVerified\": false\n            }\n        ]\n    }\n}"
 						}
 					]
+				},
+				{
+					"name": "Update Payment Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6Ijg5MjkzNjQyLTliZDEtNGNlOS04YmYwLWRiMTY0MTJhMjQ5ZSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTU1NTgyNjYsImlhdCI6MTY5NTEyNjI2Nn0.Kmm3QBZY-vOJZuVAt6d4ThgjIud5stUVmMcsZicDGCM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\" : -1,\n    \"rejection\": \"minimal bayar 50jt boozzzz hahay papale\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{staging}}/admin/payments/status/24c7027f-746c-4460-8731-34e664b59ba8",
+							"host": [
+								"{{staging}}"
+							],
+							"path": [
+								"admin",
+								"payments",
+								"status",
+								"24c7027f-746c-4460-8731-34e664b59ba8"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Payment Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\" : -1,\n    \"rejection\": \"minimal bayar 50jt boozzzz hahay papale\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{staging}}/admin/payments/status/24c7027f-746c-4460-8731-34e664b59ba8",
+									"host": [
+										"{{staging}}"
+									],
+									"path": [
+										"admin",
+										"payments",
+										"status",
+										"24c7027f-746c-4460-8731-34e664b59ba8"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 19 Sep 2023 12:32:31 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "59"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 202,\n    \"msg\": \"team payment status has been updated\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update User Doc Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiIiwidXNlcl9pZCI6Ijg5MjkzNjQyLTliZDEtNGNlOS04YmYwLWRiMTY0MTJhMjQ5ZSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTU1NTgyNjYsImlhdCI6MTY5NTEyNjI2Nn0.Kmm3QBZY-vOJZuVAt6d4ThgjIud5stUVmMcsZicDGCM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\" : -1,\n    \"rejection\": \"minimal make foto chika\",\n    \"doc_type\": \"self_portrait\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{staging}}//admin/users/status/1360cec7-ed03-424b-a2bb-db0855f537e8",
+							"host": [
+								"{{staging}}"
+							],
+							"path": [
+								"",
+								"admin",
+								"users",
+								"status",
+								"1360cec7-ed03-424b-a2bb-db0855f537e8"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update User Doc Status Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\" : -1,\n    \"rejection\": \"minimal make foto chika\",\n    \"doc_type\": \"self_portrait\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/users/status/1360cec7-ed03-424b-a2bb-db0855f537e8",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"status",
+										"1360cec7-ed03-424b-a2bb-db0855f537e8"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 19 Sep 2023 12:36:19 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "60"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 202,\n    \"msg\": \"user document status has been updated\"\n}"
+						}
+					]
 				}
 			]
 		},

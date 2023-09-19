@@ -183,3 +183,11 @@ func (u *Usecase) GetUserList(ctx context.Context, page int, pageSize int) (*dto
 
 	return &dtoResp, nil
 }
+
+func (u *Usecase) UpdateTeamPaymentStatus(ctx context.Context, teamID string, status int, rejection string) error {
+	return u.teamRepo.UpdatePaymentStatus(ctx, teamID, status, rejection)
+}
+
+func (u *Usecase) UpdateUserDocumentStatus(ctx context.Context, userID string, doctype string, status int, rejection string) error {
+	return u.profileRepo.UpdateUserDocumentStatus(ctx, userID, doctype, status, rejection)
+}

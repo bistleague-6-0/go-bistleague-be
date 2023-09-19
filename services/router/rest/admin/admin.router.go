@@ -33,6 +33,8 @@ func (r *Router) RegisterRoute(app *fiber.App) {
 	g.Post("/register", guard.ZeusGuard(r.cfg, r.RegisterAdmin)...)
 	g.Get("/payments", guard.AdminGuard(r.cfg, r.GetTeamPayment)...)
 	g.Get("/users", guard.AdminGuard(r.cfg, r.GetUserDocsList)...)
+	g.Put("/payments/status/:teamID", guard.AdminGuard(r.cfg, r.UpdatePaymentStatus)...)
+	g.Put("/users/status/:uid", guard.AdminGuard(r.cfg, r.UpdateUserDocumentStatus)...)
 }
 
 type AuthRequest struct {
@@ -127,4 +129,61 @@ func (r *Router) GetUserDocsList(g *guard.AuthGuardContext) error {
 		return g.ReturnError(http.StatusNotFound, "cannot get user docs")
 	}
 	return g.ReturnSuccess(resp)
+}
+
+func (r *Router) UpdatePaymentStatus(g *guard.AuthGuardContext) error {
+	req := dto.UpdateTeamPaymentStatus{}
+	teamID := g.FiberCtx.Params("teamID")
+	err := g.FiberCtx.BodyParser(&req)
+	if err != nil {
+		fmt.Println("error", err)
+		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
+	}
+	if teamID == "" {
+		return g.ReturnError(http.StatusBadRequest, "team id is not provided")
+	}
+	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, err.Error())
+	}
+	if req.Status != -1 && req.Status != 2 {
+		return g.ReturnError(http.StatusBadRequest, "invalid status")
+	}
+	err = r.usecase.UpdateTeamPaymentStatus(g.FiberCtx.Context(), teamID, req.Status, req.Rejection)
+	if err != nil {
+		fmt.Println(err)
+		return g.ReturnError(http.StatusInternalServerError, "cannot update payment status")
+	}
+	return g.FiberCtx.JSON(dto.NoBodyDTOResponseWrapper{
+		Status:  http.StatusAccepted,
+		Message: "team payment status has been updated",
+	})
+}
+
+func (r *Router) UpdateUserDocumentStatus(g *guard.AuthGuardContext) error {
+	req := dto.UpdateUserDocumentStatus{}
+	uid := g.FiberCtx.Params("uid")
+	err := g.FiberCtx.BodyParser(&req)
+	if err != nil {
+		fmt.Println("error", err)
+		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
+	}
+	if uid == "" {
+		return g.ReturnError(http.StatusBadRequest, "user id is not provided")
+	}
+	if req.Status != -1 && req.Status != 2 {
+		return g.ReturnError(http.StatusBadRequest, "invalid status")
+	}
+	if req.DocumentType != "student_card" && req.DocumentType != "self_portrait" && req.DocumentType != "twibbon" && req.DocumentType != "enrollment" {
+		return g.ReturnError(http.StatusBadRequest, "invalid document type")
+	}
+	err = r.usecase.UpdateUserDocumentStatus(g.FiberCtx.Context(), uid, req.DocumentType, req.Status, req.Rejection)
+	if err != nil {
+		fmt.Println(err)
+		return g.ReturnError(http.StatusInternalServerError, "cannot update user document status")
+	}
+	return g.FiberCtx.JSON(dto.NoBodyDTOResponseWrapper{
+		Status:  http.StatusAccepted,
+		Message: "user document status has been updated",
+	})
 }

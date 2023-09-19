@@ -112,3 +112,34 @@ func (r *Repository) GetUserList(ctx context.Context, page int, pageSize int) ([
 	}
 	return resp, nil
 }
+
+func (r *Repository) UpdateUserDocumentStatus(ctx context.Context, userID string, doctype string, status int, rejection string) error {
+	q := r.qb.Update("users_docs").Where(goqu.C("uid").Eq(userID))
+	if doctype == "student_card" {
+		q = q.Set(goqu.Record{
+			"student_card_status":    status,
+			"student_card_rejection": rejection,
+		})
+	} else if doctype == "self_portrait" {
+		q = q.Set(goqu.Record{
+			"self_portrait_status":    status,
+			"self_portrait_rejection": rejection,
+		})
+	} else if doctype == "twibbon" {
+		q = q.Set(goqu.Record{
+			"twibbon_status":    status,
+			"twibbon_rejection": rejection,
+		})
+	} else {
+		q = q.Set(goqu.Record{
+			"enrollment_status":    status,
+			"enrollment_rejection": rejection,
+		})
+	}
+	query, _, err := q.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = r.db.ExecContext(ctx, query)
+	return err
+}

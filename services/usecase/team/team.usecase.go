@@ -84,6 +84,7 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			result.Payment = team.PaymentFilename
 			result.PaymentURL = team.PaymentURL
 			result.PaymentStatusCode = team.PaymentStatus
+			result.PaymentRejection = team.PaymentRejection
 		}
 		result.PaymentStatus = entity.VerificationStatusMap[team.PaymentStatus]
 		if team.UserID == userID {
@@ -91,21 +92,25 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			result.StudentCardStatusCode = team.StudentCardStatus
 			result.StudentCardStatus = entity.VerificationStatusMap[team.StudentCardStatus]
 			result.StudentCardURL = team.StudentCardURL
+			result.StudentCardRejection = team.StudentCardRejection
 
 			result.SelfPortrait = team.SelfPortrait
 			result.SelfPortraitStatusCode = team.SelfPortraitStatus
 			result.SelfPortraitStatus = entity.VerificationStatusMap[team.SelfPortraitStatus]
 			result.SelfPortraitURL = team.SelfPortraitURL
+			result.SelfPortraitRejection = team.SelfPortraitRejection
 
 			result.Twibbon = team.Twibbon
 			result.TwibbonStatusCode = team.TwibbonStatus
 			result.TwibbonStatus = entity.VerificationStatusMap[team.TwibbonStatus]
 			result.TwibbonURL = team.TwibbonURL
+			result.TwibbonRejection = team.TwibbonRejection
 
 			result.Enrollment = team.Enrollment
 			result.EnrollmentStatusCode = team.EnrollmentStatus
 			result.EnrollmentStatus = entity.VerificationStatusMap[team.EnrollmentStatus]
-			result.EnrollmentURL = result.EnrollmentURL
+			result.EnrollmentURL = team.EnrollmentURL
+			result.EnrollmentRejection = team.EnrollmentRejection
 		}
 		result.Members = append(result.Members, dto.GetTeamMemberInfoResponseDTO{
 			UserID:            team.UserID,
