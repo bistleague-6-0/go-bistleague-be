@@ -249,7 +249,7 @@ func (r *Repository) GetPayments(ctx context.Context, page int, pageSize int) ([
 
 func (r *Repository) UpdatePaymentStatus(ctx context.Context, teamID string, status int, rejection string) error {
 	q := r.qb.Update("teams_docs").Set(goqu.Record{
-		"payment_status":    1,
+		"payment_status":    status,
 		"payment_rejection": rejection,
 	}).Where(goqu.C("team_id").Eq(teamID))
 	query, _, err := q.ToSQL()
