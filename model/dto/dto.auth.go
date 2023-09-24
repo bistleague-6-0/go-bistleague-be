@@ -14,12 +14,12 @@ type SignInUserRequestDTO struct {
 }
 
 type RefreshTokenRequestDTO struct {
-	RefreshKey string `json:"refresh_key" validate:"required"`
+	RefreshKey string `json:"refresh_token" validate:"required"`
 	UserID     string `json:"user_id" validate:"required"`
 }
 
 type RefreshTokenResponseDTO struct {
-	AccessToken string `json:"access_token"`
+	AccessToken string `json:"jwt_token"`
 	IsUpdated   bool   `json:"is_updated"`
 }
 
