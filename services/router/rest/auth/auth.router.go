@@ -28,11 +28,7 @@ func New(cfg *config.Config, usecase *auth.Usecase, vld *validator.Validate) *Ro
 func (r *Router) RegisterRoute(app *fiber.App) {
 	app.Post("/login", guard.DefaultGuard(r.SignInUser))
 	app.Post("/register", guard.DefaultGuard(r.SignUpUser))
-}
-
-type AuthRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	app.Post("/refresh", guard.DefaultGuard(r.RefreshToken))
 }
 
 func (r *Router) SignInUser(g *guard.GuardContext) error {
@@ -71,6 +67,24 @@ func (r *Router) SignUpUser(g *guard.GuardContext) error {
 	if err != nil {
 		fmt.Println(err)
 		return g.ReturnError(http.StatusInternalServerError, "cannot register user")
+	}
+	return g.ReturnSuccess(resp)
+}
+
+func (r *Router) RefreshToken(g *guard.GuardContext) error {
+	req := dto.RefreshTokenRequestDTO{}
+	err := g.FiberCtx.BodyParser(&req)
+	if err != nil {
+		fmt.Println("error", err)
+		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
+	}
+	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, err.Error())
+	}
+	resp, err := r.usecase.RefreshToken(g.FiberCtx.Context(), req)
+	if err != nil {
+		return g.ReturnError(http.StatusNotFound, "wrong refresh key")
 	}
 	return g.ReturnSuccess(resp)
 }
