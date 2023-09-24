@@ -45,7 +45,7 @@ type TeamWithUserEntity struct {
 	StudentCardRejection string `db:"student_card_rejection"`
 
 	SelfPortrait          string `db:"self_portrait_filename"`
-	SelfPortraitStatus    int8   `db:"self_portrait_status"`
+	SelfPortraitStatus    int    `db:"self_portrait_status"`
 	SelfPortraitURL       string `db:"self_portrait_url"`
 	SelfPortraitRejection string `db:"self_portrait_rejection"`
 
