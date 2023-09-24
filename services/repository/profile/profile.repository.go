@@ -4,6 +4,7 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/entity"
 	"context"
+	"fmt"
 
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
@@ -71,6 +72,7 @@ func (r *Repository) UpdateUserDocument(ctx context.Context, userID string, file
 		})
 	}
 	query, _, err := q.ToSQL()
+	fmt.Println(query)
 	if err != nil {
 		return err
 	}

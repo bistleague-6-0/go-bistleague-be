@@ -89,7 +89,7 @@ func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]e
 		u.uid, u.username, u.full_name,
 		ud.student_card_filename, ud.student_card_url, ud.student_card_status, ud.student_card_rejection,
 		ud.enrollment_filename, ud.enrollment_url, ud.enrollment_status, ud.enrollment_rejection,
-		ud.self_portrait_filename, ud.self_portrait_url, ud.self_portrait_url, ud.self_portrait_rejection,
+		ud.self_portrait_filename, ud.self_portrait_url, ud.self_portrait_status, ud.self_portrait_rejection,
 		ud.twibbon_filename, ud.twibbon_url, ud.twibbon_status, ud.twibbon_rejection,
 		ud.is_doc_verified, u.is_profile_verified
 	from users u
