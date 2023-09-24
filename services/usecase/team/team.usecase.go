@@ -13,9 +13,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
-
-	"github.com/golang-jwt/jwt/v5"
 )
 
 type Usecase struct {
@@ -49,17 +46,7 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 		log.Println(err)
 		return nil, err
 	}
-	claims := entity.CustomClaim{
-		TeamID: teamID,
-		UserID: teamLeaderID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "rest",
-			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-	jwtToken, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	jwtToken, err := utils.GenerateJWTToken(u.cfg.Secret.JWTSecret, teamLeaderID, teamID)
 	if err != nil {
 		return nil, err
 	}
@@ -129,17 +116,7 @@ func (u *Usecase) RedeemTeamCode(ctx context.Context, req dto.RedeemTeamCodeRequ
 	if err != nil {
 		return "", err
 	}
-	claims := entity.CustomClaim{
-		TeamID: resp.TeamID,
-		UserID: userID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "rest",
-			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-	jwtToken, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	jwtToken, err := utils.GenerateJWTToken(u.cfg.Secret.JWTSecret, userID, resp.TeamID)
 	if err != nil {
 		return "", err
 	}

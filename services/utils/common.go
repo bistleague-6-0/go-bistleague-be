@@ -7,9 +7,41 @@ import (
 	"time"
 )
 
-func CreateJWTToken(key string, claims entity.CustomClaim) (string, error) {
+func createJWTToken(key string, claims entity.CustomClaim) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(key))
+}
+
+func GenerateAdminJWTToken(key string, userUID string) (string, error) {
+	claims := entity.CustomClaim{
+		TeamID: "",
+		UserID: userUID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    "rest",
+			Subject:   "",
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 2 * 24)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	return createJWTToken(key, claims)
+}
+
+func GenerateJWTToken(key string, userUID string, teamUID string) (string, error) {
+	claims := entity.CustomClaim{
+		TeamID: teamUID,
+		UserID: userUID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    "rest",
+			Subject:   "",
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 5)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	return createJWTToken(key, claims)
+}
+
+func GenerateRefreshKey(key string, userUID string) {
+
 }
 
 func GenerateRandomName() string {

@@ -6,7 +6,9 @@ import (
 	"bistleague-be/model/entity"
 	"bistleague-be/services/repository/auth"
 	"bistleague-be/services/utils"
+	"bistleague-be/services/utils/encryptor"
 	"context"
+	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"time"
@@ -39,17 +41,15 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.SignUpUserRequestDT
 	if err != nil {
 		return nil, err
 	}
-	claims := entity.CustomClaim{
-		TeamID: resp.TeamID.String,
-		UserID: resp.UID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "rest",
-			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
+	token, err := utils.GenerateJWTToken(u.cfg.Secret.JWTSecret, resp.UID, resp.TeamID.String)
+	if err != nil {
+		return nil, err
 	}
-	token, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	refreshKey, err := encryptor.EncryptRefreshKey(encryptor.RefreshKey{
+		Uid:       user.UID,
+		TeamID:    user.TeamID.String,
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 5)),
+	}, u.cfg.Secret.JWTSecret)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,8 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.SignUpUserRequestDT
 			UserID:   resp.UID,
 			Username: resp.Username,
 		},
-		Token: token,
+		Token:        token,
+		RefreshToken: refreshKey,
 	}, nil
 }
 
@@ -71,17 +72,15 @@ func (u *Usecase) SignInUser(ctx context.Context, req dto.SignInUserRequestDTO) 
 	if err != nil {
 		return nil, err
 	}
-	claims := entity.CustomClaim{
-		TeamID: user.TeamID.String,
-		UserID: user.UID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "rest",
-			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
+	token, err := utils.GenerateJWTToken(u.cfg.Secret.JWTSecret, user.UID, user.TeamID.String)
+	if err != nil {
+		return nil, err
 	}
-	token, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	refreshKey, err := encryptor.EncryptRefreshKey(encryptor.RefreshKey{
+		Uid:       user.UID,
+		TeamID:    user.TeamID.String,
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 5)),
+	}, u.cfg.Secret.JWTSecret)
 	if err != nil {
 		return nil, err
 	}
@@ -90,6 +89,33 @@ func (u *Usecase) SignInUser(ctx context.Context, req dto.SignInUserRequestDTO) 
 			UserID:   user.UID,
 			Username: user.Username,
 		},
-		Token: token,
+		Token:        token,
+		RefreshToken: refreshKey,
 	}, nil
+}
+
+func (u *Usecase) RefreshToken(ctx context.Context, req dto.RefreshTokenRequestDTO) (*dto.RefreshTokenResponseDTO, error) {
+	refreshVal, err := encryptor.DecryptRefreshKey(req.RefreshKey, u.cfg.Secret.JWTSecret)
+	if err != nil {
+		return nil, err
+	}
+	if refreshVal.ExpiresAt.Before(time.Now()) {
+		return nil, errors.New("expired")
+	}
+	resp, err := u.repo.GetUserInformation(ctx, refreshVal.Uid)
+	if err != nil {
+		return nil, err
+	}
+	if resp.UID != req.UserID {
+		return nil, errors.New("user id does not match")
+	}
+	accessKey, err := utils.GenerateJWTToken(u.cfg.Secret.JWTSecret, resp.UID, resp.TeamID.String)
+	if err != nil {
+		return nil, err
+	}
+	result := dto.RefreshTokenResponseDTO{
+		AccessToken: accessKey,
+		IsUpdated:   resp.TeamID.String != "",
+	}
+	return &result, nil
 }

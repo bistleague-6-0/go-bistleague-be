@@ -4,67 +4,93 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"encoding/base64"
-	"fmt"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"github.com/golang-jwt/jwt/v5"
 	"io"
 )
 
-func Encode(b []byte) string {
-	return base64.StdEncoding.EncodeToString(b)
+func encrypt(data []byte, passphrase string) ([]byte, error) {
+	block, err := aes.NewCipher([]byte(generateKey(passphrase)))
+	if err != nil {
+		return nil, err
+	}
+
+	ciphertext := make([]byte, aes.BlockSize+len(data))
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(ciphertext[aes.BlockSize:], data)
+
+	return ciphertext, nil
 }
 
-func EncryptStr(text string, secretKey string) (string, error) {
-	key := []byte(secretKey)
-
-	block, err := aes.NewCipher(key)
+func decrypt(ciphertext []byte, passphrase string) ([]byte, error) {
+	block, err := aes.NewCipher([]byte(generateKey(passphrase)))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		return "", err
+	if len(ciphertext) < aes.BlockSize {
+		return nil, errors.New("ciphertext too short")
 	}
 
-	nonce := make([]byte, aesGCM.NonceSize())
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return "", err
-	}
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
 
-	ciphertext := aesGCM.Seal(nil, nonce, []byte(text), nil)
-	ciphertext = append(nonce, ciphertext...)
+	stream := cipher.NewCFBDecrypter(block, iv)
+	stream.XORKeyStream(ciphertext, ciphertext)
 
-	return Encode(ciphertext), nil
+	return ciphertext, nil
 }
 
-func DecryptStr(encryptedText string, secretKey string) (string, error) {
-	key := []byte(secretKey)
-	ciphertext, err := base64.StdEncoding.DecodeString(encryptedText)
+func generateKey(passphrase string) string {
+	hasher := sha256.New()
+	hasher.Write([]byte(passphrase))
+	return hex.EncodeToString(hasher.Sum(nil))[:32] // 32 bytes for AES-256
+}
+
+type RefreshKey struct {
+	Uid       string           `json:"uid,omitempty"`
+	TeamID    string           `json:"team_id,omitempty"`
+	ExpiresAt *jwt.NumericDate `json:"exp,omitempty"`
+}
+
+func EncryptRefreshKey(myStruct RefreshKey, passphrase string) (string, error) {
+	jsonData, err := json.Marshal(myStruct)
 	if err != nil {
 		return "", err
 	}
 
-	block, err := aes.NewCipher(key)
+	encryptedData, err := encrypt(jsonData, passphrase)
 	if err != nil {
 		return "", err
 	}
 
-	aesGCM, err := cipher.NewGCM(block)
+	return hex.EncodeToString(encryptedData), nil
+}
+
+func DecryptRefreshKey(encryptedData string, passphrase string) (RefreshKey, error) {
+	decodedData, err := hex.DecodeString(encryptedData)
 	if err != nil {
-		return "", err
+		return RefreshKey{}, err
 	}
 
-	nonceSize := aesGCM.NonceSize()
-	if len(ciphertext) < nonceSize {
-		return "", fmt.Errorf("ciphertext too short")
-	}
-
-	nonce, ciphertext := ciphertext[:nonceSize], ciphertext[nonceSize:]
-
-	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
+	decryptedData, err := decrypt(decodedData, passphrase)
 	if err != nil {
-		return "", err
+		return RefreshKey{}, err
 	}
 
-	return string(plaintext), nil
+	var myStruct RefreshKey
+	err = json.Unmarshal(decryptedData, &myStruct)
+	if err != nil {
+		return RefreshKey{}, err
+	}
+
+	return myStruct, nil
 }

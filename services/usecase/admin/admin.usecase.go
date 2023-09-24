@@ -10,11 +10,8 @@ import (
 	teamRepo "bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
 	"context"
-	"strings"
-	"time"
-
-	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
+	"strings"
 )
 
 type Usecase struct {
@@ -47,17 +44,7 @@ func (u *Usecase) InsertNewAdmin(ctx context.Context, req dto.RegisterAdminReque
 	if err != nil {
 		return nil, err
 	}
-	claims := entity.CustomClaim{
-		TeamID: "",
-		UserID: resp.UID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "rest",
-			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-	token, err := utils.CreateJWTToken(u.cfg.Secret.AdminJWT, claims)
+	token, err := utils.GenerateAdminJWTToken(u.cfg.Secret.AdminJWT, resp.UID)
 	if err != nil {
 		return nil, err
 	}
@@ -79,17 +66,7 @@ func (u *Usecase) SignInAdmin(ctx context.Context, req dto.SignInAdminRequestDTO
 	if err != nil {
 		return nil, err
 	}
-	claims := entity.CustomClaim{
-		TeamID: "",
-		UserID: admin.UID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "rest",
-			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-	token, err := utils.CreateJWTToken(u.cfg.Secret.AdminJWT, claims)
+	token, err := utils.GenerateAdminJWTToken(u.cfg.Secret.AdminJWT, admin.UID)
 	if err != nil {
 		return nil, err
 	}
