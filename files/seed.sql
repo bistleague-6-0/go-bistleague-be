@@ -23,18 +23,22 @@ CREATE TABLE IF NOT EXISTS users_docs (
     student_card_filename VARCHAR(155) DEFAULT '',
     student_card_url text DEFAULT '',
     student_card_status INT DEFAULT 0,
+    student_card_rejection text DEFAULT '',
 
     self_portrait_filename VARCHAR(155) DEFAULT '',
     self_portrait_url text DEFAULT '',
     self_portrait_status INT DEFAULT 0,
+    self_portrait_rejection text DEFAULT '',
 
     twibbon_filename VARCHAR(155) DEFAULT '',
     twibbon_url text DEFAULT '',
     twibbon_status INT DEFAULT 0,
+    twibbon_rejection text DEFAULT '',
 
     enrollment_filename VARCHAR(155) DEFAULT '',
     enrollment_url text DEFAULT '',
     enrollment_status INT DEFAULT 0,
+    enrollment_rejection text DEFAULT '',
 
     is_doc_verified boolean default false
 );
@@ -53,7 +57,14 @@ create TABLE IF NOT EXISTS teams_docs(
     team_id uuid PRIMARY KEY,
     payment_filename  VARCHAR(155) DEFAULT '',
     payment_url text DEFAULT '',
-    payment_status INT DEFAULT 0
+    payment_status INT DEFAULT 0,
+    payment_rejection text DEFAULT '',
+    submission_1_filename   varchar(155) default ''::STRING,
+    submission_1_url        text         default ''::STRING,
+    submission_1_lastupdate timestamp,
+    submission_2_filename   varchar(155) default ''::STRING,
+    submission_2_url        text         default ''::STRING,
+    submission_2_lastupdate timestamp
 );
 
 CREATE TABLE IF NOT EXISTS teams_code(
@@ -61,4 +72,13 @@ CREATE TABLE IF NOT EXISTS teams_code(
     code VARCHAR(55) UNIQUE,
     team_member_mails TEXT[],
     used int8 default 2
-)
+);
+
+CREATE TABLE IF NOT EXISTS admins (
+    uid uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    username varchar(55) unique  not null ,
+    password VARCHAR(155) not null,
+    full_name VARCHAR(155) not null,
+    inserted_at timestamp NOT NULL DEFAULT now(),
+    updated_at timestamp
+);

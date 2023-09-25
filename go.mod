@@ -11,8 +11,10 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/lib/pq v1.10.2
 	golang.org/x/crypto v0.10.0
 	golang.org/x/net v0.11.0
+	google.golang.org/api v0.126.0
 )
 
 require (
@@ -53,7 +55,6 @@ require (
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.10.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
-	google.golang.org/api v0.126.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230530153820-e85fd2cbaebc // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230530153820-e85fd2cbaebc // indirect

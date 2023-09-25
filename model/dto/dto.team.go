@@ -1,5 +1,9 @@
 package dto
 
+import (
+	"time"
+)
+
 type RedeemTeamCodeRequestDTO struct {
 	RedeemCode string `json:"redeem_code" validate:"required"`
 }
@@ -30,26 +34,31 @@ type GetTeamInfoResponseDTO struct {
 	PaymentURL        string `json:"payment_proof_url"`
 	PaymentStatus     string `json:"payment_status"`
 	PaymentStatusCode int8   `json:"payment_status_code"`
+	PaymentRejection  string `json:"payment_status_rejection"`
 
 	StudentCard           string `json:"student_card"`
 	StudentCardURL        string `json:"student_card_url"`
 	StudentCardStatus     string `json:"student_card_status"`
 	StudentCardStatusCode int8   `json:"student_card_status_code"`
+	StudentCardRejection  string `json:"student_card_rejection"`
 
 	SelfPortrait           string `json:"self_portrait"`
 	SelfPortraitURL        string `json:"self_portrait_url"`
 	SelfPortraitStatus     string `json:"self_portrait_status"`
 	SelfPortraitStatusCode int8   `json:"self_portrait_status_code"`
+	SelfPortraitRejection  string `json:"self_portrait_rejection"`
 
 	Twibbon           string `json:"twibbon"`
 	TwibbonURL        string `json:"twibbon_url"`
 	TwibbonStatus     string `json:"twibbon_status"`
 	TwibbonStatusCode int8   `json:"twibbon_status_code"`
+	TwibbonRejection  string `json:"twibbon_rejection"`
 
 	Enrollment           string `json:"enrollment"`
 	EnrollmentURL        string `json:"enrollment_url"`
 	EnrollmentStatus     string `json:"enrollment_status"`
 	EnrollmentStatusCode int8   `json:"enrollment_status_code"`
+	EnrollmentRejection  string `json:"enrollment_rejection"`
 
 	Members []GetTeamMemberInfoResponseDTO `json:"members"`
 }
@@ -67,4 +76,22 @@ type InputTeamDocumentResponseDTO struct {
 	DocumentType string `json:"doc_type"`
 	DocumentName string `json:"doc_name"`
 	DocumentURL  string `json:"doc_url"`
+}
+
+type GetSubmissionResponseDTO struct {
+	TeamID               string     `json:"team_id"`
+	DocumentType         string     `json:"doc_type"`
+	SubmissionFilename   *string    `json:"submission_filename"`
+	SubmissionUrl        *string    `json:"submission_url"`
+	SubmissionLastUpdate *time.Time `json:"submission_lastupdate"`
+}
+
+type GetTeamPaymentResponseDTO struct {
+	TeamID          string   `json:"team_id"`
+	TeamName        string   `json:"team_name"`
+	TeamMemberMails []string `json:"team_member_mails"`
+	PaymentFilename string   `json:"payment_filename"`
+	PaymentURL      string   `json:"payment_url"`
+	PaymentStatus   string   `json:"payment_status"`
+	Code            string   `json:"code"`
 }

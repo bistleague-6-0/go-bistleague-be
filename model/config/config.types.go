@@ -13,6 +13,8 @@ type Config struct {
 type SecretConfig struct {
 	TokenSecret string `json:"token_secret"`
 	JWTSecret   string `json:"jwt_secret"`
+	AdminSecret string `json:"admin_secret"`
+	AdminJWT    string `json:"admin_jwt"`
 }
 
 type ServerConfig struct {

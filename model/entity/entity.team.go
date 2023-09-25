@@ -1,5 +1,9 @@
 package entity
 
+import (
+	"time"
+)
+
 var VerificationStatusMap = map[int8]string{
 	-1: "rejected",
 	0:  "no file",
@@ -12,15 +16,10 @@ type TeamEntity struct {
 	TeamName     string `db:"team_name"`
 	TeamLeaderID string `db:"team_leader_id"`
 
-	//MARK: deprecate this
-	BuktiPembayaranURL string `db:"bukti_pembayaran_url"`
-	VerificationStatus int8   `db:"verification_status"`
-	IsVerified         bool   `db:"is_verified"`
-	//
-
-	PaymentFilename string `db:"payment_filename"`
-	PaymentURL      string `db:"payment_url"`
-	PaymentStatus   int8   `db:"payment_status"`
+	PaymentFilename  string `db:"payment_filename"`
+	PaymentURL       string `db:"payment_url"`
+	PaymentStatus    int8   `db:"payment_status"`
+	PaymentRejection string `db:"payment_rejection"`
 
 	TeamMemberMails []string `db:"team_member_mails"`
 	IsActive        bool     `db:"is_active"`
@@ -40,21 +39,45 @@ type TeamWithUserEntity struct {
 	IsDocVerified     bool   `db:"is_doc_verified"`
 	IsProfileVerified bool   `db:"is_profile_verified"`
 
-	StudentCard       string `db:"student_card_filename"`
-	StudentCardStatus int8   `db:"student_card_status"`
-	StudentCardURL    string `db:"student_card_url"`
+	StudentCard          string `db:"student_card_filename"`
+	StudentCardStatus    int8   `db:"student_card_status"`
+	StudentCardURL       string `db:"student_card_url"`
+	StudentCardRejection string `db:"student_card_rejection"`
 
-	SelfPortrait       string `db:"self_portrait_filename"`
-	SelfPortraitStatus int8   `db:"self_portrait_status"`
-	SelfPortraitURL    string `db:"self_portrait_url"`
+	SelfPortrait          string `db:"self_portrait_filename"`
+	SelfPortraitStatus    int    `db:"self_portrait_status"`
+	SelfPortraitURL       string `db:"self_portrait_url"`
+	SelfPortraitRejection string `db:"self_portrait_rejection"`
 
-	Twibbon       string `db:"twibbon_filename"`
-	TwibbonStatus int8   `db:"twibbon_status"`
-	TwibbonURL    string `db:"twibbon_url"`
+	Twibbon          string `db:"twibbon_filename"`
+	TwibbonStatus    int8   `db:"twibbon_status"`
+	TwibbonURL       string `db:"twibbon_url"`
+	TwibbonRejection string `db:"twibbon_rejection"`
 
-	Enrollment       string `db:"enrollment_filename"`
-	EnrollmentStatus int8   `db:"enrollment_status"`
-	EnrollmentURL    string `db:"enrollment_url"`
+	Enrollment          string `db:"enrollment_filename"`
+	EnrollmentStatus    int8   `db:"enrollment_status"`
+	EnrollmentURL       string `db:"enrollment_url"`
+	EnrollmentRejection string `db:"enrollment_rejection"`
 
 	RedeemCode string `db:"code"`
+}
+
+type TeamSubmission struct {
+	TeamID                string     `db:"team_id"`
+	Submission1Filename   *string    `db:"submission_1_filename"`
+	Submission1Url        *string    `db:"submission_1_url"`
+	Submission1LastUpdate *time.Time `db:"submission_1_lastupdate"`
+	Submission2Filename   *string    `db:"submission_2_filename"`
+	Submission2Url        *string    `db:"submission_2_url"`
+	Submission2LastUpdate *time.Time `db:"submission_2_lastupdate"`
+}
+
+type TeamPayment struct {
+	TeamID          string `db:"team_id"`
+	TeamName        string `db:"team_name"`
+	TeamMemberMails string `db:"team_member_mails"`
+	PaymentFilename string `db:"payment_filename"`
+	PaymentURL      string `db:"payment_url"`
+	PaymentStatus   int8   `db:"payment_status"`
+	Code            string `db:"code"`
 }

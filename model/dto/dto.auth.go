@@ -13,9 +13,20 @@ type SignInUserRequestDTO struct {
 	Password string `json:"password" validate:"required,min=8,max=20"`
 }
 
+type RefreshTokenRequestDTO struct {
+	RefreshKey string `json:"refresh_token" validate:"required"`
+	UserID     string `json:"user_id" validate:"required"`
+}
+
+type RefreshTokenResponseDTO struct {
+	AccessToken string `json:"jwt_token"`
+	IsUpdated   bool   `json:"is_updated"`
+}
+
 type AuthUserResponseDTO struct {
-	User  AuthUserInfoResponse `json:"user"`
-	Token string               `json:"jwt_token"`
+	User         AuthUserInfoResponse `json:"user"`
+	Token        string               `json:"jwt_token"`
+	RefreshToken string               `json:"refresh_token"`
 }
 
 type AuthUserInfoResponse struct {

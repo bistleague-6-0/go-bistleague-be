@@ -6,8 +6,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"golang.org/x/net/context"
 )
 
@@ -81,21 +84,21 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 
 func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]entity.TeamWithUserEntity, error) {
 	query := `select
-    t.team_id, t.team_name, t.team_leader_id, tc.code,
-    td.payment_filename, td.payment_url, td.payment_status,
-    u.uid, u.username, u.full_name,
-    ud.student_card_filename, ud.student_card_url, ud.student_card_status,
-    ud.enrollment_filename, ud.enrollment_url, ud.enrollment_status,
-    ud.self_portrait_filename, ud.self_portrait_url, ud.self_portrait_url,
-    ud.twibbon_filename, ud.twibbon_url, ud.twibbon_url,
-    ud.is_doc_verified, u.is_profile_verified
-from users u
-left join users_docs ud on ud.uid = u.uid
-left join teams t on u.team_id = t.team_id
-left join teams_code tc on tc.team_id = t.team_id
-left join teams_docs td on td.team_id = t.team_id
-where u.team_id = $1 LIMIT 3
-`
+		t.team_id, t.team_name, t.team_leader_id, tc.code,
+		td.payment_filename, td.payment_url, td.payment_status, td.payment_rejection,
+		u.uid, u.username, u.full_name,
+		ud.student_card_filename, ud.student_card_url, ud.student_card_status, ud.student_card_rejection,
+		ud.enrollment_filename, ud.enrollment_url, ud.enrollment_status, ud.enrollment_rejection,
+		ud.self_portrait_filename, ud.self_portrait_url, ud.self_portrait_status, ud.self_portrait_rejection,
+		ud.twibbon_filename, ud.twibbon_url, ud.twibbon_status, ud.twibbon_rejection,
+		ud.is_doc_verified, u.is_profile_verified
+	from users u
+		left join users_docs ud on ud.uid = u.uid
+		left join teams t on u.team_id = t.team_id
+		left join teams_code tc on tc.team_id = t.team_id
+		left join teams_docs td on td.team_id = t.team_id
+	where u.team_id = $1 LIMIT 3
+	`
 	resp := []entity.TeamWithUserEntity{}
 	err := r.db.SelectContext(ctx, &resp, query, teamID)
 	return resp, err
@@ -153,6 +156,101 @@ func (r *Repository) InsertTeamDocument(ctx context.Context, filename string, fi
 		"payment_filename": filename,
 		"payment_url":      fileURL,
 		"payment_status":   1,
+	}).Where(goqu.C("team_id").Eq(teamID))
+	query, _, err := q.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = r.db.ExecContext(ctx, query)
+	return err
+}
+
+func (r *Repository) InsertTeamSubmission(ctx context.Context, filename string, fileURL string, teamID string, docType string) error {
+	wib, _ := time.LoadLocation("Asia/Jakarta")
+	currentTime := time.Now()
+	currentTimeInWIB := currentTime.In(wib)
+
+	var colFilename, colURL, colLastUpdate string
+
+	if docType == "submission_1" {
+		colFilename = "submission_1_filename"
+		colURL = "submission_1_url"
+		colLastUpdate = "submission_1_lastupdate"
+	} else {
+		colFilename = "submission_2_filename"
+		colURL = "submission_2_url"
+		colLastUpdate = "submission_2_lastupdate"
+	}
+
+	q := r.qb.Update("teams_docs").Set(goqu.Record{
+		colFilename:   filename,
+		colURL:        fileURL,
+		colLastUpdate: pq.FormatTimestamp(currentTimeInWIB),
+	}).Where(goqu.C("team_id").Eq(teamID))
+
+	query, _, err := q.ToSQL()
+	if err != nil {
+		return err
+	}
+	_, err = r.db.ExecContext(ctx, query)
+	return err
+}
+
+func (r *Repository) GetSubmission(ctx context.Context, teamID string) (*entity.TeamSubmission, error) {
+	query := `
+        SELECT
+            team_id, submission_1_filename, submission_1_url, submission_1_lastupdate,
+            submission_2_filename, submission_2_url, submission_2_lastupdate
+        FROM teams_docs
+        WHERE team_id = $1
+        LIMIT 1
+    `
+
+	resp := entity.TeamSubmission{}
+	err := r.db.GetContext(ctx, &resp, query, teamID)
+
+	if err != nil {
+		println("Error fetching submission:", err.Error())
+	}
+
+	return &resp, err
+}
+
+func (r *Repository) GetTeamCount(ctx context.Context) (int, error) {
+	q := `SELECT COUNT(*) FROM teams`
+	var count int
+	err := r.db.GetContext(ctx, &count, q)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func (r *Repository) GetPayments(ctx context.Context, page int, pageSize int) ([]entity.TeamPayment, error) {
+	query := `
+        SELECT
+            t.team_id, t.team_name, t.team_member_mails, td.payment_filename, td.payment_url,
+            td.payment_status, tc.code
+        FROM teams t
+		LEFT JOIN teams_docs td
+		ON t.team_id = td.team_id
+		LEFT JOIN teams_code tc
+		ON t.team_id = tc.team_id
+		ORDER BY t.team_name
+		LIMIT $1 OFFSET $2
+    `
+
+	resp := []entity.TeamPayment{}
+	offset := (page - 1) * pageSize
+	err := r.db.SelectContext(ctx, &resp, query, pageSize, offset)
+
+	return resp, err
+}
+
+func (r *Repository) UpdatePaymentStatus(ctx context.Context, teamID string, status int, rejection string) error {
+	q := r.qb.Update("teams_docs").Set(goqu.Record{
+		"payment_status":    status,
+		"payment_rejection": rejection,
 	}).Where(goqu.C("team_id").Eq(teamID))
 	query, _, err := q.ToSQL()
 	if err != nil {

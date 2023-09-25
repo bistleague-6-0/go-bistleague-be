@@ -8,14 +8,11 @@ import (
 	"bistleague-be/services/repository/storage"
 	"bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
+	"bistleague-be/services/utils/randomizer"
 	"bistleague-be/services/utils/storageutils"
 	"context"
-	"encoding/hex"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"log"
-	"math/rand"
-	"time"
 )
 
 type Usecase struct {
@@ -42,26 +39,14 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 	}
 
 	// create redeem code
-	teamToken := make([]byte, 4)
-	rand.Read(teamToken)
-	strTeamToken := hex.EncodeToString(teamToken)
+	strTeamToken := randomizer.RandStringBytes(6)
 
 	teamID, err := u.repo.CreateTeam(ctx, team, strTeamToken)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	claims := entity.CustomClaim{
-		TeamID: teamID,
-		UserID: teamLeaderID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "rest",
-			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-	jwtToken, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	jwtToken, err := utils.GenerateJWTToken(u.cfg.Secret.JWTSecret, teamLeaderID, teamID)
 	if err != nil {
 		return nil, err
 	}
@@ -86,6 +71,7 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			result.Payment = team.PaymentFilename
 			result.PaymentURL = team.PaymentURL
 			result.PaymentStatusCode = team.PaymentStatus
+			result.PaymentRejection = team.PaymentRejection
 		}
 		result.PaymentStatus = entity.VerificationStatusMap[team.PaymentStatus]
 		if team.UserID == userID {
@@ -93,21 +79,26 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			result.StudentCardStatusCode = team.StudentCardStatus
 			result.StudentCardStatus = entity.VerificationStatusMap[team.StudentCardStatus]
 			result.StudentCardURL = team.StudentCardURL
+			result.StudentCardRejection = team.StudentCardRejection
 
+			fmt.Println(team.SelfPortraitStatus)
 			result.SelfPortrait = team.SelfPortrait
-			result.SelfPortraitStatusCode = team.SelfPortraitStatus
-			result.SelfPortraitStatus = entity.VerificationStatusMap[team.SelfPortraitStatus]
+			result.SelfPortraitStatusCode = int8(team.SelfPortraitStatus)
+			result.SelfPortraitStatus = entity.VerificationStatusMap[int8(team.SelfPortraitStatus)]
 			result.SelfPortraitURL = team.SelfPortraitURL
+			result.SelfPortraitRejection = team.SelfPortraitRejection
 
 			result.Twibbon = team.Twibbon
 			result.TwibbonStatusCode = team.TwibbonStatus
 			result.TwibbonStatus = entity.VerificationStatusMap[team.TwibbonStatus]
 			result.TwibbonURL = team.TwibbonURL
+			result.TwibbonRejection = team.TwibbonRejection
 
 			result.Enrollment = team.Enrollment
 			result.EnrollmentStatusCode = team.EnrollmentStatus
 			result.EnrollmentStatus = entity.VerificationStatusMap[team.EnrollmentStatus]
-			result.EnrollmentURL = result.EnrollmentURL
+			result.EnrollmentURL = team.EnrollmentURL
+			result.EnrollmentRejection = team.EnrollmentRejection
 		}
 		result.Members = append(result.Members, dto.GetTeamMemberInfoResponseDTO{
 			UserID:            team.UserID,
@@ -118,6 +109,7 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			IsProfileVerified: team.IsProfileVerified,
 		})
 	}
+	fmt.Println(result.SelfPortraitStatusCode)
 	return &result, nil
 }
 
@@ -126,17 +118,7 @@ func (u *Usecase) RedeemTeamCode(ctx context.Context, req dto.RedeemTeamCodeRequ
 	if err != nil {
 		return "", err
 	}
-	claims := entity.CustomClaim{
-		TeamID: resp.TeamID,
-		UserID: userID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "rest",
-			Subject:   "",
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 5)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-	}
-	jwtToken, err := utils.CreateJWTToken(u.cfg.Secret.JWTSecret, claims)
+	jwtToken, err := utils.GenerateJWTToken(u.cfg.Secret.JWTSecret, userID, resp.TeamID)
 	if err != nil {
 		return "", err
 	}
@@ -156,9 +138,12 @@ func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocu
 	}
 	if req.Type == "payment" {
 		err = u.repo.InsertTeamDocument(ctx, req.DocumentName, fileurl, teamID)
+	} else if req.Type == "submission_1" || req.Type == "submission_2" {
+		err = u.repo.InsertTeamSubmission(ctx, req.DocumentName, fileurl, teamID, req.Type)
 	} else {
 		err = u.profileRepo.UpdateUserDocument(ctx, userID, req.DocumentName, fileurl, req.Type)
 	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -167,4 +152,36 @@ func (u *Usecase) InsertTeamDocument(ctx context.Context, req dto.InsertTeamDocu
 		DocumentName: req.DocumentName,
 		DocumentURL:  fileurl,
 	}, nil
+}
+
+func (u *Usecase) GetTeamSubmission(ctx context.Context, submissionType int, teamID string) (*dto.GetSubmissionResponseDTO, error) {
+	resp, err := u.repo.GetSubmission(ctx, teamID)
+	if err != nil {
+		return nil, err
+	}
+
+	var dtoResp dto.GetSubmissionResponseDTO
+
+	switch submissionType {
+	case 1:
+		dtoResp = dto.GetSubmissionResponseDTO{
+			TeamID:               teamID,
+			DocumentType:         "submission_1",
+			SubmissionFilename:   resp.Submission1Filename,
+			SubmissionUrl:        resp.Submission1Url,
+			SubmissionLastUpdate: resp.Submission1LastUpdate,
+		}
+	case 2:
+		dtoResp = dto.GetSubmissionResponseDTO{
+			TeamID:               teamID,
+			DocumentType:         "submission_2",
+			SubmissionFilename:   resp.Submission2Filename,
+			SubmissionUrl:        resp.Submission2Url,
+			SubmissionLastUpdate: resp.Submission2LastUpdate,
+		}
+	default:
+		return nil, fmt.Errorf("invalid submission type")
+	}
+
+	return &dtoResp, nil
 }
