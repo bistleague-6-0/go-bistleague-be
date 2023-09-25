@@ -81,7 +81,6 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			result.StudentCardURL = team.StudentCardURL
 			result.StudentCardRejection = team.StudentCardRejection
 
-			fmt.Println(team.SelfPortraitStatus)
 			result.SelfPortrait = team.SelfPortrait
 			result.SelfPortraitStatusCode = int8(team.SelfPortraitStatus)
 			result.SelfPortraitStatus = entity.VerificationStatusMap[int8(team.SelfPortraitStatus)]
@@ -109,7 +108,6 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			IsProfileVerified: team.IsProfileVerified,
 		})
 	}
-	fmt.Println(result.SelfPortraitStatusCode)
 	return &result, nil
 }
 
