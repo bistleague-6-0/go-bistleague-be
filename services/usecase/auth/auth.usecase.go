@@ -48,7 +48,7 @@ func (u *Usecase) InsertNewUser(ctx context.Context, req dto.SignUpUserRequestDT
 	refreshKey, err := encryptor.EncryptRefreshKey(encryptor.RefreshKey{
 		Uid:       user.UID,
 		TeamID:    user.TeamID.String,
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 5)),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 3 * 24)),
 	}, u.cfg.Secret.JWTSecret)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (u *Usecase) SignInUser(ctx context.Context, req dto.SignInUserRequestDTO) 
 	refreshKey, err := encryptor.EncryptRefreshKey(encryptor.RefreshKey{
 		Uid:       user.UID,
 		TeamID:    user.TeamID.String,
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 5)),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 3)),
 	}, u.cfg.Secret.JWTSecret)
 	if err != nil {
 		return nil, err
