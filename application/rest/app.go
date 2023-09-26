@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -23,6 +24,10 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	app := fiber.New(fiber.Config{
 		AppName: fmt.Sprintf("%s %s", cfg.Server.Name, cfg.Stage),
 	})
+
+	prometheus := fiberprometheus.New(cfg.Server.Name)
+	prometheus.RegisterAt(app, "/metrics")
+	app.Use(prometheus.Middleware)
 	// setup gzip
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed, // 1
@@ -73,6 +78,13 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	// admin route
 	adminRoute := admin.New(cfg, usecase.AdminUC, resource.Vld)
 	adminRoute.RegisterRoute(app)
+
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.JSON(dto.NoBodyDTOResponseWrapper{
+			Status:  http.StatusOK,
+			Message: "Hello, Hacker!",
+		})
+	})
 
 	return app, nil
 }
