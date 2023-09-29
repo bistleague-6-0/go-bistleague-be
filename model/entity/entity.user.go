@@ -42,3 +42,11 @@ type UserDocs struct {
 	EnrollmentStatus     int8           `db:"enrollment_status"`
 	IsProfileVerified    bool           `db:"is_profile_verified"`
 }
+
+type UserChallengeEntity struct {
+	UID              string `db:"uid"`
+	IgUsername       string `db:"ig_username" validate:"required"`
+	IgContentURl     string `db:"ig_content_url" validate:"required"`
+	TiktokUsername   string `db:"tiktok_username"`
+	TiktokContentURl string `db:"tiktok_content_url"`
+}

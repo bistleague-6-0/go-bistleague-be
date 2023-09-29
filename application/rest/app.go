@@ -6,6 +6,7 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/services/router/rest/admin"
 	"bistleague-be/services/router/rest/auth"
+	"bistleague-be/services/router/rest/challenge"
 	"bistleague-be/services/router/rest/hello"
 	"bistleague-be/services/router/rest/profile"
 	"bistleague-be/services/router/rest/team"
@@ -78,6 +79,10 @@ func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	// admin route
 	adminRoute := admin.New(cfg, usecase.AdminUC, resource.Vld)
 	adminRoute.RegisterRoute(app)
+
+	// challenge route
+	challengeRoute := challenge.New(cfg, resource.Vld, usecase.ChallengeUC)
+	challengeRoute.Register(app)
 
 	app.Get("/", func(ctx *fiber.Ctx) error {
 		return ctx.JSON(dto.NoBodyDTOResponseWrapper{

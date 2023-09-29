@@ -18,6 +18,14 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at timestamp
 );
 
+CREATE TABLE IF NOT EXISTS users_mini_challenge (
+    uid uuid PRIMARY KEY,
+    ig_username VARCHAR(155) DEFAULT '',
+    ig_content_url TEXT,
+    tiktok_username  VARCHAR(155) DEFAULT '',
+    tiktok_content_url TEXT
+);
+
 CREATE TABLE IF NOT EXISTS users_docs (
     uid uuid PRIMARY KEY,
     student_card_filename VARCHAR(155) DEFAULT '',
