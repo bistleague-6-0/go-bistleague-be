@@ -64,3 +64,34 @@ func (r *Repository) GetUserChallenge(ctx context.Context, userID string) (*enti
 	}
 	return &resp, nil
 }
+
+func (r *Repository) GetUserChallenges(ctx context.Context, page uint64, limit uint64) ([]entity.AdminUserChallengeEntity, error) {
+	offset := (page - 1) * limit
+	q := `select 
+		u.uid, u.username, u.email, u.full_name, 
+		uc.ig_content_url, uc.ig_username, uc.tiktok_content_url, 
+		uc.tiktok_username
+	from users_mini_challenge uc
+	left join users u on uc.uid = u.uid
+	order by uc.inserted_at
+	LIMIT $1 OFFSET $2
+	`
+	resp := []entity.AdminUserChallengeEntity{}
+	err := r.db.SelectContext(ctx, &resp, q, limit, offset)
+	return resp, err
+}
+
+func (r *Repository) GetUserChallengeWithUserDetail(ctx context.Context, userID string) (*entity.AdminUserChallengeEntity, error) {
+	q := `select 
+		uc.uid, u.username, u.email, u.full_name, 
+		uc.ig_content_url, uc.ig_username, uc.tiktok_content_url, 
+		uc.tiktok_username
+	from users_mini_challenge uc
+	left join users u on uc.uid = u.uid
+	WHERE uc.uid = $1
+	LIMIT 1
+`
+	resp := entity.AdminUserChallengeEntity{}
+	err := r.db.GetContext(ctx, &resp, q, userID)
+	return &resp, err
+}

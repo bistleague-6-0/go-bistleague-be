@@ -21,7 +21,7 @@ func main() {
 		panic(err)
 	}
 	repo := admin.New(cfg, rsc.Db, rsc.QBuilder)
-	uc := admin2.New(cfg, repo, nil, nil)
+	uc := admin2.New(cfg, repo, nil, nil, nil)
 	_, err = uc.InsertNewAdmin(ctx, dto.RegisterAdminRequestDTO{
 		Username: "bistmin",
 		Password: "g4C0rb1St1!",

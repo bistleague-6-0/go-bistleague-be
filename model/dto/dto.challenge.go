@@ -7,6 +7,14 @@ type InsertChallengeRequestDTO struct {
 	TiktokContentURl string `json:"tiktok_content_url"`
 }
 
+type AdminGetMiniChallengeResponseDTO struct {
+	UID      string `json:"user_id"`
+	FullName string `json:"full_name"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	InsertChallengeRequestDTO
+}
+
 type UpdateChallengeRequestDTO struct {
 	UID string `json:"user_id"`
 	InsertChallengeRequestDTO
