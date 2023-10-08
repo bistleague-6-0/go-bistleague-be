@@ -5,6 +5,7 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
 	adminRepo "bistleague-be/services/repository/admin"
+	"bistleague-be/services/repository/challenge"
 	"bistleague-be/services/repository/profile"
 	"bistleague-be/services/repository/team"
 	teamRepo "bistleague-be/services/repository/team"
@@ -15,18 +16,20 @@ import (
 )
 
 type Usecase struct {
-	cfg         *config.Config
-	repo        *adminRepo.Repository
-	profileRepo *profile.Repository
-	teamRepo    *teamRepo.Repository
+	cfg           *config.Config
+	repo          *adminRepo.Repository
+	profileRepo   *profile.Repository
+	teamRepo      *teamRepo.Repository
+	challengeRepo *challenge.Repository
 }
 
-func New(cfg *config.Config, repo *adminRepo.Repository, profileRepo *profile.Repository, teamRepo *team.Repository) *Usecase {
+func New(cfg *config.Config, repo *adminRepo.Repository, profileRepo *profile.Repository, teamRepo *team.Repository, challengeRepo *challenge.Repository) *Usecase {
 	return &Usecase{
-		cfg:         cfg,
-		repo:        repo,
-		profileRepo: profileRepo,
-		teamRepo:    teamRepo,
+		cfg:           cfg,
+		repo:          repo,
+		profileRepo:   profileRepo,
+		teamRepo:      teamRepo,
+		challengeRepo: challengeRepo,
 	}
 }
 
@@ -167,4 +170,46 @@ func (u *Usecase) UpdateTeamPaymentStatus(ctx context.Context, teamID string, st
 
 func (u *Usecase) UpdateUserDocumentStatus(ctx context.Context, userID string, doctype string, status int, rejection string) error {
 	return u.profileRepo.UpdateUserDocumentStatus(ctx, userID, doctype, status, rejection)
+}
+
+func (u *Usecase) GetMiniChallengesUsecase(ctx context.Context, page uint64, limit uint64) ([]dto.AdminGetMiniChallengeResponseDTO, error) {
+	resp, err := u.challengeRepo.GetUserChallenges(ctx, page, limit)
+	if err != nil {
+		return nil, err
+	}
+	result := []dto.AdminGetMiniChallengeResponseDTO{}
+	for _, chal := range resp {
+		result = append(result, dto.AdminGetMiniChallengeResponseDTO{
+			UID:      chal.UID,
+			FullName: chal.FullName,
+			Username: chal.Username,
+			Email:    chal.Email,
+			InsertChallengeRequestDTO: dto.InsertChallengeRequestDTO{
+				IgUsername:       chal.IgUsername,
+				IgContentURl:     chal.IgContentURl,
+				TiktokUsername:   chal.TiktokUsername,
+				TiktokContentURl: chal.TiktokContentURl,
+			},
+		})
+	}
+	return result, err
+}
+
+func (u *Usecase) GetMiniChallengeByUIDUsecase(ctx context.Context, uid string) (*dto.AdminGetMiniChallengeResponseDTO, error) {
+	resp, err := u.challengeRepo.GetUserChallengeWithUserDetail(ctx, uid)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.AdminGetMiniChallengeResponseDTO{
+		UID:      resp.UID,
+		FullName: resp.FullName,
+		Username: resp.FullName,
+		Email:    resp.Email,
+		InsertChallengeRequestDTO: dto.InsertChallengeRequestDTO{
+			IgUsername:       resp.IgUsername,
+			IgContentURl:     resp.IgContentURl,
+			TiktokUsername:   resp.TiktokUsername,
+			TiktokContentURl: resp.TiktokContentURl,
+		},
+	}, nil
 }

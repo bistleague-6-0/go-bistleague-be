@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f95ed389-ae0c-4e4c-9ec2-61663de597fb",
+		"_postman_id": "328ab94d-6b6f-4388-8877-baae805c2e0d",
 		"name": "Bist League",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -51,7 +51,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"refresh_token\": \"637ebd27386996d78375cf60b440a0042cd4394993b3fe7b7b717143ef2c5766ebb0fb7829fe36f83cbbf6a77a1a214f7155e01bf8d6c3d0679e2e88af2023b2440ca0fe4ee466c050a84c0ca72f24\",\n    \"user_id\": \"5b0d342d-dcd7-49e3-9f30-c8406f48464e\"\n}",
+							"raw": "{\n    \"refresh_token\": \"7deae7fc732e9d8bdc041819c3f99c45a17d62d02629caa7c57908d9b2770e9fc5a0cec80c075dbc96183cac59f64ccf44abf186daef010d95d4ec207684a1ec2c2d34b994ab279159a84ed23dae73748abc64939ac2df04661fc7b8921eb9bd0d70f4d1fc1c46b616001aea8aedd5665832608f9a08687bea595ca68badf58b\",\n    \"user_id\": \"5b0d342d-dcd7-49e3-9f30-c8406f48464e\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -849,6 +849,74 @@
 							"body": "{\n    \"status\": 202,\n    \"msg\": \"user document status has been updated\"\n}"
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "Challenge",
+			"item": [
+				{
+					"name": "Add Challenge Properties",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiMWU3Nzc2YTktYWY1OS00YjE5LTk0OWEtNTZhNjMxYWYyZDJiIiwidXNlcl9pZCI6IjViMGQzNDJkLWRjZDctNDllMy05ZjMwLWM4NDA2ZjQ4NDY0ZSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTU5ODAyNzUsImlhdCI6MTY5NTk3OTk3NX0.c2XfN2d_-ynweYqzB-3A4neUVwV1UqPCfq6Zov0J7f4"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ig_username\": \"confusion_hill\",\n    \"ig_content_url\": \"https://pkg.go.dev/github.com/go-playground/validator/v10#section-readme\",\n    \"tiktok_username\": \"\",\n    \"tiktok_content_url\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/challenge"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Challenge Properties",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiMWU3Nzc2YTktYWY1OS00YjE5LTk0OWEtNTZhNjMxYWYyZDJiIiwidXNlcl9pZCI6IjViMGQzNDJkLWRjZDctNDllMy05ZjMwLWM4NDA2ZjQ4NDY0ZSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTU5ODEwNTksImlhdCI6MTY5NTk4MDc1OX0.zpZEyBw9UKpmxAuxHc4IagZ1T4UIdtBkHyGTS_f1M44"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"5b0d342d-dcd7-49e3-9f30-c8406f48464e\",\n    \"ig_username\": \"confusion_hill\",\n    \"ig_content_url\": \"https://pkg.go.dev/github.com/go-playground/validator/v10#section-readme\",\n    \"tiktok_username\": \"mantap_jiwa\",\n    \"tiktok_content_url\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/challenge"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Challenge Properties",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWFtX2lkIjoiMWU3Nzc2YTktYWY1OS00YjE5LTk0OWEtNTZhNjMxYWYyZDJiIiwidXNlcl9pZCI6IjViMGQzNDJkLWRjZDctNDllMy05ZjMwLWM4NDA2ZjQ4NDY0ZSIsImlzcyI6InJlc3QiLCJleHAiOjE2OTU5ODE2MTgsImlhdCI6MTY5NTk4MTMxOH0.5566uitz_E5ZJYRAu-Rcsor_myVkAwGr3Wocuog-dbM"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{local}}/challenge"
+					},
+					"response": []
 				}
 			]
 		},
