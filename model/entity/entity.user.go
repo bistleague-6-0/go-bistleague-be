@@ -50,3 +50,10 @@ type UserChallengeEntity struct {
 	TiktokUsername   string `db:"tiktok_username"`
 	TiktokContentURl string `db:"tiktok_content_url"`
 }
+
+type AdminUserChallengeEntity struct {
+	Email    string `db:"email"`
+	Username string `db:"username"`
+	FullName string `db:"full_name"`
+	UserChallengeEntity
+}

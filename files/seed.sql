@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS users_mini_challenge (
     ig_username VARCHAR(155) DEFAULT '',
     ig_content_url TEXT,
     tiktok_username  VARCHAR(155) DEFAULT '',
-    tiktok_content_url TEXT
+    tiktok_content_url TEXT,
+    inserted_at timestamp default now()
 );
 
 CREATE TABLE IF NOT EXISTS users_docs (

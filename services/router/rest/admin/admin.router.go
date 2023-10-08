@@ -6,6 +6,7 @@ import (
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/usecase/admin"
 	"fmt"
+	"github.com/gofiber/fiber/v2/log"
 	"net/http"
 	"strconv"
 
@@ -35,6 +36,8 @@ func (r *Router) RegisterRoute(app *fiber.App) {
 	g.Get("/users", guard.AdminGuard(r.cfg, r.GetUserDocsList)...)
 	g.Put("/payments/status/:teamID", guard.AdminGuard(r.cfg, r.UpdatePaymentStatus)...)
 	g.Put("/users/status/:uid", guard.AdminGuard(r.cfg, r.UpdateUserDocumentStatus)...)
+	g.Get("/challenge/mini/:uid", guard.AdminGuard(r.cfg, r.GetMiniChallenge)...)
+	g.Get("/challenge/mini", guard.AdminGuard(r.cfg, r.GetAllMiniChallenge)...)
 }
 
 type AuthRequest struct {
@@ -186,4 +189,35 @@ func (r *Router) UpdateUserDocumentStatus(g *guard.AuthGuardContext) error {
 		Status:  http.StatusAccepted,
 		Message: "user document status has been updated",
 	})
+}
+
+func (r *Router) GetMiniChallenge(g *guard.AuthGuardContext) error {
+	uid := g.FiberCtx.Params("uid")
+	if uid == "" {
+		return g.ReturnError(http.StatusNotFound, "cannot find challenge")
+	}
+	resp, err := r.usecase.GetMiniChallengeByUIDUsecase(g.FiberCtx.Context(), uid)
+	if err != nil {
+		return g.ReturnError(http.StatusNotFound, "cannot find challenge")
+	}
+	return g.ReturnSuccess(resp)
+}
+
+func (r *Router) GetAllMiniChallenge(g *guard.AuthGuardContext) error {
+	strPage := g.FiberCtx.Query("page", "1")
+	page, err := strconv.ParseUint(strPage, 10, 32)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "page is not an integer")
+	}
+	strLimit := g.FiberCtx.Query("limit", "10")
+	limit, err := strconv.ParseUint(strLimit, 10, 32)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "limit is not an integer")
+	}
+	resp, err := r.usecase.GetMiniChallengesUsecase(g.FiberCtx.Context(), page, limit)
+	if err != nil {
+		log.Error(err)
+		return g.ReturnError(http.StatusInternalServerError, "internal server error")
+	}
+	return g.ReturnSuccess(resp)
 }
