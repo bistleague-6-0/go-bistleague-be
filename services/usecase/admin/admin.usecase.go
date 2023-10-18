@@ -231,6 +231,10 @@ func (u *Usecase) UpdateTeamPaymentStatus(ctx context.Context, teamID string, st
 	}
 
 	teamVerifications, err := u.teamRepo.GetTeamVerification(ctx, teamID)
+	if err != nil {
+		return err
+	}
+
 	verified := true
 	var data struct {
 		NamaLengkap  string
@@ -238,16 +242,18 @@ func (u *Usecase) UpdateTeamPaymentStatus(ctx context.Context, teamID string, st
 		NamaTim      string
 		NomorTelepon string
 	}
+	if len(teamVerifications) < 2 {
+		verified = false
+	}
 	for _, teamVerification := range teamVerifications {
+		if teamVerification.PaymentStatus != 2 || teamVerification.StudentCardStatus != 2 || teamVerification.SelfPortraitStatus != 2 || teamVerification.TwibbonStatus != 2 {
+			verified = false
+		}
 		if teamVerification.TeamLeaderID == teamVerification.UserID {
 			data.NamaLengkap = teamVerification.FullName
 			data.Email = teamVerification.Email
 			data.NamaTim = teamVerification.TeamName
-			data.NomorTelepon = teamVerification.Phone
-
-			if teamVerification.PaymentStatus != 2 || teamVerification.StudentCardStatus != 2 || teamVerification.SelfPortraitStatus != 2 || teamVerification.TwibbonStatus != 2 {
-				verified = false
-			}
+			data.NomorTelepon = teamVerification.Phone.String
 		}
 	}
 
@@ -268,6 +274,9 @@ func (u *Usecase) UpdateUserDocumentStatus(ctx context.Context, userID string, d
 	}
 
 	teamVerifications, err := u.teamRepo.GetTeamVerification(ctx, teamID)
+	if err != nil {
+		return err
+	}
 	verified := true
 	var data struct {
 		NamaLengkap  string
@@ -275,16 +284,18 @@ func (u *Usecase) UpdateUserDocumentStatus(ctx context.Context, userID string, d
 		NamaTim      string
 		NomorTelepon string
 	}
+	if len(teamVerifications) < 2 {
+		verified = false
+	}
 	for _, teamVerification := range teamVerifications {
+		if teamVerification.PaymentStatus != 2 || teamVerification.StudentCardStatus != 2 || teamVerification.SelfPortraitStatus != 2 || teamVerification.TwibbonStatus != 2 {
+			verified = false
+		}
 		if teamVerification.TeamLeaderID == teamVerification.UserID {
 			data.NamaLengkap = teamVerification.FullName
 			data.Email = teamVerification.Email
 			data.NamaTim = teamVerification.TeamName
-			data.NomorTelepon = teamVerification.Phone
-
-			if teamVerification.PaymentStatus != 2 || teamVerification.StudentCardStatus != 2 || teamVerification.SelfPortraitStatus != 2 || teamVerification.TwibbonStatus != 2 {
-				verified = false
-			}
+			data.NomorTelepon = teamVerification.Phone.String
 		}
 	}
 

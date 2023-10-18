@@ -4,6 +4,7 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/entity"
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/doug-martin/goqu/v9"
@@ -116,10 +117,17 @@ func (r *Repository) GetUserList(ctx context.Context, page int, pageSize int) ([
 }
 
 func (r *Repository) UpdateUserDocumentStatus(ctx context.Context, userID string, doctype string, status int, rejection string) (string, error) {
-	var teamID string
-	err := r.db.GetContext(ctx, &teamID, "SELECT team_id FROM users WHERE uid = ?", userID)
+	queryUser := `SELECT team_id FROM users WHERE uid = $1 LIMIT 1`
+	user := entity.UserEntity{}
+	err := r.db.GetContext(ctx, &user, queryUser, userID)
 	if err != nil {
 		return "", err
+	}
+
+	teamID := user.TeamID.String
+
+	if teamID == "" {
+		return "", errors.New("user invalid")
 	}
 
 	q := r.qb.Update("users_docs").Where(goqu.C("uid").Eq(userID))
