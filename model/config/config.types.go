@@ -8,6 +8,7 @@ type Config struct {
 	Secret         SecretConfig   `json:"secret"`
 	ServiceAccount ServiceAccount `json:"service-account-gcp"`
 	Storage        StorageConfig  `json:"storage"`
+	SMTP           SMTPConfig     `json:"smtp"`
 }
 
 type SecretConfig struct {
@@ -51,4 +52,11 @@ type StorageConfig struct {
 	StorageURlBase string `json:"storage_url_base"`
 	ProjectID      string `json:"projectID"`
 	BucketName     string `json:"bucketName"`
+}
+
+type SMTPConfig struct {
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	User     string `json:"user"`
+	Password string `json:"password"`
 }

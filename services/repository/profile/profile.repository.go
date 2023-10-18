@@ -115,7 +115,13 @@ func (r *Repository) GetUserList(ctx context.Context, page int, pageSize int) ([
 	return resp, nil
 }
 
-func (r *Repository) UpdateUserDocumentStatus(ctx context.Context, userID string, doctype string, status int, rejection string) error {
+func (r *Repository) UpdateUserDocumentStatus(ctx context.Context, userID string, doctype string, status int, rejection string) (string, error) {
+	var teamID string
+	err := r.db.GetContext(ctx, &teamID, "SELECT team_id FROM users WHERE uid = ?", userID)
+	if err != nil {
+		return "", err
+	}
+
 	q := r.qb.Update("users_docs").Where(goqu.C("uid").Eq(userID))
 	if doctype == "student_card" {
 		q = q.Set(goqu.Record{
@@ -140,8 +146,14 @@ func (r *Repository) UpdateUserDocumentStatus(ctx context.Context, userID string
 	}
 	query, _, err := q.ToSQL()
 	if err != nil {
-		return err
+		return "", err
 	}
+
 	_, err = r.db.ExecContext(ctx, query)
-	return err
+	if err != nil {
+		return "", err
+	}
+
+	return teamID, nil
+
 }
