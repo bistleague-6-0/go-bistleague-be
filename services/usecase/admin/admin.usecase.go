@@ -6,13 +6,71 @@ import (
 	"bistleague-be/model/entity"
 	adminRepo "bistleague-be/services/repository/admin"
 	"bistleague-be/services/repository/challenge"
+	emailRepo "bistleague-be/services/repository/email"
 	"bistleague-be/services/repository/profile"
 	"bistleague-be/services/repository/team"
 	teamRepo "bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
 	"context"
-	"golang.org/x/crypto/bcrypt"
 	"strings"
+
+	"golang.org/x/crypto/bcrypt"
+)
+
+const (
+	emailTemplate = `
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<style>
+					body {
+						font-family: Arial, sans-serif;
+						background-color: #f7f7f7;
+						margin: 0;
+						padding: 20px;
+					}
+					.email-container {
+						background-color: #ffffff;
+						max-width: 600px;
+						margin: 0 auto;
+						padding: 20px;
+						border-radius: 5px;
+						box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+					}
+					.details-header {
+						font-weight: bold;
+					}
+				</style>
+					</head>
+					<body>
+						<div class="email-container">
+						<p>Dear {{.NamaLengkap}},</p>
+						<p>We are delighted to inform you that your registration for the Bist League 6 has been successfully received and confirmed. Congratulations, and thank you for choosing to participate in our competition!</p>
+
+						<p><span class="details-header">Here are the details of your registration:</span></p>
+						<ul>
+							<li><span>Full Name:</span> {{.NamaLengkap}}</li>
+							<li><span>Email Address:</span> {{.Email}}</li>
+							<li><span>Team Name (if applicable):</span> {{.NamaTim}}</li>
+							<li><span>Contact Number:</span> {{.NomorTelepon}}</li>
+						</ul>
+
+						<p>Please keep this email for your records. In case you have any questions or need to make any changes to your registration details, please do not hesitate to contact us at <a href="mailto:bistleague@std.stei.itb.ac.id">bistleague@std.stei.itb.ac.id</a> or +62 81290908333.</p>
+
+						<p  class="details-header">Important Dates:</p>
+						<ul>
+							<li><span>Preliminary Competition Date:</span> October 22, 2023</li>
+							<li><span>Location:</span> Online</li>
+						</ul>
+
+						<p>Once again, congratulations on your successful registration. We look forward to seeing you and your team at the competition. Best of luck with your preparations, and may the best team win!</p>
+
+						<p>Sincerely,</p>
+						<p>Bist league 6</p>
+						</div>
+					</body>
+					</html>
+			`
 )
 
 type Usecase struct {
@@ -21,15 +79,17 @@ type Usecase struct {
 	profileRepo   *profile.Repository
 	teamRepo      *teamRepo.Repository
 	challengeRepo *challenge.Repository
+	emailRepo     *emailRepo.Repository
 }
 
-func New(cfg *config.Config, repo *adminRepo.Repository, profileRepo *profile.Repository, teamRepo *team.Repository, challengeRepo *challenge.Repository) *Usecase {
+func New(cfg *config.Config, repo *adminRepo.Repository, profileRepo *profile.Repository, teamRepo *team.Repository, challengeRepo *challenge.Repository, emailRepo *emailRepo.Repository) *Usecase {
 	return &Usecase{
 		cfg:           cfg,
 		repo:          repo,
 		profileRepo:   profileRepo,
 		teamRepo:      teamRepo,
 		challengeRepo: challengeRepo,
+		emailRepo:     emailRepo,
 	}
 }
 
@@ -165,11 +225,76 @@ func (u *Usecase) GetUserList(ctx context.Context, page int, pageSize int) (*dto
 }
 
 func (u *Usecase) UpdateTeamPaymentStatus(ctx context.Context, teamID string, status int, rejection string) error {
-	return u.teamRepo.UpdatePaymentStatus(ctx, teamID, status, rejection)
+	err := u.teamRepo.UpdatePaymentStatus(ctx, teamID, status, rejection)
+	if err != nil {
+		return err
+	}
+
+	teamVerifications, err := u.teamRepo.GetTeamVerification(ctx, teamID)
+	verified := true
+	var data struct {
+		NamaLengkap  string
+		Email        string
+		NamaTim      string
+		NomorTelepon string
+	}
+	for _, teamVerification := range teamVerifications {
+		if teamVerification.TeamLeaderID == teamVerification.UserID {
+			data.NamaLengkap = teamVerification.FullName
+			data.Email = teamVerification.Email
+			data.NamaTim = teamVerification.TeamName
+			data.NomorTelepon = teamVerification.Phone
+
+			if teamVerification.PaymentStatus != 2 || teamVerification.StudentCardStatus != 2 || teamVerification.SelfPortraitStatus != 2 || teamVerification.TwibbonStatus != 2 {
+				verified = false
+			}
+		}
+	}
+
+	if verified {
+		return u.emailRepo.SendEmailHTML([]string{data.Email},
+			"Confirmation of Registration for Business Case Competition by Bist League 6",
+			emailTemplate, data)
+	}
+
+	return err
 }
 
 func (u *Usecase) UpdateUserDocumentStatus(ctx context.Context, userID string, doctype string, status int, rejection string) error {
-	return u.profileRepo.UpdateUserDocumentStatus(ctx, userID, doctype, status, rejection)
+	teamID, err := u.profileRepo.UpdateUserDocumentStatus(ctx, userID, doctype, status, rejection)
+
+	if err != nil {
+		return err
+	}
+
+	teamVerifications, err := u.teamRepo.GetTeamVerification(ctx, teamID)
+	verified := true
+	var data struct {
+		NamaLengkap  string
+		Email        string
+		NamaTim      string
+		NomorTelepon string
+	}
+	for _, teamVerification := range teamVerifications {
+		if teamVerification.TeamLeaderID == teamVerification.UserID {
+			data.NamaLengkap = teamVerification.FullName
+			data.Email = teamVerification.Email
+			data.NamaTim = teamVerification.TeamName
+			data.NomorTelepon = teamVerification.Phone
+
+			if teamVerification.PaymentStatus != 2 || teamVerification.StudentCardStatus != 2 || teamVerification.SelfPortraitStatus != 2 || teamVerification.TwibbonStatus != 2 {
+				verified = false
+			}
+		}
+	}
+
+	if verified {
+		return u.emailRepo.SendEmailHTML([]string{data.Email},
+			"Confirmation of Registration for Business Case Competition by Bist League 6",
+			emailTemplate, data)
+	}
+
+	return err
 }
 
 func (u *Usecase) GetMiniChallengesUsecase(ctx context.Context, page uint64, limit uint64) ([]dto.AdminGetMiniChallengeResponseDTO, error) {
