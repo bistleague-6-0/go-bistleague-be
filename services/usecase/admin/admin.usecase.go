@@ -51,7 +51,7 @@ const (
 						<ul>
 							<li><span>Full Name:</span> {{.NamaLengkap}}</li>
 							<li><span>Email Address:</span> {{.Email}}</li>
-							<li><span>Team Name (if applicable):</span> {{.NamaTim}}</li>
+							<li><span>Team Name:</span> {{.NamaTim}}</li>
 							<li><span>Contact Number:</span> {{.NomorTelepon}}</li>
 						</ul>
 
