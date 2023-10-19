@@ -259,3 +259,20 @@ func (r *Repository) UpdatePaymentStatus(ctx context.Context, teamID string, sta
 	_, err = r.db.ExecContext(ctx, query)
 	return err
 }
+
+func (r *Repository) GetTeamVerification(ctx context.Context, teamID string) ([]entity.TeamVerification, error) {
+	query := `select
+		t.team_id, t.team_name, t.team_leader_id,
+		td.payment_status,
+		u.uid, u.email, u.phone_number, u.full_name,
+		ud.student_card_status, ud.enrollment_status, ud.self_portrait_status, ud.twibbon_status
+	from users u
+		left join users_docs ud on ud.uid = u.uid
+		left join teams t on u.team_id = t.team_id
+		left join teams_docs td on td.team_id = t.team_id
+	where u.team_id = $1 LIMIT 3
+	`
+	resp := []entity.TeamVerification{}
+	err := r.db.SelectContext(ctx, &resp, query, teamID)
+	return resp, err
+}

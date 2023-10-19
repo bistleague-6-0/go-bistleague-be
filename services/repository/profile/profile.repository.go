@@ -4,6 +4,7 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/entity"
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/doug-martin/goqu/v9"
@@ -115,7 +116,20 @@ func (r *Repository) GetUserList(ctx context.Context, page int, pageSize int) ([
 	return resp, nil
 }
 
-func (r *Repository) UpdateUserDocumentStatus(ctx context.Context, userID string, doctype string, status int, rejection string) error {
+func (r *Repository) UpdateUserDocumentStatus(ctx context.Context, userID string, doctype string, status int, rejection string) (string, error) {
+	queryUser := `SELECT team_id FROM users WHERE uid = $1 LIMIT 1`
+	user := entity.UserEntity{}
+	err := r.db.GetContext(ctx, &user, queryUser, userID)
+	if err != nil {
+		return "", err
+	}
+
+	teamID := user.TeamID.String
+
+	if teamID == "" {
+		return "", errors.New("user invalid")
+	}
+
 	q := r.qb.Update("users_docs").Where(goqu.C("uid").Eq(userID))
 	if doctype == "student_card" {
 		q = q.Set(goqu.Record{
@@ -140,8 +154,14 @@ func (r *Repository) UpdateUserDocumentStatus(ctx context.Context, userID string
 	}
 	query, _, err := q.ToSQL()
 	if err != nil {
-		return err
+		return "", err
 	}
+
 	_, err = r.db.ExecContext(ctx, query)
-	return err
+	if err != nil {
+		return "", err
+	}
+
+	return teamID, nil
+
 }

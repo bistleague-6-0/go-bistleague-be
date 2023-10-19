@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"database/sql"
 	"time"
 )
 
@@ -80,4 +81,19 @@ type TeamPayment struct {
 	PaymentURL      string `db:"payment_url"`
 	PaymentStatus   int8   `db:"payment_status"`
 	Code            string `db:"code"`
+}
+
+type TeamVerification struct {
+	UserID             string         `db:"uid"`
+	TeamID             sql.NullString `db:"team_id"`
+	TeamName           string         `db:"team_name"`
+	FullName           string         `db:"full_name"`
+	TeamLeaderID       string         `db:"team_leader_id"`
+	Email              string         `db:"email"`
+	Phone              sql.NullString `db:"phone_number"`
+	PaymentStatus      int8           `db:"payment_status"`
+	StudentCardStatus  int8           `db:"student_card_status"`
+	SelfPortraitStatus int            `db:"self_portrait_status"`
+	TwibbonStatus      int8           `db:"twibbon_status"`
+	EnrollmentStatus   int8           `db:"enrollment_status"`
 }
