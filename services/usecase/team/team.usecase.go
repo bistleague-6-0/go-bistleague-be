@@ -57,13 +57,21 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 }
 
 func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID string) (*dto.GetTeamInfoResponseDTO, error) {
-	resp, err := u.repo.GetTeamInformation(ctx, teamID)
+	// Fetch team information without submission data
+	teamInfoResp, err := u.repo.GetTeamInformation(ctx, teamID)
 	if err != nil {
 		return nil, err
 	}
+
+	submission1Resp, err := u.repo.GetSubmission(ctx, teamID)
+	if err != nil {
+		return nil, err
+	}
+
 	result := dto.GetTeamInfoResponseDTO{}
 	result.TeamID = teamID
-	for _, team := range resp {
+
+	for _, team := range teamInfoResp {
 		result.TeamName = team.TeamName
 		result.TeamRedeemCode = team.RedeemCode
 		result.IsActive = team.IsActive
@@ -108,6 +116,10 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			IsProfileVerified: team.IsProfileVerified,
 		})
 	}
+
+	result.Submission1Url = submission1Resp.Submission1Url
+	result.Submission2Url = submission1Resp.Submission2Url
+
 	return &result, nil
 }
 

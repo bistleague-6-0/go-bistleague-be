@@ -60,6 +60,9 @@ type TeamWithUserEntity struct {
 	EnrollmentURL       string `db:"enrollment_url"`
 	EnrollmentRejection string `db:"enrollment_rejection"`
 
+	Submission1Url        *string    `db:"submission_1_url"`
+	Submission2Url        *string    `db:"submission_2_url"`
+
 	RedeemCode string `db:"code"`
 }
 
