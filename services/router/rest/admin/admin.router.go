@@ -38,6 +38,7 @@ func (r *Router) RegisterRoute(app *fiber.App) {
 	g.Put("/users/status/:uid", guard.AdminGuard(r.cfg, r.UpdateUserDocumentStatus)...)
 	g.Get("/challenge/mini/:uid", guard.AdminGuard(r.cfg, r.GetMiniChallenge)...)
 	g.Get("/challenge/mini", guard.AdminGuard(r.cfg, r.GetAllMiniChallenge)...)
+	g.Get("/submission", guard.AdminGuard(r.cfg, r.GetAllSubmission)...)
 }
 
 type AuthRequest struct {
@@ -219,5 +220,19 @@ func (r *Router) GetAllMiniChallenge(g *guard.AuthGuardContext) error {
 		log.Error(err)
 		return g.ReturnError(http.StatusInternalServerError, "internal server error")
 	}
+	return g.ReturnSuccess(resp)
+}
+
+func (r *Router) GetAllSubmission(g *guard.AuthGuardContext) error {
+	resp, err := r.usecase.GetAllSubmissionUsecase(g.FiberCtx.Context())
+
+	if err != nil {
+		return g.ReturnError(http.StatusNotFound, "cannot find submission data")
+	}
+
+	if resp == nil {
+		return g.ReturnError(http.StatusNotFound, "cannot find submission data")
+	}
+	
 	return g.ReturnSuccess(resp)
 }
