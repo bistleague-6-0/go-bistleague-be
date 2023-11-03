@@ -13,7 +13,6 @@ import (
 	"bistleague-be/services/utils"
 	"context"
 	"strings"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -348,4 +347,45 @@ func (u *Usecase) GetMiniChallengeByUIDUsecase(ctx context.Context, uid string) 
 			TiktokContentURl: resp.TiktokContentURl,
 		},
 	}, nil
+}
+
+func (u *Usecase) GetAllSubmissionUsecase(ctx context.Context, page int, pageSize int) (*dto.PaginationDTOWrapper, error) {
+    resp, err := u.teamRepo.GetAllSubmission(ctx, page, pageSize)
+    if err != nil {
+        return nil, err
+    }
+
+	result := []dto.GetAllSubmissionResponseDTO{}
+
+    for _, submission := range resp {
+
+        result = append(result, dto.GetAllSubmissionResponseDTO{
+            TeamID:               submission.TeamID,
+            Submission1Filename:   submission.Submission1Filename,
+            Submission1Url:        submission.Submission1Url,
+            Submission1LastUpdate: submission.Submission1LastUpdate,
+			Submission2Filename:   submission.Submission2Filename,
+			Submission2Url:        submission.Submission2Url,
+			Submission2LastUpdate: submission.Submission2LastUpdate,
+        })
+    }
+
+	totalTeam, err := u.teamRepo.GetTeamCount(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var dtoResp dto.PaginationDTOWrapper
+
+	totalPage := (totalTeam + pageSize - 1) / pageSize
+
+	dtoResp = dto.PaginationDTOWrapper{
+		PageSize:  pageSize,
+		Page:      page,
+		TotalPage: totalPage,
+		Data:      result,
+	}
+
+
+    return &dtoResp, err
 }
