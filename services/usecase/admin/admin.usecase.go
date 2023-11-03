@@ -349,8 +349,8 @@ func (u *Usecase) GetMiniChallengeByUIDUsecase(ctx context.Context, uid string) 
 	}, nil
 }
 
-func (u *Usecase) GetAllSubmissionUsecase(ctx context.Context) ([]dto.GetAllSubmissionResponseDTO, error) {
-    resp, err := u.teamRepo.GetAllSubmission(ctx)
+func (u *Usecase) GetAllSubmissionUsecase(ctx context.Context, page int, pageSize int) (*dto.PaginationDTOWrapper, error) {
+    resp, err := u.teamRepo.GetAllSubmission(ctx, page, pageSize)
     if err != nil {
         return nil, err
     }
@@ -370,5 +370,22 @@ func (u *Usecase) GetAllSubmissionUsecase(ctx context.Context) ([]dto.GetAllSubm
         })
     }
 
-    return result, err
+	totalTeam, err := u.teamRepo.GetTeamCount(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var dtoResp dto.PaginationDTOWrapper
+
+	totalPage := (totalTeam + pageSize - 1) / pageSize
+
+	dtoResp = dto.PaginationDTOWrapper{
+		PageSize:  pageSize,
+		Page:      page,
+		TotalPage: totalPage,
+		Data:      result,
+	}
+
+
+    return &dtoResp, err
 }

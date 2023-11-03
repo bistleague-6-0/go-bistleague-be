@@ -224,7 +224,25 @@ func (r *Router) GetAllMiniChallenge(g *guard.AuthGuardContext) error {
 }
 
 func (r *Router) GetAllSubmission(g *guard.AuthGuardContext) error {
-	resp, err := r.usecase.GetAllSubmissionUsecase(g.FiberCtx.Context())
+	pageStr := g.FiberCtx.Queries()["page"]
+	pageSizeStr := g.FiberCtx.Queries()["page_size"]
+	if pageStr == "" {
+		pageStr = "1"
+	}
+	if pageSizeStr == "" {
+		pageSizeStr = "10"
+	}
+	page, err := strconv.ParseInt(pageStr, 10, 16)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "page is not valid int")
+	}
+
+	pageSize, err := strconv.ParseInt(pageSizeStr, 10, 16)
+	if err != nil {
+		return g.ReturnError(http.StatusBadRequest, "page size is not valid int")
+	}
+	
+	resp, err := r.usecase.GetAllSubmissionUsecase(g.FiberCtx.Context(), int(page), int(pageSize))
 
 	if err != nil {
 		return g.ReturnError(http.StatusNotFound, "cannot find submission data")

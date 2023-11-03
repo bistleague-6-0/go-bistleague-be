@@ -277,16 +277,18 @@ func (r *Repository) GetTeamVerification(ctx context.Context, teamID string) ([]
 	return resp, err
 }
 
-func (r *Repository) GetAllSubmission(ctx context.Context) ([]entity.TeamSubmission, error) {
+func (r *Repository) GetAllSubmission(ctx context.Context, page int, pageSize int) ([]entity.TeamSubmission, error) {
     query := `
         SELECT
             team_id, submission_1_filename, submission_1_url, submission_1_lastupdate,
             submission_2_filename, submission_2_url, submission_2_lastupdate
         FROM teams_docs
+		LIMIT $1 OFFSET $2
     `
 
     var resp []entity.TeamSubmission
-    err := r.db.SelectContext(ctx, &resp, query)
+	offset := (page - 1) * pageSize
+    err := r.db.SelectContext(ctx, &resp, query, pageSize, offset)
 
     if err != nil {
         println("Error fetching submission:", err.Error())
