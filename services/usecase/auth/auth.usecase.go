@@ -5,24 +5,29 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/model/entity"
 	"bistleague-be/services/repository/auth"
+	"bistleague-be/services/repository/cache"
 	"bistleague-be/services/utils"
 	"bistleague-be/services/utils/encryptor"
 	"context"
 	"errors"
+	"fmt"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
 type Usecase struct {
-	cfg  *config.Config
-	repo *auth.Repository
+	cfg       *config.Config
+	repo      *auth.Repository
+	cacheRepo *cache.Repository
 }
 
-func New(cfg *config.Config, repo *auth.Repository) *Usecase {
+func New(cfg *config.Config, repo *auth.Repository, cacheRepo *cache.Repository) *Usecase {
 	return &Usecase{
-		cfg:  cfg,
-		repo: repo,
+		cfg:       cfg,
+		repo:      repo,
+		cacheRepo: cacheRepo,
 	}
 }
 
@@ -118,4 +123,28 @@ func (u *Usecase) RefreshToken(ctx context.Context, req dto.RefreshTokenRequestD
 		IsUpdated:   resp.TeamID.String != "",
 	}
 	return &result, nil
+}
+
+func (u *Usecase) ForgetPasswordUsecase(ctx context.Context, email string) error {
+	// selalu return success mau itu dia dpt emailnya atau engga.
+	// soalnya, klo misalnya email ga ketemu di return email ga ketemu
+	// bisa di abuse sama hacker
+	// return error hanya untuk server error seperti db conn error, parse error, dll
+	token := "random token dong"
+	isUsed := u.cacheRepo.Check(ctx, token)
+	if isUsed {
+		return errors.New("udah kepake bwang")
+	}
+	u.cacheRepo.Set(ctx, token, email, time.Hour*5)
+	resp, err := u.cacheRepo.Get(ctx, email)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	fmt.Println("cache value", resp)
+	return nil
+}
+
+func (u *Usecase) ValidateForgetPasswordTokenUsecase(ctx context.Context, token string) error {
+	return nil
 }
