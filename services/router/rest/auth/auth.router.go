@@ -106,7 +106,7 @@ func (r *Router) ForgetPasswordRoute(g *guard.GuardContext) error {
 	}
 	err = r.usecase.ForgetPasswordUsecase(g.FiberCtx.Context(), req.Email)
 	if err != nil {
-		return g.ReturnError(http.StatusInternalServerError, "internal server error")
+		return g.ReturnError(http.StatusInternalServerError, err.Error())
 	}
 	return g.ReturnSuccess("success")
 }
