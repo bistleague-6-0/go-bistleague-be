@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-
+	"time"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
@@ -131,9 +131,9 @@ func (r *Router) GetSubmission(g *guard.AuthGuardContext) error {
 		return g.ReturnError(http.StatusNotFound, "cannot find submission data")
 	}
 
-	if resp.SubmissionLastUpdate == nil {
+	if (resp.SubmissionLastUpdate == time.Time{}) {
 		return g.ReturnError(http.StatusNotFound, "cannot find submission data")
 	}
-
-	return g.ReturnSuccess(resp)
+	
+	return g.ReturnSuccess(resp)   
 }

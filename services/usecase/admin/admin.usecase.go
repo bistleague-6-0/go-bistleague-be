@@ -361,12 +361,13 @@ func (u *Usecase) GetAllSubmissionUsecase(ctx context.Context) ([]dto.GetAllSubm
 
         result = append(result, dto.GetAllSubmissionResponseDTO{
             TeamID:               submission.TeamID,
-            Submission1Filename:   submission.Submission1Filename,
-            Submission1Url:        submission.Submission1Url,
-            Submission1LastUpdate: submission.Submission1LastUpdate,
-			Submission2Filename:   submission.Submission2Filename,
-			Submission2Url:        submission.Submission2Url,
-			Submission2LastUpdate: submission.Submission2LastUpdate,
+			TeamName:              submission.TeamName,
+            Submission1Filename:   submission.Submission1Filename.String,
+            Submission1Url:        submission.Submission1Url.String,
+            Submission1LastUpdate: submission.Submission1LastUpdate.Time,
+			Submission2Filename:   submission.Submission2Filename.String,
+			Submission2Url:        submission.Submission2Url.String,
+			Submission2LastUpdate: submission.Submission2LastUpdate.Time,
         })
     }
 
