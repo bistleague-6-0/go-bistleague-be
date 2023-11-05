@@ -165,17 +165,17 @@ func (u *Usecase) GetTeamSubmission(ctx context.Context, submissionType int, tea
 		dtoResp = dto.GetSubmissionResponseDTO{
 			TeamID:               teamID,
 			DocumentType:         "submission_1",
-			SubmissionFilename:   resp.Submission1Filename,
-			SubmissionUrl:        resp.Submission1Url,
-			SubmissionLastUpdate: resp.Submission1LastUpdate,
+			SubmissionFilename:   resp.Submission1Filename.String,
+			SubmissionUrl:        resp.Submission1Url.String,
+			SubmissionLastUpdate: resp.Submission1LastUpdate.Time,
 		}
 	case 2:
 		dtoResp = dto.GetSubmissionResponseDTO{
 			TeamID:               teamID,
 			DocumentType:         "submission_2",
-			SubmissionFilename:   resp.Submission2Filename,
-			SubmissionUrl:        resp.Submission2Url,
-			SubmissionLastUpdate: resp.Submission2LastUpdate,
+			SubmissionFilename:   resp.Submission2Filename.String,
+			SubmissionUrl:        resp.Submission2Url.String,
+			SubmissionLastUpdate: resp.Submission2LastUpdate.Time,
 		}
 	default:
 		return nil, fmt.Errorf("invalid submission type")
