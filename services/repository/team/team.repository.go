@@ -280,9 +280,11 @@ func (r *Repository) GetTeamVerification(ctx context.Context, teamID string) ([]
 func (r *Repository) GetAllSubmission(ctx context.Context, page int, pageSize int) ([]entity.TeamSubmission, error) {
     query := `
         SELECT
-            team_id, submission_1_filename, submission_1_url, submission_1_lastupdate,
-            submission_2_filename, submission_2_url, submission_2_lastupdate
-        FROM teams_docs
+            t.team_name, td.team_id, td.submission_1_filename, td.submission_1_url, td.submission_1_lastupdate,
+            td.submission_2_filename, td.submission_2_url, td.submission_2_lastupdate
+        FROM teams_docs td
+		LEFT JOIN teams t
+		ON td.team_id = t.team_id
 		LIMIT $1 OFFSET $2
     `
 

@@ -361,6 +361,7 @@ func (u *Usecase) GetAllSubmissionUsecase(ctx context.Context, page int, pageSiz
 
         result = append(result, dto.GetAllSubmissionResponseDTO{
             TeamID:               submission.TeamID,
+			TeamName:              submission.TeamName,
             Submission1Filename:   submission.Submission1Filename,
             Submission1Url:        submission.Submission1Url,
             Submission1LastUpdate: submission.Submission1LastUpdate,

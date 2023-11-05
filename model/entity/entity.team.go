@@ -65,6 +65,7 @@ type TeamWithUserEntity struct {
 
 type TeamSubmission struct {
 	TeamID                string     `db:"team_id"`
+	TeamName              string     `db:"team_name"`
 	Submission1Filename   *string    `db:"submission_1_filename"`
 	Submission1Url        *string    `db:"submission_1_url"`
 	Submission1LastUpdate *time.Time `db:"submission_1_lastupdate"`

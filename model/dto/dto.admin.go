@@ -39,6 +39,7 @@ type UpdateUserDocumentStatus struct {
 
 type GetAllSubmissionResponseDTO struct {
 	TeamID               string     `json:"team_id"`
+	TeamName              string     `json:"team_name"`
 	Submission1Filename   *string    `json:"submission1_filename"`
 	Submission1Url        *string    `json:"submission1_url"`
 	Submission1LastUpdate *time.Time `json:"submission1_lastupdate"`
