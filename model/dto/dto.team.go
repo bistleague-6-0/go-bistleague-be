@@ -84,9 +84,9 @@ type InputTeamDocumentResponseDTO struct {
 type GetSubmissionResponseDTO struct {
 	TeamID               string     `json:"team_id"`
 	DocumentType         string     `json:"doc_type"`
-	SubmissionFilename   *string    `json:"submission_filename"`
-	SubmissionUrl        *string    `json:"submission_url"`
-	SubmissionLastUpdate *time.Time `json:"submission_lastupdate"`
+	SubmissionFilename   string    `json:"submission_filename"`
+	SubmissionUrl        string    `json:"submission_url"`
+	SubmissionLastUpdate time.Time `json:"submission_lastupdate"`
 }
 
 type GetTeamPaymentResponseDTO struct {
