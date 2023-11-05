@@ -11,6 +11,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/jackc/pgx/v4 v4.18.1
+	github.com/jellydator/ttlcache/v3 v3.1.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.2
 	golang.org/x/crypto v0.10.0
@@ -61,6 +62,7 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/oauth2 v0.8.0 // indirect
+	golang.org/x/sync v0.2.0 // indirect
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.10.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
