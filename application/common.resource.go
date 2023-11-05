@@ -50,6 +50,12 @@ func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource
 		ttlcache.WithTTL[string, string](12 * time.Hour),
 	)
 	go cache.Start()
+	go func() {
+		for {
+			time.Sleep(4 * time.Hour)
+			cache.DeleteExpired()
+		}
+	}()
 	rsc := CommonResource{
 		Db:       db,
 		QBuilder: &dialect,
