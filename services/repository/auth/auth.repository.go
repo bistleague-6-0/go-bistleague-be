@@ -4,8 +4,10 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/model/entity"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/doug-martin/goqu/v9"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -21,6 +23,20 @@ func New(cfg *config.Config, db *sqlx.DB, qb *goqu.DialectWrapper) *Repository {
 		db:  db,
 		qb:  qb,
 	}
+}
+
+func (r *Repository) GetUserInformationByEmail(ctx context.Context, email string) (*entity.UserEntity, error) {
+	result := &entity.UserEntity{}
+	err := r.db.GetContext(ctx, result, "SELECT uid, full_name FROM users WHERE email = $1 lIMIT 1", email)
+	if err != nil {
+		log.Error(err)
+		return nil, errors.New("user with email not found")
+	}
+	return result, nil
+}
+
+func (r *Repository) UpdateUserPassword(ctx context.Context, uid string, newPass string) error {
+	return nil
 }
 
 func (r *Repository) RegisterNewUser(ctx context.Context, newUser entity.UserEntity) (*entity.UserEntity, error) {

@@ -6,11 +6,12 @@ import (
 	"bistleague-be/model/entity"
 	"bistleague-be/services/repository/auth"
 	"bistleague-be/services/repository/cache"
+	email "bistleague-be/services/repository/email"
 	"bistleague-be/services/utils"
 	"bistleague-be/services/utils/encryptor"
+	"bistleague-be/services/utils/randomizer"
 	"context"
 	"errors"
-	"fmt"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -21,13 +22,15 @@ type Usecase struct {
 	cfg       *config.Config
 	repo      *auth.Repository
 	cacheRepo *cache.Repository
+	emailRepo *email.Repository
 }
 
-func New(cfg *config.Config, repo *auth.Repository, cacheRepo *cache.Repository) *Usecase {
+func New(cfg *config.Config, repo *auth.Repository, cacheRepo *cache.Repository, emailRepo *email.Repository) *Usecase {
 	return &Usecase{
 		cfg:       cfg,
 		repo:      repo,
 		cacheRepo: cacheRepo,
+		emailRepo: emailRepo,
 	}
 }
 
@@ -130,21 +133,48 @@ func (u *Usecase) ForgetPasswordUsecase(ctx context.Context, email string) error
 	// soalnya, klo misalnya email ga ketemu di return email ga ketemu
 	// bisa di abuse sama hacker
 	// return error hanya untuk server error seperti db conn error, parse error, dll
-	token := "random token dong"
+	user, err := u.repo.GetUserInformationByEmail(ctx, email)
+	if err != nil {
+		return errors.New("internal server error")
+	}
+	token := randomizer.RandStringBytes(25)
 	isUsed := u.cacheRepo.Check(ctx, token)
 	if isUsed {
-		return errors.New("udah kepake bwang")
+		return errors.New("internal server error")
 	}
-	u.cacheRepo.Set(ctx, token, email, time.Hour*5)
-	resp, err := u.cacheRepo.Get(ctx, email)
-	if err != nil {
-		log.Error(err)
-		return err
+	u.cacheRepo.Set(ctx, token, user.UID, time.Hour*5)
+	var data struct {
+		NamaLengkap string
+		Token       string
 	}
-	fmt.Println("cache value", resp)
+	data.NamaLengkap = user.FullName
+	data.Token = token
+	err = u.emailRepo.SendEmailHTML([]string{email}, "validate request", forgetPasswordEmailTemplate, data)
 	return nil
 }
 
 func (u *Usecase) ValidateForgetPasswordTokenUsecase(ctx context.Context, token string) error {
-	return nil
+	listOfEmail := []string{
+		"fdika24@outlook.com",
+		"18220015@std.stei.itb.ac.id",
+	}
+	var data struct {
+		NamaLengkap string
+		Email       string
+		Password    string
+	}
+	resp, err := u.cacheRepo.Get(ctx, token)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	data.NamaLengkap = "Testing Nama"
+	data.Email = resp
+	data.Password = "jemb000tts"
+
+	err = u.emailRepo.SendEmailHTML(listOfEmail, "temporary password", forgetPasswordValidateTokenEmailTemplate, data)
+	if err != nil {
+		log.Error(err)
+	}
+	return err
 }

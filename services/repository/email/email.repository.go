@@ -4,6 +4,7 @@ import (
 	"bistleague-be/model/config"
 	"bytes"
 	"fmt"
+	"github.com/gofiber/fiber/v2/log"
 	"mime"
 	"net/smtp"
 	"strings"
@@ -41,7 +42,7 @@ func (r *Repository) SendEmailText(to []string, subject, body string) error {
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
 
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Error(err)
 	}
 
 	return err

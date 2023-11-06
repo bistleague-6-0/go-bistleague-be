@@ -12,8 +12,8 @@ import (
 	teamRepo "bistleague-be/services/repository/team"
 	"bistleague-be/services/utils"
 	"context"
-	"strings"
 	"golang.org/x/crypto/bcrypt"
+	"strings"
 )
 
 const (
@@ -350,25 +350,25 @@ func (u *Usecase) GetMiniChallengeByUIDUsecase(ctx context.Context, uid string) 
 }
 
 func (u *Usecase) GetAllSubmissionUsecase(ctx context.Context, page int, pageSize int) (*dto.PaginationDTOWrapper, error) {
-    resp, err := u.teamRepo.GetAllSubmission(ctx, page, pageSize)
-    if err != nil {
-        return nil, err
-    }
+	resp, err := u.teamRepo.GetAllSubmission(ctx, page, pageSize)
+	if err != nil {
+		return nil, err
+	}
 
 	result := []dto.GetAllSubmissionResponseDTO{}
 
-    for _, submission := range resp {
+	for _, submission := range resp {
 
-        result = append(result, dto.GetAllSubmissionResponseDTO{
-            TeamID:               submission.TeamID,
-            Submission1Filename:   submission.Submission1Filename,
-            Submission1Url:        submission.Submission1Url,
-            Submission1LastUpdate: submission.Submission1LastUpdate,
+		result = append(result, dto.GetAllSubmissionResponseDTO{
+			TeamID:                submission.TeamID,
+			Submission1Filename:   submission.Submission1Filename,
+			Submission1Url:        submission.Submission1Url,
+			Submission1LastUpdate: submission.Submission1LastUpdate,
 			Submission2Filename:   submission.Submission2Filename,
 			Submission2Url:        submission.Submission2Url,
 			Submission2LastUpdate: submission.Submission2LastUpdate,
-        })
-    }
+		})
+	}
 
 	totalTeam, err := u.teamRepo.GetTeamCount(ctx)
 	if err != nil {
@@ -386,6 +386,5 @@ func (u *Usecase) GetAllSubmissionUsecase(ctx context.Context, page int, pageSiz
 		Data:      result,
 	}
 
-
-    return &dtoResp, err
+	return &dtoResp, err
 }
