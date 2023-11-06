@@ -120,5 +120,5 @@ func (r *Router) ValidateForgetPasswordRoute(g *guard.GuardContext) error {
 	if err != nil {
 		return g.ReturnError(http.StatusBadRequest, "token is invalid")
 	}
-	return g.ReturnSuccess(token)
+	return g.ReturnSuccess("success")
 }

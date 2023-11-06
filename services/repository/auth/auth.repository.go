@@ -36,6 +36,11 @@ func (r *Repository) GetUserInformationByEmail(ctx context.Context, email string
 }
 
 func (r *Repository) UpdateUserPassword(ctx context.Context, uid string, newPass string) error {
+	_, err := r.db.ExecContext(ctx, "UPDATE users SET password = $1 WHERE uid = $2", newPass, uid)
+	if err != nil {
+		log.Error(err)
+		return errors.New("cannot update user password")
+	}
 	return nil
 }
 
@@ -76,10 +81,12 @@ func (r *Repository) LoginUser(ctx context.Context, username string) (*entity.Us
 		Where(goqu.C("username").Eq(username)).Limit(1)
 	sql, _, err := query.ToSQL()
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	err = r.db.GetContext(ctx, &resp, sql)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	return &resp, nil
@@ -88,7 +95,7 @@ func (r *Repository) LoginUser(ctx context.Context, username string) (*entity.Us
 func (r *Repository) GetUserInformation(ctx context.Context, uid string) (*entity.UserEntity, error) {
 	resp := entity.UserEntity{}
 	query := r.qb.
-		Select("uid", "password", "username", "team_id").
+		Select("uid", "password", "username", "team_id", "email", "full_name").
 		From("users").
 		Where(goqu.C("uid").Eq(uid)).Limit(1)
 	sql, _, err := query.ToSQL()

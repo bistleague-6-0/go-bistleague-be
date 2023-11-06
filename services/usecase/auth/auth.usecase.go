@@ -14,6 +14,7 @@ import (
 	"errors"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -78,10 +79,12 @@ func (u *Usecase) SignInUser(ctx context.Context, req dto.SignInUserRequestDTO) 
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	token, err := utils.GenerateJWTToken(u.cfg.Secret.JWTSecret, user.UID, user.TeamID.String)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	refreshKey, err := encryptor.EncryptRefreshKey(encryptor.RefreshKey{
@@ -90,6 +93,7 @@ func (u *Usecase) SignInUser(ctx context.Context, req dto.SignInUserRequestDTO) 
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 3)),
 	}, u.cfg.Secret.JWTSecret)
 	if err != nil {
+		log.Error(err)
 		return nil, err
 	}
 	return &dto.AuthUserResponseDTO{
@@ -137,7 +141,7 @@ func (u *Usecase) ForgetPasswordUsecase(ctx context.Context, email string) error
 	if err != nil {
 		return errors.New("internal server error")
 	}
-	token := randomizer.RandStringBytes(25)
+	token := randomizer.RandStringBytes(25) + uuid.NewString()
 	isUsed := u.cacheRepo.Check(ctx, token)
 	if isUsed {
 		return errors.New("internal server error")
@@ -154,24 +158,37 @@ func (u *Usecase) ForgetPasswordUsecase(ctx context.Context, email string) error
 }
 
 func (u *Usecase) ValidateForgetPasswordTokenUsecase(ctx context.Context, token string) error {
-	listOfEmail := []string{
-		"fdika24@outlook.com",
-		"18220015@std.stei.itb.ac.id",
-	}
 	var data struct {
 		NamaLengkap string
 		Email       string
 		Password    string
 	}
-	resp, err := u.cacheRepo.Get(ctx, token)
+	userId, err := u.cacheRepo.Get(ctx, token)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	data.NamaLengkap = "Testing Nama"
-	data.Email = resp
-	data.Password = "jemb000tts"
-
+	u.cacheRepo.Delete(ctx, token)
+	user, err := u.repo.GetUserInformation(ctx, userId)
+	if err != nil {
+		return err
+	}
+	newPass := randomizer.RandStringBytes(10)
+	newpw, err := bcrypt.GenerateFromPassword([]byte(newPass), bcrypt.DefaultCost)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	err = u.repo.UpdateUserPassword(ctx, userId, string(newpw))
+	if err != nil {
+		return err
+	}
+	data.NamaLengkap = user.FullName
+	data.Email = user.Email
+	data.Password = newPass
+	listOfEmail := []string{
+		user.Email,
+	}
 	err = u.emailRepo.SendEmailHTML(listOfEmail, "temporary password", forgetPasswordValidateTokenEmailTemplate, data)
 	if err != nil {
 		log.Error(err)
