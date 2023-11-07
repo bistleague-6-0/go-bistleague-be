@@ -1,5 +1,10 @@
 package dto
 
+import (
+	"time"
+)
+
+
 type RegisterAdminRequestDTO struct {
 	Username string `json:"username" validate:"required,min=8,max=20"`
 	Password string `json:"password" validate:"required,min=8,max=20"`
@@ -30,4 +35,15 @@ type UpdateUserDocumentStatus struct {
 	DocumentType string `json:"doc_type"`
 	Status       int    `json:"status"`
 	Rejection    string `json:"rejection"`
+}
+
+type GetAllSubmissionResponseDTO struct {
+	TeamID               string     `json:"team_id"`
+	TeamName              string     `json:"team_name"`
+	Submission1Filename   string    `json:"submission1_filename"`
+	Submission1Url        string    `json:"submission1_url"`
+	Submission1LastUpdate time.Time `json:"submission1_lastupdate"`
+	Submission2Filename   string    `json:"submission2_filename"`
+	Submission2Url        string    `json:"submission2_url"`
+	Submission2LastUpdate time.Time `json:"submission2_lastupdate"`
 }

@@ -57,13 +57,21 @@ func (u *Usecase) CreateTeam(ctx context.Context, req dto.CreateTeamRequestDTO, 
 }
 
 func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID string) (*dto.GetTeamInfoResponseDTO, error) {
-	resp, err := u.repo.GetTeamInformation(ctx, teamID)
+	// Fetch team information without submission data
+	teamInfoResp, err := u.repo.GetTeamInformation(ctx, teamID)
 	if err != nil {
 		return nil, err
 	}
+
+	submission1Resp, err := u.repo.GetSubmission(ctx, teamID)
+	if err != nil {
+		return nil, err
+	}
+
 	result := dto.GetTeamInfoResponseDTO{}
 	result.TeamID = teamID
-	for _, team := range resp {
+
+	for _, team := range teamInfoResp {
 		result.TeamName = team.TeamName
 		result.TeamRedeemCode = team.RedeemCode
 		result.IsActive = team.IsActive
@@ -108,6 +116,10 @@ func (u *Usecase) GetTeamInformation(ctx context.Context, teamID string, userID 
 			IsProfileVerified: team.IsProfileVerified,
 		})
 	}
+
+	result.Submission1Url = submission1Resp.Submission1Url
+	result.Submission2Url = submission1Resp.Submission2Url
+
 	return &result, nil
 }
 
@@ -165,17 +177,17 @@ func (u *Usecase) GetTeamSubmission(ctx context.Context, submissionType int, tea
 		dtoResp = dto.GetSubmissionResponseDTO{
 			TeamID:               teamID,
 			DocumentType:         "submission_1",
-			SubmissionFilename:   resp.Submission1Filename,
-			SubmissionUrl:        resp.Submission1Url,
-			SubmissionLastUpdate: resp.Submission1LastUpdate,
+			SubmissionFilename:   resp.Submission1Filename.String,
+			SubmissionUrl:        resp.Submission1Url.String,
+			SubmissionLastUpdate: resp.Submission1LastUpdate.Time,
 		}
 	case 2:
 		dtoResp = dto.GetSubmissionResponseDTO{
 			TeamID:               teamID,
 			DocumentType:         "submission_2",
-			SubmissionFilename:   resp.Submission2Filename,
-			SubmissionUrl:        resp.Submission2Url,
-			SubmissionLastUpdate: resp.Submission2LastUpdate,
+			SubmissionFilename:   resp.Submission2Filename.String,
+			SubmissionUrl:        resp.Submission2Url.String,
+			SubmissionLastUpdate: resp.Submission2LastUpdate.Time,
 		}
 	default:
 		return nil, fmt.Errorf("invalid submission type")

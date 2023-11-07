@@ -83,9 +83,11 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 }
 
 func (r *Repository) GetTeamInformation(ctx context.Context, teamID string) ([]entity.TeamWithUserEntity, error) {
-	query := `select
+	query := `
+	select
 		t.team_id, t.team_name, t.team_leader_id, tc.code,
 		td.payment_filename, td.payment_url, td.payment_status, td.payment_rejection,
+		td.submission_1_url, td.submission_2_url,
 		u.uid, u.username, u.full_name,
 		ud.student_card_filename, ud.student_card_url, ud.student_card_status, ud.student_card_rejection,
 		ud.enrollment_filename, ud.enrollment_url, ud.enrollment_status, ud.enrollment_rejection,
@@ -275,4 +277,26 @@ func (r *Repository) GetTeamVerification(ctx context.Context, teamID string) ([]
 	resp := []entity.TeamVerification{}
 	err := r.db.SelectContext(ctx, &resp, query, teamID)
 	return resp, err
+}
+
+func (r *Repository) GetAllSubmission(ctx context.Context, page int, pageSize int) ([]entity.TeamSubmission, error) {
+    query := `
+        SELECT
+            t.team_name, td.team_id, td.submission_1_filename, td.submission_1_url, td.submission_1_lastupdate,
+            td.submission_2_filename, td.submission_2_url, td.submission_2_lastupdate
+        FROM teams_docs td
+		LEFT JOIN teams t
+		ON td.team_id = t.team_id
+		LIMIT $1 OFFSET $2
+    `
+
+    var resp []entity.TeamSubmission
+	offset := (page - 1) * pageSize
+    err := r.db.SelectContext(ctx, &resp, query, pageSize, offset)
+
+    if err != nil {
+        println("Error fetching submission:", err.Error())
+    }
+
+    return resp, err
 }

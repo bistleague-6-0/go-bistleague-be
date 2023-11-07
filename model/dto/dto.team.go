@@ -60,6 +60,9 @@ type GetTeamInfoResponseDTO struct {
 	EnrollmentStatusCode int8   `json:"enrollment_status_code"`
 	EnrollmentRejection  string `json:"enrollment_rejection"`
 
+	Submission1Url        *string    `json:"submission_1_url"`
+	Submission2Url        *string    `json:"submission_2_url"`
+	
 	Members []GetTeamMemberInfoResponseDTO `json:"members"`
 }
 
@@ -81,9 +84,9 @@ type InputTeamDocumentResponseDTO struct {
 type GetSubmissionResponseDTO struct {
 	TeamID               string     `json:"team_id"`
 	DocumentType         string     `json:"doc_type"`
-	SubmissionFilename   *string    `json:"submission_filename"`
-	SubmissionUrl        *string    `json:"submission_url"`
-	SubmissionLastUpdate *time.Time `json:"submission_lastupdate"`
+	SubmissionFilename   string    `json:"submission_filename"`
+	SubmissionUrl        string    `json:"submission_url"`
+	SubmissionLastUpdate time.Time `json:"submission_lastupdate"`
 }
 
 type GetTeamPaymentResponseDTO struct {

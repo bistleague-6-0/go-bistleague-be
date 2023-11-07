@@ -4,6 +4,7 @@ import (
 	"bistleague-be/model/config"
 	"bistleague-be/services/repository/admin"
 	"bistleague-be/services/repository/auth"
+	"bistleague-be/services/repository/cache"
 	"bistleague-be/services/repository/challenge"
 	emailRepo "bistleague-be/services/repository/email"
 	"bistleague-be/services/repository/hello"
@@ -21,6 +22,7 @@ type CommonRepository struct {
 	adminRepo     *admin.Repository
 	challengeRepo *challenge.Repository
 	emailRepo     *emailRepo.Repository
+	cacheRepo     *cache.Repository
 }
 
 func NewCommonRepository(cfg *config.Config, rsc *CommonResource) (*CommonRepository, error) {
@@ -35,6 +37,10 @@ func NewCommonRepository(cfg *config.Config, rsc *CommonResource) (*CommonReposi
 	if err != nil {
 		return nil, err
 	}
+	cacheRepo, err := cache.New(cfg, rsc.cache)
+	if err != nil {
+		return nil, err
+	}
 	commonRepo := CommonRepository{
 		helloRepo:     helloRepo,
 		authRepo:      authRepo,
@@ -44,6 +50,7 @@ func NewCommonRepository(cfg *config.Config, rsc *CommonResource) (*CommonReposi
 		adminRepo:     adminRepo,
 		challengeRepo: challengeRepo,
 		emailRepo:     emailRepo,
+		cacheRepo:     cacheRepo,
 	}
 	return &commonRepo, nil
 }

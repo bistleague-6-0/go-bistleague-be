@@ -10,9 +10,11 @@ import (
 	"github.com/doug-martin/goqu/v9"
 	"github.com/go-playground/validator/v10"
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/jellydator/ttlcache/v3"
 	"github.com/jmoiron/sqlx"
 	"google.golang.org/api/option"
 	"regexp"
+	"time"
 )
 
 type CommonResource struct {
@@ -20,6 +22,7 @@ type CommonResource struct {
 	QBuilder *goqu.DialectWrapper
 	Vld      *validator.Validate
 	bucket   *storage.BucketHandle
+	cache    *ttlcache.Cache[string, string]
 }
 
 func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource, error) {
@@ -43,11 +46,22 @@ func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource
 		return nil, err
 	}
 	bucket := storageCli.Bucket(cfg.Storage.BucketName)
+	cache := ttlcache.New[string, string](
+		ttlcache.WithTTL[string, string](12 * time.Hour),
+	)
+	go cache.Start()
+	go func() {
+		for {
+			time.Sleep(4 * time.Hour)
+			cache.DeleteExpired()
+		}
+	}()
 	rsc := CommonResource{
 		Db:       db,
 		QBuilder: &dialect,
 		Vld:      vld,
 		bucket:   bucket,
+		cache:    cache,
 	}
 	return &rsc, nil
 }

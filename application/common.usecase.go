@@ -21,7 +21,7 @@ type CommonUsecase struct {
 
 func NewCommonUsecase(cfg *config.Config, commonRepo *CommonRepository) (*CommonUsecase, error) {
 	helloUC := hello.New(cfg, commonRepo.helloRepo)
-	authUC := auth.New(cfg, commonRepo.authRepo)
+	authUC := auth.New(cfg, commonRepo.authRepo, commonRepo.cacheRepo)
 	teamUC := team.New(cfg, commonRepo.teamRepo, commonRepo.storageRepo, commonRepo.profileRepo)
 	profileUC := profile.New(cfg, commonRepo.profileRepo)
 	adminUC := admin.New(cfg, commonRepo.adminRepo, commonRepo.profileRepo, commonRepo.teamRepo, commonRepo.challengeRepo, commonRepo.emailRepo)
