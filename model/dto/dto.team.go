@@ -2,6 +2,7 @@ package dto
 
 import (
 	"time"
+	"database/sql"
 )
 
 type RedeemTeamCodeRequestDTO struct {
@@ -60,8 +61,8 @@ type GetTeamInfoResponseDTO struct {
 	EnrollmentStatusCode int8   `json:"enrollment_status_code"`
 	EnrollmentRejection  string `json:"enrollment_rejection"`
 
-	Submission1Url        *string    `json:"submission_1_url"`
-	Submission2Url        *string    `json:"submission_2_url"`
+	Submission1Url        sql.NullString    `json:"submission_1_url"`
+	Submission2Url        sql.NullString    `json:"submission_2_url"`
 	
 	Members []GetTeamMemberInfoResponseDTO `json:"members"`
 }
