@@ -3,10 +3,10 @@ package application
 import (
 	"bistleague-be/model/config"
 	"cloud.google.com/go/storage"
+	"github.com/gofiber/fiber/v2/log"
 	"context"
 	_ "database/sql"
 	"encoding/json"
-	"fmt"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/go-playground/validator/v10"
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -41,8 +41,7 @@ func NewCommonResource(cfg *config.Config, ctx context.Context) (*CommonResource
 	}
 	storageCli, err := storage.NewClient(ctx, option.WithCredentialsJSON(jsonCreds))
 	if err != nil {
-		fmt.Println(cfg.ServiceAccount)
-		fmt.Println("error kontol", err)
+		log.Error(err)
 		return nil, err
 	}
 	bucket := storageCli.Bucket(cfg.Storage.BucketName)

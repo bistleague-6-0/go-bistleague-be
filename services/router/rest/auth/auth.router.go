@@ -5,7 +5,7 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/usecase/auth"
-	"fmt"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
@@ -37,7 +37,7 @@ func (r *Router) SignInUser(g *guard.GuardContext) error {
 	req := dto.SignInUserRequestDTO{}
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
-		fmt.Println("error", err)
+		log.Error(err)
 		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
@@ -55,7 +55,7 @@ func (r *Router) SignUpUser(g *guard.GuardContext) error {
 	req := dto.SignUpUserRequestDTO{}
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
-		fmt.Println("error", err)
+		log.Error(err)
 		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
@@ -67,7 +67,7 @@ func (r *Router) SignUpUser(g *guard.GuardContext) error {
 	}
 	resp, err := r.usecase.InsertNewUser(g.FiberCtx.Context(), req)
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		return g.ReturnError(http.StatusInternalServerError, "cannot register user")
 	}
 	return g.ReturnSuccess(resp)
@@ -77,7 +77,7 @@ func (r *Router) RefreshToken(g *guard.GuardContext) error {
 	req := dto.RefreshTokenRequestDTO{}
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
-		fmt.Println("error", err)
+		log.Error(err)
 		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
@@ -97,7 +97,7 @@ func (r *Router) ForgetPasswordRoute(g *guard.GuardContext) error {
 	}
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
-		fmt.Println("error", err)
+		log.Error(err)
 		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
