@@ -7,7 +7,7 @@ import (
 	"bistleague-be/services/repository/admin"
 	admin2 "bistleague-be/services/usecase/admin"
 	"context"
-	"fmt"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 func main() {
@@ -30,5 +30,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("admin has been created!")
+	log.Info("Admin Created")
 }
