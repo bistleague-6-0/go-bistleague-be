@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
-
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
@@ -54,7 +54,7 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 	q3 := "INSERT INTO teams_code(team_id, code) VALUES ($1, $2)"
 	_, err = tx.ExecContext(ctx, q3, teamID.Id, redeemToken)
 	if err != nil {
-		fmt.Println("err 54", err)
+		log.Error(err)
 		tx.Rollback()
 		return "", err
 	}
@@ -63,7 +63,7 @@ func (r *Repository) CreateTeam(ctx context.Context, newTeam entity.TeamEntity, 
 	q1two := `INSERT INTO teams_docs(team_id) VALUES ($1)`
 	_, err = tx.ExecContext(ctx, q1two, teamID.Id)
 	if err != nil {
-		fmt.Println("err 63", err)
+		log.Error(err)
 		tx.Rollback()
 		return "", err
 	}
@@ -287,6 +287,8 @@ func (r *Repository) GetAllSubmission(ctx context.Context, page int, pageSize in
         FROM teams_docs td
 		LEFT JOIN teams t
 		ON td.team_id = t.team_id
+		WHERE t.team_name IS NOT NULL
+		ORDER BY t.team_name
 		LIMIT $1 OFFSET $2
     `
 

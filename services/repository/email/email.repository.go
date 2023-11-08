@@ -8,6 +8,7 @@ import (
 	"net/smtp"
 	"strings"
 	"text/template"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 type Repository struct {
@@ -41,7 +42,7 @@ func (r *Repository) SendEmailText(to []string, subject, body string) error {
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
 
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Error(err)
 	}
 
 	return err

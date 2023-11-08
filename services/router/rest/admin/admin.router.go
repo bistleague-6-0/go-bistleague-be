@@ -5,11 +5,9 @@ import (
 	"bistleague-be/model/dto"
 	"bistleague-be/services/middleware/guard"
 	"bistleague-be/services/usecase/admin"
-	"fmt"
 	"github.com/gofiber/fiber/v2/log"
 	"net/http"
 	"strconv"
-
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
@@ -50,7 +48,7 @@ func (r *Router) SignInAdmin(g *guard.GuardContext) error {
 	req := dto.SignInAdminRequestDTO{}
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
-		fmt.Println("error", err)
+		log.Error(err)
 		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
@@ -68,7 +66,7 @@ func (r *Router) RegisterAdmin(g *guard.GuardContext) error {
 	req := dto.RegisterAdminRequestDTO{}
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
-		fmt.Println("error", err)
+		log.Error(err)
 		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	err = r.vld.StructCtx(g.FiberCtx.Context(), &req)
@@ -77,7 +75,7 @@ func (r *Router) RegisterAdmin(g *guard.GuardContext) error {
 	}
 	resp, err := r.usecase.InsertNewAdmin(g.FiberCtx.Context(), req)
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		return g.ReturnError(http.StatusInternalServerError, "cannot register admin")
 	}
 	return g.ReturnSuccess(resp)
@@ -103,7 +101,7 @@ func (r *Router) GetTeamPayment(g *guard.AuthGuardContext) error {
 	}
 	resp, err := r.usecase.GetTeamPayment(g.FiberCtx.Context(), int(page), int(pageSize))
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		return g.ReturnError(http.StatusNotFound, "cannot get teams payment")
 	}
 	return g.ReturnSuccess(resp)
@@ -129,7 +127,7 @@ func (r *Router) GetUserDocsList(g *guard.AuthGuardContext) error {
 	}
 	resp, err := r.usecase.GetUserList(g.FiberCtx.Context(), int(page), int(pageSize))
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		return g.ReturnError(http.StatusNotFound, "cannot get user docs")
 	}
 	return g.ReturnSuccess(resp)
@@ -140,7 +138,7 @@ func (r *Router) UpdatePaymentStatus(g *guard.AuthGuardContext) error {
 	teamID := g.FiberCtx.Params("teamID")
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
-		fmt.Println("error", err)
+		log.Error(err)
 		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	if teamID == "" {
@@ -155,7 +153,7 @@ func (r *Router) UpdatePaymentStatus(g *guard.AuthGuardContext) error {
 	}
 	err = r.usecase.UpdateTeamPaymentStatus(g.FiberCtx.Context(), teamID, req.Status, req.Rejection)
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		return g.ReturnError(http.StatusInternalServerError, "cannot update payment status")
 	}
 	return g.FiberCtx.JSON(dto.NoBodyDTOResponseWrapper{
@@ -169,7 +167,7 @@ func (r *Router) UpdateUserDocumentStatus(g *guard.AuthGuardContext) error {
 	uid := g.FiberCtx.Params("uid")
 	err := g.FiberCtx.BodyParser(&req)
 	if err != nil {
-		fmt.Println("error", err)
+		log.Error(err)
 		return g.ReturnError(http.StatusBadRequest, "cannot find json body")
 	}
 	if uid == "" {
@@ -183,7 +181,7 @@ func (r *Router) UpdateUserDocumentStatus(g *guard.AuthGuardContext) error {
 	}
 	err = r.usecase.UpdateUserDocumentStatus(g.FiberCtx.Context(), uid, req.DocumentType, req.Status, req.Rejection)
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		return g.ReturnError(http.StatusInternalServerError, "cannot update user document status")
 	}
 	return g.FiberCtx.JSON(dto.NoBodyDTOResponseWrapper{
