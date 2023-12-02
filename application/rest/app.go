@@ -23,7 +23,8 @@ import (
 func applicationDelegate(cfg *config.Config) (*fiber.App, error) {
 	ctx := context.Background()
 	app := fiber.New(fiber.Config{
-		AppName: fmt.Sprintf("%s %s", cfg.Server.Name, cfg.Stage),
+		AppName:   fmt.Sprintf("%s %s", cfg.Server.Name, cfg.Stage),
+		BodyLimit: 15 * 1024 * 1024,
 	})
 
 	prometheus := fiberprometheus.New(cfg.Server.Name)
