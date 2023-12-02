@@ -10,6 +10,8 @@ var signatures = map[string]string{
 	"JVBERi0":     "application/pdf",
 	"iVBORw0KGgo": "image/png",
 	"/9j/":        "image/jpeg",
+	"UEsDB":       "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+	"0M8R4":       "application/vnd.ms-powerpoint",
 }
 
 type Base64File struct {
@@ -65,6 +67,10 @@ func DecodeBase64WithFormat(base64Data string) ([]byte, string, error) {
 		ext = ".png"
 	case "image/jpeg":
 		ext = ".jpg"
+	case "application/vnd.ms-powerpoint":
+		ext = ".ppt"
+	case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+		ext = ".pptx"
 	default:
 		return nil, "", errors.New("unsupported mimeType: " + mimeType)
 	}
